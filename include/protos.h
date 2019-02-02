@@ -2,8 +2,7 @@
 #define __ITSOL_INCLUDED_PROTOS_H__
 
 #include <stdio.h>
-#include "globheads.h"
-#include "defs.h"
+#include "type-defs.h"
 #include "ios.h"
 
 #if defined(_SGI) || defined(_LINUX)
