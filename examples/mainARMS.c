@@ -6,16 +6,7 @@
  *                                                                 *
  * Report bugs / send comments to: saad@cs.umn.edu                 *
  *-----------------------------------------------------------------*/
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <math.h>
-#include "globheads.h"
-#include "defs.h" 
 #include "protos.h"
-#include "ios.h"  
-#include <time.h>
-#include <assert.h> 
 
 #define TOL_DD 0.7   /* diagonal dominance tolerance for */
                      /* independent sets                 */

@@ -5,15 +5,7 @@
  *                                                                 *
  * Report bugs / send comments to: saad@cs.umn.edu, nli@cs.umn.edu *
  *-----------------------------------------------------------------*/
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h> 
-#include <math.h>
-#include "globheads.h"
-#include "defs.h" 
 #include "protos.h"
-#include "ios.h"  
-#include <sys/time.h>
 
 /*-------------------- protos */
 void output_header_vb( io_t *pio );
