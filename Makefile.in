@@ -15,11 +15,11 @@ all:
 clean:
 	@(cd src; $(MAKE) clean)
 	@rm -fr config-env.log config.log config.status autom4te.cache
-	@(cd example; $(MAKE) clean)
+	@(cd examples; $(MAKE) clean)
 
 distclean:
 	@(cd src; $(MAKE) clean)
-	@(cd example; $(MAKE) clean)
+	@(cd examples; $(MAKE) clean)
 	@rm -f Makefile Makefile.inc 
 	@rm -fr config-env.log config.log config.status autom4te.cache
 	@rm -f include/config.h Makefile Makefile.inc
