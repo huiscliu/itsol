@@ -1,4 +1,7 @@
 
+#ifndef ITSOL_DEFS_H
+#define ITSOL_DEFS_H
+
 #define qsplit qsplit_
 #define dgemv dgemv_
 #define readmtc readmtc_
@@ -40,3 +43,4 @@
 #define MAX_HBNAME      64
 #define MAX_MAT	   100
 
+#endif

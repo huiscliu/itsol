@@ -1,3 +1,6 @@
+#ifndef ITSOL_IOS_H
+#define ITSOL_IOS_H
+
 #define MAX_MAT	   100
 #define MAX_LINE        256
 #define MaxNamLen 64
@@ -48,3 +51,4 @@ typedef struct _io_t {
     double rnorm;               /* final residual norm: ||Ax-Ax0|| */
 } io_t;
 
+#endif
