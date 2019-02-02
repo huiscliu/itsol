@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <math.h>
 
-#include "globheads.h"
+#include "protos.h"
 
 #ifndef min
 #define min(a,b) (((a)>(b))?(b):(a))

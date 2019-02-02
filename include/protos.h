@@ -3,6 +3,8 @@
 
 #include <stdio.h>
 #include "globheads.h"
+#include "defs.h"
+#include "ios.h"
 
 #if defined(_SGI) || defined(_LINUX)
 #define dnrm2   dnrm2_

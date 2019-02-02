@@ -2,6 +2,8 @@
 #ifndef ITSOL_DEFS_H
 #define ITSOL_DEFS_H
 
+#include "config.h"
+
 #define qsplit qsplit_
 #define dgemv dgemv_
 #define readmtc readmtc_
