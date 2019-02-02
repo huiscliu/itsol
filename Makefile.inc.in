@@ -23,6 +23,10 @@ RPATH_FLAG	= @RPATH_FLAG@
 	${CC} ${CFLAGS} ${CPPFLAGS} -c $*.c
 	@echo
 
+%.o : %.f
+	${FC} ${FCFLAGS} -c $*.f
+	@echo
+
 % : %.o
 	${LINKER} ${LDFLAGS} -o $@ $*.o ${LIBS}
 	@echo
