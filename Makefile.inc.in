@@ -7,6 +7,10 @@ CPPFLAGS        = @CPPFLAGS@
 CC              = @CC@
 CFLAGS          = @CFLAGS@
 
+FC              = @FC@
+FCFLAGS         = @FCFLAGS@
+FCLIBS          = @FCLIBS@
+
 LINKER          = @LINKER@
 LDFLAGS         = @LDFLAGS@
 LIBS            = @LIBS@

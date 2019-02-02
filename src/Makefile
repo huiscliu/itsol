@@ -11,7 +11,11 @@ SRC_C   = $(wildcard *.c)
 DIR_C   = $(notdir $(SRC_C))
 OBJS_C  = $(patsubst %.c,%.o,$(DIR_C))
 
-OBJS     := $(OBJS_C)
+SRC_F   = $(wildcard *.f)
+DIR_F   = $(notdir $(SRC_F))
+OBJS_F  = $(patsubst %.f,%.o,$(DIR_F))
+
+OBJS     := $(OBJS_C) $(OBJS_F)
 
 lib: lib$(NLIB).a
 
