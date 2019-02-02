@@ -2,7 +2,6 @@
 #define __ITSOL_ARMS2_H__
 
 #include "sets.h"
-#include "misc.h"
 #include "PQ.h"
 #include "MatOps.h"
 #include "piluNEW.h"

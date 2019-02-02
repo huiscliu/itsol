@@ -2,7 +2,6 @@
 #define __ITSOL_EXT_PROTOS_H__
 
 #include <stdio.h>
-#include "type-defs.h"
 
 #if defined(_SGI) || defined(_LINUX)
 #define dnrm2   dnrm2_

@@ -4,7 +4,6 @@
 
 #include <math.h>
 #include "type-defs.h"
-#include "itsol.h"
 
 /*----------------------------------------------------------------------------
  * ILUT preconditioner

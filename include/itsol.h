@@ -14,7 +14,6 @@
 #include "indsetC.h"
 #include "itsol.h"
 #include "MatOps.h"
-#include "misc.h"
 #include "piluNEW.h"
 #include "PQ.h"
 #include "setblks.h"

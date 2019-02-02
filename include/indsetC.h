@@ -3,7 +3,6 @@
 #define __ITSOL_INDSETC_H__
 
 #include "sets.h"
-#include "misc.h"
 
 int add2is(int *last, int nod, int *iord, int *riord);
 int add2com(int *nback, int nod, int *iord, int *riord);

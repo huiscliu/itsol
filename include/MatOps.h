@@ -2,7 +2,6 @@
 #define __ITSOL_MatOps_H__
 
 #include "sets.h"
-#include "misc.h"
 #include "svdInvC.h"
 
 /* MatOps.c */

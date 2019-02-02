@@ -4,15 +4,6 @@
 
 #include "sets.h"
 
-/*-----------------------------------------------------------------------*
- * Crout version of ILU                                                  *
- *-----------------------------------------------------------------------*
- * Na Li, Apr 09, 2002 -- YS - August 22nd, 2002                         *
- *                                                                       *
- * Report bugs / send comments to: saad@cs.umn.edu, nli@cs.umn.edu       *
- *-----------------------------------------------------------------------*/
-#include "type-defs.h"
-
 /*---------------------------------------------------------------------
  * Column-based ILUT (ILUTC) preconditioner
  * incomplete LU factorization with dropping strategy specified by input

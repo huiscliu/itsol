@@ -3,7 +3,6 @@
 #define __ITSOL_ILUTPC_H__
 
 #include "sets.h"
-#include "misc.h"
 #include "MatOps.h"
 
 /*---------------------------------------------------------------------- 
