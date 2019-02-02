@@ -1,14 +1,10 @@
 
-.PHONY: clean lib example
+.PHONY: clean lib
 
 default:lib
 
 lib:
 	@(cd ../src/; make)
 
-example:
-	@(cd ../example/; make)
-
 clean:
 	@(cd ../src/; make clean)
-	@(cd ../example/; make clean)
