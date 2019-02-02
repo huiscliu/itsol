@@ -6,6 +6,7 @@
 #include "ext-protos.h"
 #include "sets.h"
 #include "MatOps.h"
+#include "misc.h"
 
 /* setblks.c */ 
 int KeyComp(const void *vfst, const void *vsnd);
@@ -37,22 +38,6 @@ void setup_arms (arms Levmat);
 int cleanARMS(arms ArmsPre);
 int csSplit4(csptr amat, int bsize, int csize, csptr B, csptr F, csptr E, csptr C); 
 
-/* misc.c */
-int SparTran(csptr amat, csptr bmat, int job, int flag); 
-int coscalC(csptr mata, double *diag, int nrm);
-void dscale(int n, double *dd, double *x, double * y);
-void hilosort(csptr mat, int abval, int hilo);
-void printmat(FILE *ft, csptr A, int i0, int i1);
-void qqsort(int *ja, double *ma, int left, int right);
-void qsort2C(int *ja, double *ma, int left, int right, int abval); 
-void qsort3i(int *wa, int *cor1, int *cor2, int left, int right); 
-void qsortC(int *ja, double *ma, int left, int right, int abval); 
-void qsortR2I(double *wa, int *cor1, int *cor2, int left, int right); 
-int qsplitC(double *a, int *ind, int n, int ncut);
-int roscalC(csptr mata, double *diag, int nrm);
-void swapj(int v[], int i, int j);
-void swapm(double v[], int i, int j);
-
 /* piluNEW.c */
 int pilu(p4ptr amat, csptr B, csptr C, double *droptol, int *lfil, csptr schur);
 
@@ -75,9 +60,6 @@ int weightsC(csptr mat, double *w);
 int KeyComp( const void *vfst, const void *vsnd );
 int init_blocks( csptr csmat, int *pnBlock, int **pnB, int **pperm, double eps, double *t_hash,
         double *t_angle );
-
-/* systimer.c */
-double sys_timer(void);
 
 /*auxill.c */
 int read_inputs( char *in_file, io_t *pio );
