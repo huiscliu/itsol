@@ -9,7 +9,7 @@ AC_CONFIG_AUX_DIR([utils])
 
 AC_CONFIG_HEADER([include/config.h])
 AC_CONFIG_FILES([Makefile Makefile.inc])
-AMG_DIR="`pwd`"
+ITSOL_DIR="`pwd`"
 
 AC_MSG_NOTICE(============================== compilers ===========================)
 
@@ -58,7 +58,7 @@ AC_FULLPATH(CPP)
 # The default linker
 AC_SUBST(LINKER, "$LINKER")
 
-AC_PREFIX_DEFAULT(/usr/local/sxamg)
+AC_PREFIX_DEFAULT(/usr/local/itsol)
 
 AC_CHECK_PROGS(AR,[ar], no)
 if test $AR = "no" ; then
@@ -112,15 +112,15 @@ AC_ADD_FLAGS(LDFLAGS, -L/usr/local/lib)
 
 #--------------------------------------- basic flags
 # Note: -I`pwd`/include and -L`pwd`/src must be the first term in CPPFLAGS
-# and LDFLAGS respectively, which will be changed to AMG_INSTDIR/include by
+# and LDFLAGS respectively, which will be changed to ITSOL_INSTDIR/include by
 # 'make install'
-CPPFLAGS="-I${AMG_DIR}/include $CPPFLAGS"
-LDFLAGS="-L${AMG_DIR}/src $LDFLAGS"
+CPPFLAGS="-I${ITSOL_DIR}/include $CPPFLAGS"
+LDFLAGS="-L${ITSOL_DIR}/src $LDFLAGS"
 
 #--------------------------------------- the end
 if test -z "$LINKER"; then
     LINKER="$CC"
 fi
-LIBS="-lsxamg $LIBS"
+LIBS="-litsol $LIBS"
 
 AC_OUTPUT
