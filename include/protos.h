@@ -3,143 +3,10 @@
 
 #include <stdio.h>
 #include "type-defs.h"
-
-#if defined(_SGI) || defined(_LINUX)
-#define dnrm2   dnrm2_
-#define ddot    ddot_
-#define daxpy   daxpy_
-#define qsplit  qsplit_
-#define dscal   dscal_
-#define dgemv   dgemv_
-#define dgemm   dgemm_
-#define dgetrf  dgetrf_
-#define dgetri  dgetri_
-#define dgesvd  dgesvd_
-#define readmtc readmtc_
-#define csrcsc  csrcsc_
-#define roscal  roscal_
-#define coscal  coscal_
-#define qsplit  qsplit_
-#elif defined(_IBM)
-#include <essl.h>
-#define dnrm2   dnrm2
-#define ddot    ddot
-#define daxpy   daxpy
-#define qsplit  qsplit
-#define dscal   dscal
-#define dgemv   dgemv
-#define dgemm   dgemm
-#define dgetrf  dgetrf
-#define dgetri  dgetri
-#define dgesvd  dgesvd
-#define readmtc readmtc
-#define csrcsc  csrcsc 
-#define roscal  roscal
-#define coscal  coscal
-#define qsplit  qsplit
-#else
-#define dnrm2   dnrm2_
-#define ddot    ddot_
-#define daxpy   daxpy_
-#define qsplit  qsplit_
-#define dscal   dscal_
-#define dgemv   dgemv_
-#define dgemm   dgemm_
-#define dgetrf  dgetrf_
-#define dgetri  dgetri_
-#define dgesvd  dgesvd_
-#define readmtc readmtc_
-#define csrcsc  csrcsc_
-#define roscal  roscal_
-#define coscal  coscal_
-#define qsplit  qsplit_
-#endif
-
-#ifndef min
-#define min(a,b) (((a)>(b))?(b):(a))
-#endif
-#ifndef max
-#define max(a,b) (((a)>(b))?(a):(b))
-#endif
-
-/* FORTRAN routines */
-void readmtc(int*,  int*,  int*,  char*,  double*,  int*,
-	     int*,  double*, int*,  char*,  int*,  int*,  int*,
-	     char*,  char*, char*,  int*) ;
-void csrcsc(int*, int*, int*, double*, int*, int*, double*,
-		    int*, int*) ; 
-void qsplit(double *a, int *ind, int *n, int *ncut);	
-void dgesvd(char*, char*, int*, int*, double*, int*, double*,
-		   double *, int*, double*, int*, double*, int*,
-		   int*); 
-void csrcoo( int *, int *, int *, double *, int *, int *, int *,
-		double *, int *, int *, int *);    
-
-#if defined(_IBM)
-#define DDOT(n,x,incx,y,incy)        ddot((n), (x), (incx), (y), (incy)) 
-#define DCOPY(n,x,incx,y,incy)       dcopy((n), (x), (incx), (y), \
-					   (incy)) 
-#define DSCAL(n,alpha,x,incx)        dscal((n), (alpha), (x), (incx)) 
-#define DAXPY(n,alpha,x,incx,y,incy) daxpy((n), (alpha), (x), (incx), \
-					   (y), (incy)) 
-#define DNRM2(n,x,incx)              dnrm2((n), (x), (incx))
-
-#define IDMIN(n,sx,incx)             idmin((n), (sx), (incx))
-#define DGEMV(transa,m,n,alpha,a,lda,x,incx,beta,y,incy)		\
-  dgemv((transa), (m), (n),						\
-	(alpha), (a), (lda), (x), (incx),				\
-	(beta), (y), (incy))
-
-#define DGEMM(transa,transb,l,n,m,alpha,a,lda,b,ldb,beta,c,ldc)		\
-  dgemm((transa),(transb),						\
-	(l),(n),(m),(alpha),(a),					\
-	(lda),(b),(ldb),(beta),(c),(ldc))
-#define DGETRF(m, n, a, lda, ipvt, info)  \
-  dgetrf((m), (n), (a), (lda), (ipvt), (info))
-#define DGETRI(n, a, lda, ipvt, work, lwork, info)		\
-  dgetri((n), (a), (lda), (ipvt), (work), (lwork), (info))
-#else
-#define DDOT(n,x,incx,y,incy)        ddot(&(n),(x),&(incx),(y),&(incy))
-#define DCOPY(n,x,incx,y,incy)       dcopy(&(n),(x),&(incx),(y),&(incy))
-#define DSCAL(n,alpha,x,incx)        dscal(&(n),&(alpha),(x), &(incx))
-#define DAXPY(n,alpha,x,incx,y,incy) daxpy(&(n), &(alpha), (x), \
-					 &(incx), y, &(incy))
-#define DNRM2(n, x, incx)            dnrm2(&(n), (x), &(incx))
-#define IDMIN(n, sx, incx)           idmin((&(n), (sx), &(incx))
-#define DGEMV(transa, m, n, alpha, a, lda, x, incx, beta, y, incy)  \
-  dgemv((transa), &(m), &(n), &(alpha), (a), &(lda), (x), &(incx), \
-	 &(beta), (y), &(incy))
-#define DGEMM(transa,transb,l,n,m,alpha,a,lda,b,ldb,beta,c,ldc)	\
-  dgemm((transa), (transb), &(l), &(n), &(m), &(alpha), (a),	\
-	 &(lda), b, &(ldb), &(beta), (c), &(ldc)) 
-#define DGETRF(m, n, a, lda, ipvt, info)		\
-  dgetrf(&(m), &(n), (a), &(lda), (ipvt), (info))
-#define DGETRI(n, a, lda, ipvt, work, lwork, info)			\
-  dgetri(&(n), (a), &(lda), (ipvt), (work), &(lwork), (info))
-
-double ddot(int *n, double *x, int *incx, double *y, int
-		    *incy);  
-void   dcopy(int *n, double *x, int *incx, double *y, int
-		    *incy); 
-void   dscal(int *n, double *alpha, double *x, int *incx);
-void   daxpy(int *n, double *alpha, double *x, int *incx,
-		    double *y, int *incy);
-double dnrm2(int *n, double *x, int *incx);
-void   idmin(int *n, double *sx, int *incx);
-void   dgemv(char *transa, int *m, int *n, double *alpha,
-		    double *a, int *lda, double *x, int *incx, double
-		    *beta, double *y, int *incy);
-void   dgemm(char *transa, char *transb, int *l, int *m, int
-		    *n, double *alpha, double *a, int *lda, double
-		    *b, int *ldb, double *beta, double *c, int *ldc);       
-void   dgetrf(int *m, int *n, double *a, int *lda, int *ipvt,
-		     int *info); 
-void   dgetri(int *n, double *a, int *lda, int *ipvt, double
-		     *work, int *lwork, int *info);
-#endif 
+#include "ext-protos.h"
 
 /* sets.c */
-int nnz_arms (arms PreSt,  FILE *ft);
+int nnz_arms(arms PreSt,  FILE *ft);
 void errexit(char *f_str, ...);
 void *Malloc(int nbytes, char *msg); 
 int setupCS(csptr amat, int len, int job); 
@@ -161,10 +28,8 @@ int mallocVBRow(vbiluptr lu, int nrow);
 int mallocRow( iluptr lu, int nrow );
 void zrmC(int m, int n, BData data); 
 void copyBData(int m, int n, BData dst, BData src, int isig); 
-int CSRcs(int n, double *a, int *ja, int *ia, csptr mat, int 
-		 rsa); 
-int csrvbsrC(int job, int nBlk, int *nB, csptr csmat, vbsptr
-		    vbmat);  
+int CSRcs(int n, double *a, int *ja, int *ia, csptr mat, int rsa); 
+int csrvbsrC(int job, int nBlk, int *nB, csptr csmat, vbsptr vbmat);  
 int col2vbcol( int col, vbsptr vbmat );
 int nnz_vbilu(vbiluptr lu); 
 int nnz_lev4(p4ptr levmat, int *lev, FILE *ft);
@@ -225,30 +90,25 @@ int invSVD(int nn, double *A) ;
 
 /* setblks.c */ 
 int KeyComp(const void *vfst, const void *vsnd);
-int init_blocks(csptr, int *, int **, int **, double, double *,
-		       double *);  
+int init_blocks(csptr, int *, int **, int **, double, double *, double *);  
 
 /* upper directory */
 int vbilukC( int lofM, vbsptr vbmat, vbiluptr lu, FILE *fp ); 
-int vbilutC( vbsptr vbmat, vbiluptr lu, int lfil, double tol,
-		    BData *w, FILE *fp ); 
-int ilutc(iluptr mt, iluptr lu, int lfil, double tol, int drop,
-		 FILE *fp ); 
+int vbilutC( vbsptr vbmat, vbiluptr lu, int lfil, double tol, BData *w, FILE *fp ); 
+int ilutc(iluptr mt, iluptr lu, int lfil, double tol, int drop, FILE *fp ); 
 int ilukC( int lofM, csptr csmat, iluptr lu, FILE *fp );
-int ilut( csptr csmat, iluptr lu, int lfil, double tol,
-		 FILE *fp );
-  int fgmr(SMatptr Amat, SPreptr lu, double *rhs, double *sol, double tol,
-	   int im, int *itmax, FILE *fits ); 
+int ilut( csptr csmat, iluptr lu, int lfil, double tol, FILE *fp );
+int fgmr(SMatptr Amat, SPreptr lu, double *rhs, double *sol, double tol,
+        int im, int *itmax, FILE *fits ); 
 int arms2(csptr Amat, int *ipar, double *droptol, int *lfil, 
-	  double tolind, arms PreMat, FILE *ft) ;
+        double tolind, arms PreMat, FILE *ft) ;
 int condestLU( iluptr, FILE *);
 int nnz_ilu( iluptr lu ); 
 void roscal (int* nrow, int* job, int* nrm, double *a, int *ja,
-		    int *ia, double *diag, double *b, int *jb, int
-		    *ib, int *ierr) ;  
+        int *ia, double *diag, double *b, int *jb, int
+        *ib, int *ierr) ;  
 void coscal (int* nrow, int* job, int* nrm, double *a, int *ja,
-		    int *ia, double *diag, double *b, int *jb, int
-		    *ib, int *ierr) ;  
+        int *ia, double *diag, double *b, int *jb, int *ib, int *ierr) ;  
 int outputLU( iluptr lu, char *filename );
 int lumsolC(double *y, double *x, iluptr lu );
 void lumatvec(iluptr mat, double *x, double *y);
@@ -256,8 +116,8 @@ int CSClum( int n, double *a, int *ja, int *ia, iluptr mat, int rsa );
 int CSClumC(csptr amat, iluptr mat, int rsa ); 
 void setup_arms (arms Levmat);
 int cleanARMS(arms ArmsPre);
-int csSplit4(csptr amat, int bsize, int csize, csptr B, csptr F,
-		    csptr E, csptr C); 
+int csSplit4(csptr amat, int bsize, int csize, csptr B, csptr F, csptr E, csptr C); 
+
 /* misc.c */
 int SparTran(csptr amat, csptr bmat, int job, int flag); 
 int coscalC(csptr mata, double *diag, int nrm);
@@ -265,46 +125,37 @@ void dscale(int n, double *dd, double *x, double * y);
 void hilosort(csptr mat, int abval, int hilo);
 void printmat(FILE *ft, csptr A, int i0, int i1);
 void qqsort(int *ja, double *ma, int left, int right);
-void qsort2C(int *ja, double *ma, int left, int right, int
-		    abval); 
-void qsort3i(int *wa, int *cor1, int *cor2, int left, int
-		    right); 
-void qsortC(int *ja, double *ma, int left, int right, int
-		   abval); 
-void qsortR2I(double *wa, int *cor1, int *cor2, int left, int
-		     right); 
+void qsort2C(int *ja, double *ma, int left, int right, int abval); 
+void qsort3i(int *wa, int *cor1, int *cor2, int left, int right); 
+void qsortC(int *ja, double *ma, int left, int right, int abval); 
+void qsortR2I(double *wa, int *cor1, int *cor2, int left, int right); 
 int qsplitC(double *a, int *ind, int n, int ncut);
 int roscalC(csptr mata, double *diag, int nrm);
 void swapj(int v[], int i, int j);
 void swapm(double v[], int i, int j);
 
 /* piluNEW.c */
-int pilu(p4ptr amat, csptr B, csptr C, double *droptol, int
-		*lfil, csptr schur);
+int pilu(p4ptr amat, csptr B, csptr C, double *droptol, int *lfil, csptr schur);
 
 /* ilutpC.c */
-int ilutD(csptr amat, double *droptol, int *lfil, ilutptr
-		 ilusch);
+int ilutD(csptr amat, double *droptol, int *lfil, ilutptr ilusch);
 int ilutpC(csptr amat, double *droptol, int *lfil, double
-		  permtol, int mband, ilutptr ilusch);
+        permtol, int mband, ilutptr ilusch);
 
 /* PQ.c */
-int PQperm(csptr mat, int bsize, int *Pord, int *Qord, int
-		  *nnod, double tol);
+int PQperm(csptr mat, int bsize, int *Pord, int *Qord, int *nnod, double tol);
 int add2com(int *nback, int nod, int *iord, int *riord);
 int add2is(int *last, int nod, int *iord, int *riord);
-int indsetC(csptr mat, int bsize, int *iord, int *nnod, double
-		   tol); 
-int preSel(csptr mat, int *icor, int *jcor, int job, double
-		  tol, int *count);
+int indsetC(csptr mat, int bsize, int *iord, int *nnod, double tol); 
+int preSel(csptr mat, int *icor, int *jcor, int job, double tol, int *count);
+
 /* indsetC.c */
 int weightsC(csptr mat, double *w);
 
 /* setblks.c */
 int KeyComp( const void *vfst, const void *vsnd );
-int init_blocks( csptr csmat, int *pnBlock, int **pnB, int
-			**pperm, double eps, double *t_hash, double
-			*t_angle );
+int init_blocks( csptr csmat, int *pnBlock, int **pnB, int **pperm, double eps, double *t_hash,
+        double *t_angle );
 
 /* systimer.c */
 double sys_timer(void);
@@ -330,8 +181,6 @@ int checkperm(int *p, int n) ;
 void qsortR1I(double *wa, int *cor1, int left, int right);
 void swapj(int v[], int i, int j);
 void swapm(double v[], int i, int j) ;
-int vbilukC( int lofM, vbsptr vbmat, vbiluptr lu, FILE *fp );
-
 void coocsc(int n, int nnz, double *val, int *col, int *row, double **a, int **ja, int **ia, int job);
 
 #endif 
