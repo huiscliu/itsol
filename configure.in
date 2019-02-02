@@ -16,7 +16,7 @@ AC_MSG_NOTICE(============================== compilers =========================
 #--------------------------------------- config files and compilers
 # Checks for programs.
 AC_PROG_CC(gcc clang icc)
-AC_PROG_FC(gfortran ifort)
+AC_PROG_FC(gfortran g77 f77 ifort)
 AC_PROG_CPP
 
 if test "$GCC" = "yes"; then
