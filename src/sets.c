@@ -3,7 +3,7 @@
 #include <stdarg.h>
 #include <string.h>
 #include <math.h>
-#include "globheads.h"
+#include "type-defs.h"
 #include "protos.h"
 
 void errexit( char *f_str, ... ){

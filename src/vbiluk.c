@@ -44,9 +44,9 @@ int vbilukC( int lofM, vbsptr vbmat, vbiluptr lu, FILE *fp )
  * =========
  * lofM     = level of fill: all entries with level of fill > lofM are
  *            dropped. Setting lofM = 0 gives BILU(0).
- * vbmat    = block matrix stored in VBSpaFmt format -- see globheads.h for
+ * vbmat    = block matrix stored in VBSpaFmt format -- see type-defs.h for
  *            details on format, the block sizes might be different
- * lu       = pointer to a VBILUSpar struct -- see globheads.h for details
+ * lu       = pointer to a VBILUSpar struct -- see type-defs.h for details
  *            on format
  * fp       = file pointer for error log ( might be stderr )
  *
@@ -197,9 +197,9 @@ int lofC( int lofM, vbsptr vbmat, vbiluptr lu, FILE *fp )
  * on entry:
  * =========
  * lofM     = level of fill, lofM >= 0
- * vbmat    = block matrix stored in VBSpaFmt format -- see globheads.h for
+ * vbmat    = block matrix stored in VBSpaFmt format -- see type-defs.h for
  *            details on format, size of blocks might be different
- * lu       = pointer to a VBILUSpar struct -- see globheads.h for details
+ * lu       = pointer to a VBILUSpar struct -- see type-defs.h for details
  *            on format
  * fp       = file pointer for error log ( might be stderr )
  *--------------------------------------------------------------------

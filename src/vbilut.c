@@ -40,9 +40,9 @@ int vbilutC( vbsptr vbmat, vbiluptr lu, int lfil, double tol,
  *----------------------------------------------------------------------------
  * on entry:
  * =========
- * vbmat    = block matrix stored in VBSpaFmt format -- see globheads.h for
+ * vbmat    = block matrix stored in VBSpaFmt format -- see type-defs.h for
  *            details on format, the block sizes might be different
- * lu       = pointer to a VBILUSpar struct -- see globheads.h for details
+ * lu       = pointer to a VBILUSpar struct -- see type-defs.h for details
  *            on format
  * lfil     = integer. The fill-in parameter. Each row of L and
  *            each row of U will have a maximum of lfil elements.

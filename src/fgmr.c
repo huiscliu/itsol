@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
-#include "globheads.h"
+#include "type-defs.h"
 #include "protos.h"
 
 #define  epsmac  1.0e-16

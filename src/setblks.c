@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "globheads.h"
+#include "type-defs.h"
 #include "protos.h"
 
 typedef struct __KeyType

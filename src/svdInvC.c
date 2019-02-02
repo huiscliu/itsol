@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdarg.h>
-#include "globheads.h"
+#include "type-defs.h"
 #include "protos.h"
 
 #define TOL 1.e-17

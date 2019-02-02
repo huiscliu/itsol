@@ -3,7 +3,7 @@
 #include <string.h>
 #include <math.h>
 #define  PERMTOL  0.99   /*  0 --> no permutation 0.01 to 0.1 good  */
-#include "globheads.h"
+#include "type-defs.h"
 #include "protos.h" 
 
 /*-------------------- end protos */
