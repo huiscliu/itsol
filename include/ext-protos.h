@@ -19,6 +19,8 @@
 #define roscal  roscal_
 #define coscal  coscal_
 #define qsplit  qsplit_
+#define bxinv   bxinv_
+#define gauss   gauss_
 #elif defined(_IBM)
 #include <essl.h>
 #define dnrm2   dnrm2
@@ -36,6 +38,8 @@
 #define roscal  roscal
 #define coscal  coscal
 #define qsplit  qsplit
+#define bxinv   bxinv
+#define gauss   gauss
 #else
 #define dnrm2   dnrm2_
 #define ddot    ddot_
@@ -52,6 +56,8 @@
 #define roscal  roscal_
 #define coscal  coscal_
 #define qsplit  qsplit_
+#define bxinv   bxinv_
+#define gauss   gauss_
 #endif
 
 #ifndef min
