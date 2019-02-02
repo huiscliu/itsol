@@ -29,15 +29,15 @@
  *                || L(:,i) || * |u(i,j)/D(i,i)| < tol * | D(j,j) | 
  *                
  *            2 : condition number estimator based on: 
- *                rhs = (1, 1, ..., 1 )^T ;
+ *                rhs = (1, 1, ..., 1)^T ;
  *            3 : condition number estimator based on: 
- *                rhs = ((+/-)1, ..., (+/-)1 )^T 
+ *                rhs = ((+/-)1, ..., (+/-)1)^T 
  *                + maximizing |v_k| ;
  *            4 : condition number estimator based on: 
- *                rhs = ((+/-)1, ..., (+/-)1 )^T based on ;
- *                + maximizing the norm of (v_{k+1}, ..., v_n)^T );
+ *                rhs = ((+/-)1, ..., (+/-)1)^T based on ;
+ *                + maximizing the norm of (v_{k+1}, ..., v_n)^T);
  * 
- * fp       = file pointer for error log (might be stdout )
+ * fp       = file pointer for error log (might be stdout)
  *
  * on return:
  * ==========
@@ -71,7 +71,7 @@
  *     |  .   .  .    .     |    |             .    .  |
  *     |  .   .  .      .   |    |               .  .  |
  *     | Ln1 Ln2 . . .  . 0 |    |                   0 | 
- * D = diag( 1/U11, 1/U22, 1/U33, ..., 1/Unn )
+ * D = diag(1/U11, 1/U22, 1/U33, ..., 1/Unn)
  * 
  *   \ - - . . . - - >
  *   | \ - . . . - - >
@@ -104,13 +104,13 @@
  * Ulist(n)   Ulist(j) points to a linked list of rows that will update the
  *            j-th column in L part
  *----------------------------------------------------------------------*/
-int ilutc(iluptr mt, iluptr lu, int lfil, double tol, int drop, FILE *fp );
+int ilutc(iluptr mt, iluptr lu, int lfil, double tol, int drop, FILE *fp);
 
-int update_diagonals(iluptr lu, int i );
+int update_diagonals(iluptr lu, int i);
 
-int CondestC(iluptr lu, FILE *fp );
+int CondestC(iluptr lu, FILE *fp);
 
-int comp(const void *fst, const void *snd );
+int comp(const void *fst, const void *snd);
 
 int std_drop(int lfil, int i, double tolL, double tolU, double toldiag) ;
 

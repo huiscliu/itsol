@@ -27,7 +27,7 @@
  * tol      = real*8. Sets the threshold for dropping small terms in the
  *            factorization. See below for details on dropping strategy.
  * w        = working array
- * fp       = file pointer for error log ( might be stdout )
+ * fp       = file pointer for error log (might be stdout)
  *
  * on return:
  * ==========
@@ -60,7 +60,7 @@
  * will give the usual threshold strategy (however, fill-in is then
  * impredictible).
  *--------------------------------------------------------------------------*/
-int vbilutC( vbsptr vbmat, vbiluptr lu, int lfil, double tol,
-             BData *w, FILE *fp );
+int vbilutC(vbsptr vbmat, vbiluptr lu, int lfil, double tol,
+             BData *w, FILE *fp);
 
 #endif

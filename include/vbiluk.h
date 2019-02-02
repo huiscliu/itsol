@@ -20,7 +20,7 @@
  *            details on format, the block sizes might be different
  * lu       = pointer to a VBILUSpar struct -- see type-defs.h for details
  *            on format
- * fp       = file pointer for error log ( might be stderr )
+ * fp       = file pointer for error log (might be stderr)
  *
  * on return:
  * ==========
@@ -39,7 +39,7 @@
  * ======
  * All the diagonal blocks of the input block matrix must not be singular
  *--------------------------------------------------------------------------*/
-int vbilukC( int lofM, vbsptr vbmat, vbiluptr lu, FILE *fp );
+int vbilukC(int lofM, vbsptr vbmat, vbiluptr lu, FILE *fp);
 
 /*--------------------------------------------------------------------
  * symbolic ilu factorization to calculate structure of ilu matrix
@@ -52,7 +52,7 @@ int vbilukC( int lofM, vbsptr vbmat, vbiluptr lu, FILE *fp );
  *            details on format, size of blocks might be different
  * lu       = pointer to a VBILUSpar struct -- see type-defs.h for details
  *            on format
- * fp       = file pointer for error log ( might be stderr )
+ * fp       = file pointer for error log (might be stderr)
  *--------------------------------------------------------------------
  * on return:
  * ==========

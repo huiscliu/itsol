@@ -23,7 +23,7 @@
  *            lfil must be .ge. 0.
  * tol      = real*8. Sets the threshold for dropping small terms in the
  *            factorization. See below for details on dropping strategy.
- * fp       = file pointer for error log ( might be stdout )
+ * fp       = file pointer for error log (might be stdout)
  *
  * on return:
  * ==========
@@ -54,8 +54,8 @@
  * will give the usual threshold strategy (however, fill-in is then
  * impredictible).
  *--------------------------------------------------------------------------*/
-int ilut( csptr csmat, iluptr lu, int lfil, double tol, FILE *fp );
+int ilut(csptr csmat, iluptr lu, int lfil, double tol, FILE *fp);
 
-int lutsolC( double *y, double *x, iluptr lu );
+int lutsolC(double *y, double *x, iluptr lu);
 
 #endif

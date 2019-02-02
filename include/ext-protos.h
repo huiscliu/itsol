@@ -77,7 +77,7 @@ void qsplit(double *a, int *ind, int *n, int *ncut);
 void dgesvd(char*, char*, int*, int*, double*, int*, double*,
 		   double *, int*, double*, int*, double*, int*,
 		   int*); 
-void csrcoo( int *, int *, int *, double *, int *, int *, int *,
+void csrcoo(int *, int *, int *, double *, int *, int *, int *,
 		double *, int *, int *, int *);    
 
 #if defined(_IBM)

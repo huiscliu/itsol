@@ -5,7 +5,7 @@
 #include "type-defs.h"
 #include "sets.h"
 
-int lofC( int lofM, csptr csmat, iluptr lu, FILE *fp ); 
-int ilukC( int lofM, csptr csmat, iluptr lu, FILE *fp );
+int lofC(int lofM, csptr csmat, iluptr lu, FILE *fp); 
+int ilukC(int lofM, csptr csmat, iluptr lu, FILE *fp);
 
 #endif

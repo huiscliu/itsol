@@ -20,20 +20,20 @@ int nnzVBMat(vbsptr vbmat) ;
 int memVBMat(vbsptr vbmat); 
 int setupVBILU(vbiluptr lu, int n, int *bsz);
 int cleanVBILU(vbiluptr lu); 
-int cleanILU( iluptr lu );
+int cleanILU(iluptr lu);
 int cleanILUT(ilutptr amat, int indic);
 int cleanP4(p4ptr amat);
 int mallocVBRow(vbiluptr lu, int nrow); 
-int mallocRow( iluptr lu, int nrow );
+int mallocRow(iluptr lu, int nrow);
 void zrmC(int m, int n, BData data); 
 void copyBData(int m, int n, BData dst, BData src, int isig); 
 int CSRcs(int n, double *a, int *ja, int *ia, csptr mat, int rsa); 
 int csrvbsrC(int job, int nBlk, int *nB, csptr csmat, vbsptr vbmat);  
-int col2vbcol( int col, vbsptr vbmat );
+int col2vbcol(int col, vbsptr vbmat);
 int nnz_vbilu(vbiluptr lu); 
 int nnz_lev4(p4ptr levmat, int *lev, FILE *ft);
-int setupILU(iluptr lu, int n );
-int CS2lum( int n, csptr Amat, iluptr mat, int typ);
+int setupILU(iluptr lu, int n);
+int CS2lum(int n, csptr Amat, iluptr mat, int typ);
 int COOcs(int n, int nnz,  double *a, int *ja, int *ia, csptr bmat);
 void coocsr_(int*, int*, double*, int*, int*, double*, int*, int*);
 
@@ -41,9 +41,9 @@ int csSplit4(csptr amat, int bsize, int csize, csptr B, csptr F, csptr E, csptr 
 void setup_arms (arms Levmat);
 int cleanARMS(arms ArmsPre);
 void coocsc(int n, int nnz, double *val, int *col, int *row, double **a, int **ja, int **ia, int job);
-int nnz_ilu( iluptr lu );
-int CSClum( int n, double *a, int *ja, int *ia, iluptr mat, int rsa );
-int CSClumC(csptr amat, iluptr mat, int rsa );
+int nnz_ilu(iluptr lu);
+int CSClum(int n, double *a, int *ja, int *ia, iluptr mat, int rsa);
+int CSClumC(csptr amat, iluptr mat, int rsa);
 
 /* misc.c */
 int SparTran(csptr amat, csptr bmat, int job, int flag); 
@@ -62,7 +62,7 @@ void swapj(int v[], int i, int j);
 void swapm(double v[], int i, int j);
 double sys_timer(void);
 int dumpArmsMat(arms PreSt, FILE *ft);
-int outputLU( iluptr lu, char *filename);
+int outputLU(iluptr lu, char *filename);
 int checkperm(int *p, int n);
 void qsortR1I(double *wa, int *cor1, int left, int right);
 

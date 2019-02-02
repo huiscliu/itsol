@@ -5,10 +5,10 @@
 #include "sets.h"
 #include "MatOps.h"
 
-int KeyComp( const void *vfst, const void *vsnd );
+int KeyComp(const void *vfst, const void *vsnd);
 
 /*----------------------------------------------------------------------------
- * Setup Blocks ( rows and columns might be permuted to get better results )
+ * Setup Blocks (rows and columns might be permuted to get better results)
  *----------------------------------------------------------------------------
  * Na Li, Aug 2001
  *----------------------------------------------------------------------------
@@ -38,11 +38,11 @@ int KeyComp( const void *vfst, const void *vsnd );
  *     a. Calculate A^T
  *     b. for i-th row, calculate dot product (row_i, row_j) using A*A^T
  *        algorithm where j = i+1, ..., n-1 and group[j] == -1
- *        if cos( <row_i, row_j> ) = (row_i,row_j)/|row_i||row_j| is > eps,
+ *        if cos(<row_i, row_j>) = (row_i,row_j)/|row_i||row_j| is > eps,
  *        we merge row_i and row_j by resetting
  *        group[j] = i and size[i] = size[i]+size[j]
  *--------------------------------------------------------------------------*/
-int init_blocks( csptr csmat, int *pnBlock, int **pnB, int **pperm,
-                 double eps, double *t_hash, double *t_angle );
+int init_blocks(csptr csmat, int *pnBlock, int **pnB, int **pperm,
+                 double eps, double *t_hash, double *t_angle);
 
 #endif

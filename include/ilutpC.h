@@ -15,10 +15,10 @@
 |
 | on entry:
 |========== 
-| ( amat ) =  Matrix stored in SpaFmt struct.
+| (amat) =  Matrix stored in SpaFmt struct.
 |
 | lfil[5]  =  number nonzeros in L-part
-| lfil[6]  =  number nonzeros in U-part     ( lfil >= 0 )
+| lfil[6]  =  number nonzeros in U-part     (lfil >= 0)
 |
 | droptol[5] = threshold for dropping small terms in L during
 |              factorization.
@@ -78,11 +78,11 @@ int ilutpC(csptr amat, double *droptol, int *lfil, double permtol,
 |
 | on entry:
 |========== 
-| ( amat ) =  Matrix stored in SpaFmt struct.
+| (amat) =  Matrix stored in SpaFmt struct.
 | (ilusch) =  Pointer to ILUTfac struct
 |
 | lfil[5]  =  number nonzeros in L-part 
-| lfil[6]  =  number nonzeros in U-part     ( lfil >= 0 )
+| lfil[6]  =  number nonzeros in U-part     (lfil >= 0)
 |
 | droptol[5] = threshold for dropping small terms in L during 
 |              factorization. 
