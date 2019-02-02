@@ -63,10 +63,6 @@
 #define max(a,b) (((a)>(b))?(a):(b))
 #endif
 
-#define MAX_LINE        256
-#define MAX_HBNAME      64
-#define MAX_MAT			100
-
 /* FORTRAN routines */
 void readmtc(int*,  int*,  int*,  char*,  double*,  int*,
 	     int*,  double*, int*,  char*,  int*,  int*,  int*,
