@@ -1,3 +1,7 @@
+
+#ifndef __ITSOL_ILUTC_H__
+#define __ITSOL_ILUTC_H__
+
 /*-----------------------------------------------------------------------*
  * Crout version of ILU                                                  *
  *-----------------------------------------------------------------------*
@@ -118,3 +122,4 @@ int comp(const void *fst, const void *snd );
 int std_drop(int lfil, int i, double tolL, double tolU, double toldiag) ;
 int lumsolC(double *y, double *x, iluptr lu );
 
+#endif

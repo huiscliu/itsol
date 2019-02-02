@@ -1,3 +1,5 @@
+#ifndef __ITSOL_ARMS2_H__
+#define __ITSOL_ARMS2_H__
 
 #include "type-defs.h"
 
@@ -140,3 +142,5 @@
 +---------------------------------------------------------------------*/
 int arms2(csptr Amat, int *ipar, double *droptol, int *lfil, 
 	  double tolind, arms PreMat, FILE *ft);
+
+#endif

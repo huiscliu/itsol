@@ -1,3 +1,6 @@
+#ifndef __ITSOL_PQ_H__
+#define __ITSOL_PQ_H__
+
 #include "type-defs.h"
 
 int PQperm(csptr mat, int bsize, int *Pord, int *Qord, int *nnod, double tol);
@@ -56,3 +59,5 @@ int weightsC(csptr mat, double *w);
 |       count = number of entries selected (size of B block) 
 |--------------------------------------------------------------------*/
 int preSel(csptr mat, int *icor, int *jcor, int job, double tol, int *count);
+
+#endif

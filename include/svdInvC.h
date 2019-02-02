@@ -1,3 +1,7 @@
+
+#ifndef __ITSOL_SVDINVC_H__
+#define __ITSOL_SVDINVC_H__
+
 #include "type-defs.h"
 
 /* *-------------------- inversion by svd
@@ -23,3 +27,5 @@ int invGauss(int nn, double *A);
  **--------------------
  */
 int invSVD(int nn, double *A);
+
+#endif

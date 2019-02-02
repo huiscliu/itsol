@@ -1,4 +1,7 @@
 
+#ifndef __ITSOL_VBILUT_H__
+#define __ITSOL_VBILUT_H__
+
 /*----------------------------------------------------------------------------
  * Block ILUT (BILUT) preconditioner
  * Block incomplete LU factorization with dual truncation mechanism
@@ -55,3 +58,5 @@
  *--------------------------------------------------------------------------*/
 int vbilutC( vbsptr vbmat, vbiluptr lu, int lfil, double tol,
              BData *w, FILE *fp );
+
+#endif

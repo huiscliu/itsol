@@ -1,4 +1,7 @@
 
+#ifndef __ITSOL_ILUTPC_H__
+#define __ITSOL_ILUTPC_H__
+
 #include "type-defs.h"
 
 /*---------------------------------------------------------------------- 
@@ -109,3 +112,5 @@ int ilutpC(csptr amat, double *droptol, int *lfil, double permtol,
 |     All processing is done using C indexing.
 |--------------------------------------------------------------------*/
 int ilutD(csptr amat, double *droptol, int *lfil, ilutptr ilusch);
+
+#endif

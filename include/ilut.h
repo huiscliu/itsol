@@ -1,3 +1,7 @@
+
+#ifndef __ITSOL_ILUT_H__
+#define __ITSOL_ILUT_H__
+
 #include <math.h>
 #include "type-defs.h"
 #include "itsol.h"
@@ -55,3 +59,4 @@ int ilut( csptr csmat, iluptr lu, int lfil, double tol, FILE *fp )
 
 int lutsolC( double *y, double *x, iluptr lu );
 
+#endif

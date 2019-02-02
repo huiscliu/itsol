@@ -1,4 +1,7 @@
 
+#ifndef __ITSOL_AUXILL_H__
+#define __ITSOL_AUXILL_H__
+
 int read_inputs(char *in_file, io_t *pio);
 
 int get_matrix_info( FILE *fmat, io_t *pio );
@@ -30,3 +33,5 @@ void output_result( int lfil, io_t *pio, int iparam );
 void set_arms_pars(io_t* io, int Dscale, int *ipar, double *dropcoef, int *lfil);
 
 void randvec (double *v, int n);
+
+#endif

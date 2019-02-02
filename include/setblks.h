@@ -1,3 +1,7 @@
+
+#ifndef __ITSOL_SETBLKS_H__
+#define __ITSOL_SETBLKS_H__
+
 #include "type-defs.h"
 
 int KeyComp( const void *vfst, const void *vsnd );
@@ -39,3 +43,5 @@ int KeyComp( const void *vfst, const void *vsnd );
  *--------------------------------------------------------------------------*/
 int init_blocks( csptr csmat, int *pnBlock, int **pnB, int **pperm,
                  double eps, double *t_hash, double *t_angle );
+
+#endif

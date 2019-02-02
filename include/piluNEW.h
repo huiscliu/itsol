@@ -1,3 +1,7 @@
+
+#ifndef __ITSOL_PILUNEW_H__
+#define __ITSOL_PILUNEW_H__
+
 #include "type-defs.h"
 
 /*---------------------------------------------------------------------- 
@@ -70,3 +74,5 @@
 |--------------------------------------------------------------------*/
 int pilu(p4ptr amat, csptr B, csptr C, double *droptol, 
 	 int *lfil, csptr schur);
+
+#endif
