@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include "type-defs.h"
-#include "protos.h"
+#include "itsol.h"
 
 /*-------------------- end protos*/
 int ilut( csptr csmat, iluptr lu, int lfil, double tol, FILE *fp )

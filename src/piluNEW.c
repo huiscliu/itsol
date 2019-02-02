@@ -3,7 +3,7 @@
 #include <string.h>
 #include <math.h>
 #include "type-defs.h"
-#include "protos.h"
+#include "itsol.h"
 
 int pilu(p4ptr amat, csptr B, csptr C, double *droptol, 
 	 int *lfil, csptr schur) {

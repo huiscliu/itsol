@@ -5,7 +5,7 @@
  *                                                                   *
  * Report bugs / send comments to: saad@cs.umn.edu, nli@cs.umn.edu   *
  *-------------------------------------------------------------------*/
-#include "protos.h"
+#include "itsol.h"
 
 /*-------------------- protos */
   void output_header( io_t *pio );

@@ -3,7 +3,7 @@
 #include <string.h>
 #include <math.h>
 #include "type-defs.h"
-#include "protos.h"
+#include "itsol.h"
 
 #define  epsmac  1.0e-16
 

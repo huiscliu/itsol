@@ -4,7 +4,7 @@
 #include <math.h>
 #define  PERMTOL  0.99   /*  0 --> no permutation 0.01 to 0.1 good  */
 #include "type-defs.h"
-#include "protos.h" 
+#include "itsol.h" 
 
 /*-------------------- end protos */
 int arms2(csptr Amat, int *ipar, double *droptol, int *lfil, 
@@ -147,8 +147,8 @@ int arms2(csptr Amat, int *ipar, double *droptol, int *lfil,
 | ipar[0]   = number of levels found (may differ from input value) 
 |
 +---------------------------------------------------------------------*/
-/*-------------------- function  prototyping  done in LIB/protos.h    */
-/*-------------------- move above to protos.h */
+/*-------------------- function  prototyping  done in LIB/itsol.h    */
+/*-------------------- move above to itsol.h */
   p4ptr levp, levc, levn, levmat = PreMat->levmat;
   csptr schur, B, F, E, C=NULL; 
   ilutptr ilsch = PreMat->ilus; 

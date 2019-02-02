@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "type-defs.h"
-#include "protos.h"
+#include "itsol.h"
 
 typedef struct __KeyType
 {

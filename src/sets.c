@@ -3,8 +3,7 @@
 #include <stdarg.h>
 #include <string.h>
 #include <math.h>
-#include "type-defs.h"
-#include "protos.h"
+#include "itsol.h"
 
 void errexit( char *f_str, ... ){
   va_list argp;

@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h> 
 #include <math.h>
-#include "protos.h"
+#include "itsol.h"
 
 #define ERR_AUXIL  10
 #define MAX_NUM_LEV 10        /* maximum number of levels for arms    */ 

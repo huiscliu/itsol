@@ -6,7 +6,7 @@
  *                                                                 *
  * Report bugs / send comments to: saad@cs.umn.edu                 *
  *-----------------------------------------------------------------*/
-#include "protos.h"
+#include "itsol.h"
 
 #define TOL_DD 0.7   /* diagonal dominance tolerance for */
                      /* independent sets                 */

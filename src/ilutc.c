@@ -9,7 +9,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include "type-defs.h"
-#include "protos.h"
+#include "itsol.h"
 
 #ifndef MAXFLOAT
 #define MAXFLOAT (1e30)

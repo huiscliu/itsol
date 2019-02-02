@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <stdarg.h>
 #include "type-defs.h"
-#include "protos.h"
+#include "itsol.h"
 
 #define TOL 1.e-17
 #define max(a,b) (((a)>(b))?(a):(b))

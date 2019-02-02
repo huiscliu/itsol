@@ -3,7 +3,7 @@
 #include <string.h>
 #include <math.h>
 #include "type-defs.h"
-#include "protos.h"
+#include "itsol.h"
 
 #define  ALPHA  0.00001
 

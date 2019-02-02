@@ -3,7 +3,7 @@
 #include <string.h>
 #include <math.h>
 
-#include "protos.h"
+#include "itsol.h"
 
 #ifndef min
 #define min(a,b) (((a)>(b))?(b):(a))
