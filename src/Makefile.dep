@@ -30,8 +30,6 @@ sets.o: sets.c ../include/config.h ../include/ext-protos.h ../include/MatOps.h .
 
 svdInvC.o: svdInvC.c ../include/config.h ../include/ext-protos.h ../include/MatOps.h ../include/misc.h ../include/protos.h ../include/sets.h ../include/type-defs.h
 
-systimer.o: systimer.c ../include/config.h ../include/ext-protos.h ../include/MatOps.h ../include/misc.h ../include/protos.h ../include/sets.h ../include/type-defs.h
-
 vbiluk.o: vbiluk.c ../include/config.h ../include/ext-protos.h ../include/MatOps.h ../include/misc.h ../include/protos.h ../include/sets.h ../include/type-defs.h
 
 vbilut.o: vbilut.c ../include/config.h ../include/ext-protos.h ../include/MatOps.h ../include/misc.h ../include/protos.h ../include/sets.h ../include/type-defs.h
