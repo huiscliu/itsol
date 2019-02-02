@@ -1,5 +1,5 @@
 # ITSOL
-ITERATIVE SOLVERS package created by Yousef Saad
+ITerative SOLvers package created by Yousef Saad
 
 # Authors
     * Na Li [graduate student, 2001 - 2006]
