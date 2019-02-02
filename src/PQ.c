@@ -36,6 +36,9 @@ int PQperm(csptr mat, int bsize, int *Pord, int *Qord, int *nnod,
   int *icor, *jcor, *row; 
   int i, j, ii, k, col, jj, rnz, nzi, n=mat->n, count, numnode;
   double  aij, rn, *mrow;  
+
+  (void)bsize;
+
 /*-----------------------------------------------------------------------*/  
   for (j=0; j<n; j++) {
     Pord[j] = -1;

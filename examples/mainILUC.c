@@ -32,7 +32,8 @@ void coocsc(int,int,double*,int*,int*,double**,int**,int**,int);
 /*-------------------- end protos */
 
 #define DRP_MTH 0          /* drop method see ilutc code */
-int main() { 
+int main(void)
+{ 
   int ierr = 0;
 /*-------------------------------------------------------------------
  * options
@@ -173,7 +174,7 @@ int main() {
 	outputLU( lu, matdata );
       }
       io.tm_p = tm2 - tm1;
-      io.fillfact = (double)nnz_ilu( lu )/(double)(io.nnz + 1);
+      io.fillfact = nnz_ilu( lu )/(double)(io.nnz + 1);
       fprintf( flog, "ilutc ends, fill factor (mem used) = %f\n",\
 	       io.fillfact); 
       

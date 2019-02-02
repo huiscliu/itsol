@@ -114,7 +114,8 @@ int read_inputs( char *in_file, io_t *pio )
 }
 
 /*-----------------------------------------------*/
-int get_matrix_info( FILE *fmat, io_t *pio ){
+int get_matrix_info( FILE *fmat, io_t *pio )
+{
   char path[MAX_LINE],  MatNam[MaxNamLen], Fmt[4];
   int count;
 /*-------------------- READ LINE */
@@ -167,8 +168,7 @@ void output_perm( int n, int *perm, FILE *f ){
 }
 
 
-int read_coo(double **VAL, int **COL, int **ROW, io_t *pio, 
-	     double **rhs, double **sol, int job) 
+int read_coo(double **VAL, int **COL, int **ROW, io_t *pio, double **rhs, double **sol, int job) 
 {
 /*-------------------- reads a matrix in coordinate format. 
 !  arrays VAL, COL, ROW are allocated and created 
@@ -326,9 +326,7 @@ int readhb_c(int *NN, double **AA, int **JA, int **IA, io_t *pio,
     return 0;
 }
 
-int readhb_2(int *NN, double **AA, int **JA, int **IA,
-             io_t *pio, double **rhs, double **sol, int *rsa,
-             int fmt)
+int readhb_2(int *NN, double **AA, int **JA, int **IA, io_t *pio, double **rhs, double **sol, int *rsa, int fmt)
 /*-----------------------------------------------------------*
    Output AA, JA, IA
    fmt == 0, output in CSC
@@ -474,8 +472,8 @@ void output_result( int lfil, io_t *pio, int iparam ){
   fflush( f );
 }
 
-void set_arms_pars(io_t* io, int Dscale, int *ipar, 
-		   double *dropcoef, int *lfil){
+void set_arms_pars(io_t* io, int Dscale, int *ipar, double *dropcoef, int *lfil)
+{
 /*-------------------------------------------------*/
 /* sets parameters required by arms preconditioner */
 /* input io_t, Dscale                            */
@@ -525,11 +523,7 @@ void randvec (double *v, int n) {
   int k, seed = 4321;
   srand(seed);
   for (k=0; k<n; k++) {
-    x = (   (double)rand() / ((double)(RAND_MAX)+(double)(1)) );
+    x = (rand() * 1. / ((double)(RAND_MAX)+(double)(1)) );
     v[k] = x;
   }
 }
-
-
-
-

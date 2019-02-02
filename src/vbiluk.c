@@ -3,7 +3,7 @@
 #include <string.h>
 #include <math.h>
 
-#include "globheads.h"
+#include "protos.h"
 
 #ifndef min
 #define min(a,b) (((a)>(b))?(b):(a))
@@ -215,6 +215,7 @@ int lofC( int lofM, vbsptr vbmat, vbiluptr lu, FILE *fp )
     int n = vbmat->n;
     int *levls = NULL, *jbuf = NULL, *iw = lu->work;
     int **ulvl;  /*  stores lev-fils for U part of ILU factorization*/
+
     vbsptr L = lu->L, U = lu->U;
 /*--------------------------------------------------------------------
  * n        = number of rows or columns in matrix
@@ -228,6 +229,7 @@ int lofC( int lofM, vbsptr vbmat, vbiluptr lu, FILE *fp )
     int i, j, k, col, ip, it, jpiv;
     int incl, incu, jmin, kmin;
 
+    (void)fp;
     levls  = (int *)Malloc( n*sizeof(int), "lofC" );
     jbuf = (int *)Malloc( n*sizeof(int), "lofC" );
     ulvl = (int **)Malloc( n*sizeof(int *), "lofC" );

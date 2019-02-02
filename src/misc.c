@@ -540,8 +540,9 @@ int dumpCooMat(csptr A, int shiftR, int shiftC, FILE *ft){
     -------------------- matlab style */
   int n, i, k, nzi;
   int *row;
-  n = A->n;
   double *rowm;
+
+  n = A->n;
   for (i=0; i<n; i++) {
     nzi = A->nzcount[i];
     row = A->ja[i];
@@ -614,8 +615,6 @@ void qsortR1I(double *wa, int *cor1, int left, int right)
 |---------------------------------------------------------------------*/
 {
    int i, last;
-   void swapj(int *, int, int);
-   void swapm(double *, int, int);
 
    if (left >= right)  return;
 

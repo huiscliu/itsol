@@ -545,8 +545,8 @@ int std_drop(int lfil, int i, double tolL, double tolU, double toldiag)
  * 
  *---------------------------------------------------------------------*/ 
   int j, len, col, row, ipos;
-  int *ia, *ja;
-  double *ma, t;
+  int *ia = NULL, *ja = NULL;
+  double *ma = NULL, t;
   t = D[i];
 /*-------------------- drop U elements                                 */
   len  = 0;

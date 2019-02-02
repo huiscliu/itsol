@@ -8,7 +8,7 @@
 
 void errexit( char *f_str, ... ){
   va_list argp;
-  char out1[256], out2[256];
+  char out1[512], out2[1024];
 
   va_start(argp, f_str);
   vsprintf(out1, f_str, argp);
@@ -16,7 +16,7 @@ void errexit( char *f_str, ... ){
 
   sprintf(out2, "Error! %s\n", out1);
 
-  fprintf(stdout, out2);
+  fprintf(stdout, "%s", out2);
   fflush(stdout);
 
   exit( -1 );
@@ -957,7 +957,6 @@ int COOcs(int n, int nnz,  double *a, int *ja, int *ia, csptr bmat)
 |--------------------------------------------------------------------*/
   int i, k, k1, l, job = 1;
   int *len;
-  int setupCS(csptr, int, int);
   /*-------------------- setup data structure for bmat (csptr) struct */
   if (setupCS(bmat, n, job)) {
     printf(" ERROR SETTING UP bmat IN SETUPCS \n") ;
@@ -1001,11 +1000,11 @@ void coocsc(int n, int nnz, double *val, int *col, int *row,
    job == 1, input coo in 1-indexing
 */
 {
+  int i, *ir, *jc;
+
   *a = (double *)Malloc(nnz*sizeof(double), "coocsc");
   *ja = (int *)Malloc(nnz*sizeof(int), "coocsc");
   *ia = (int *)Malloc((n+1)*sizeof(int), "coocsc");
-
-  int i, *ir, *jc;
 
   if (job == 0) {
     ir = (int *)Malloc(nnz*sizeof(int), "coocsc");
@@ -1193,6 +1192,7 @@ int nnz_lev4(p4ptr levmat, int *lev, FILE *ft)
      recursive */
   int nnzT, nnzL, nnzU, nnzF, nnzE, nnzDown=0;
   p4ptr nextmat; 
+
   nnzL = nnz_cs(levmat->L); 
   nnzU = nnz_cs(levmat->U); 
   nnzF = nnz_cs(levmat->F); 
@@ -1200,24 +1200,25 @@ int nnz_lev4(p4ptr levmat, int *lev, FILE *ft)
   nnzT = nnzL+nnzU+nnzF+nnzE;
 /*-------------------- print */
   if (ft) {
-  if (*lev == 0) 
- fprintf(ft,"\nnnz/lev used:      L        U        F        E    subtot\n");  
- fprintf(ft,"    Level %2d %8d %8d %8d %8d %8d\n",*lev, nnzL,
-	 nnzU,nnzF,nnzE,nnzT);
+      if (*lev == 0) 
+          fprintf(ft,"\nnnz/lev used:      L        U        F        E    subtot\n");  
+      fprintf(ft,"    Level %2d %8d %8d %8d %8d %8d\n",*lev, nnzL,
+              nnzU,nnzF,nnzE,nnzT);
   }
   (*lev)++;
   nextmat = levmat->next; 
+
   if (nextmat != NULL) 
-   nnzDown = nnz_lev4(nextmat, lev, ft);
-   return (nnzT+nnzDown); 
+      nnzDown = nnz_lev4(nextmat, lev, ft);
+  return (nnzT+nnzDown); 
 }
-  
+
 int nnz_cs (csptr A) {
-/*-------------------- counts number of nonzeros in CSR matrix A */
-  int i, n=A->n, nnz=0; 
-  for (i=0; i<n; i++) 
-    nnz +=A->nzcount[i];
-  return nnz;
+    /*-------------------- counts number of nonzeros in CSR matrix A */
+    int i, n=A->n, nnz=0; 
+    for (i=0; i<n; i++) 
+        nnz +=A->nzcount[i];
+    return nnz;
   }
 
 int nnz_arms (arms PreSt,  FILE *ft)

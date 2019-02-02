@@ -189,6 +189,8 @@ int lofC( int lofM, csptr csmat, iluptr lu, FILE *fp )
     int i, j, k, col, ip, it, jpiv; 
     int incl, incu, jmin, kmin; 
   
+    (void)fp;
+
     levls  = (int *)Malloc( n*sizeof(int), "lofC" );
     jbuf = (int *)Malloc( n*sizeof(int), "lofC" ); 
     ulvl = (int **)Malloc( n*sizeof(int *), "lofC" );

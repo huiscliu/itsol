@@ -29,7 +29,8 @@ void output_blocks( int nBlock, int *nB, FILE *f );
 void output_perm( int n, int *perm, FILE *f );
 /*-------------------- end protos */
 
-int main() { 
+int main(void)
+{ 
   int ierr = 0;
 /*-------------------------------------------------------------------
  * options
@@ -194,8 +195,8 @@ int main() {
     }
 /*------------- info of Block matrix */
     io.rt_v = (double)csmat->n / (double)vbmat->n;
-    io.rt_e = (double)nnz_cs(csmat) / (double)nnzVBMat( vbmat );
-    io.ceff = (double)nnz_cs(csmat) / (double)memVBMat( vbmat ) * 100;
+    io.rt_e = nnz_cs(csmat) / 1. / nnzVBMat( vbmat );
+    io.ceff = nnz_cs(csmat) / 1. / memVBMat( vbmat ) * 100;
 /*---------------------------*/    
     output_header_vb( &io );
     lfil = io.lfil0;
@@ -222,7 +223,7 @@ int main() {
 	exit(11);
       }
       io.tm_p = tm2 - tm1;
-      io.fillfact = (double)nnz_vbilu( lu )/(double)(io.nnz + 1);
+      io.fillfact = nnz_vbilu( lu )/(double)(io.nnz + 1);
       fprintf( flog, "vbilut ends, fill factor (mem used) = %f\n",\
       io.fillfact );
 /*----------------------------------------------------- */

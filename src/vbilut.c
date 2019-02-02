@@ -90,7 +90,7 @@ int vbilutC( vbsptr vbmat, vbiluptr lu, int lfil, double tol,
   int dim, szjrow, sz, len, lenu, lenl, col, jpos, jrow, upos, para;
   int max_blk_sz = MAX_BLOCK_SIZE*MAX_BLOCK_SIZE*sizeof(double);
   int nzcount, *ja, *jbuf, *iw, i, j, k, kk;
-  double t, tnorm, tolnorm, *xnrm, *wn, vbnorm2( int, double * );
+  double t, tnorm, tolnorm, *xnrm, *wn;
   vbsptr L, U;
   BData *ba, *D, buf_fact, buf_ns;
 

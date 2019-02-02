@@ -180,6 +180,9 @@ extern int COOcs(int n, int nnz,  double *a, int *ja, int *ia, csptr bmat);
 void coocsr_(int*, int*, double*, int*, int*, double*, int*, int*);
 
 /* MatOps.c */
+void matvecC(csptr mat, double *x, double *y );
+void matvecCSC(SMatptr mat, double *x, double *y);
+int CondestC(iluptr lu, FILE *fp );
 extern int diag_scal(vbsptr vbmat);
 extern int diagvec(vbsptr vbmat, BData x, BData y);
 extern void matvec(csptr mata, double *x, double *y); 
@@ -313,6 +316,28 @@ extern int init_blocks( csptr csmat, int *pnBlock, int **pnB, int
 extern double sys_timer(void);
 
 /*auxill.c */
-extern void randvec (double *v, int n);		   	       
+int read_inputs( char *in_file, io_t *pio );
+int get_matrix_info( FILE *fmat, io_t *pio );
+void output_blocks( int nBlock, int *nB, FILE *f );
+void output_perm( int n, int *perm, FILE *f );
+int read_coo(double **VAL, int **COL, int **ROW, io_t *pio, double **rhs, double **sol, int job);
+int readhb_c(int *NN, double **AA, int **JA, int **IA, io_t *pio, double **rhs, double **sol, int *rsa);
+int readhb_2(int *NN, double **AA, int **JA, int **IA, io_t *pio, double **rhs, double **sol, int *rsa, int fmt);
+void output_header( io_t *pio );
+void output_header_vb( io_t *pio );
+void output_result( int lfil, io_t *pio, int iparam );
+void set_arms_pars(io_t* io, int Dscale, int *ipar, double *dropcoef, int *lfil);
+void randvec (double *v, int n);
+
+int lutsolC( double *y, double *x, iluptr lu );
+
+int dumpArmsMat(arms PreSt, FILE *ft);
+int checkperm(int *p, int n) ;
+void qsortR1I(double *wa, int *cor1, int left, int right);
+void swapj(int v[], int i, int j);
+void swapm(double v[], int i, int j) ;
+int vbilukC( int lofM, vbsptr vbmat, vbiluptr lu, FILE *fp );
+
+void coocsc(int n, int nnz, double *val, int *col, int *row, double **a, int **ja, int **ia, int job);
 
 #endif 

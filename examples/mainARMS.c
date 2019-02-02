@@ -35,7 +35,8 @@ void randvec (double *v, int n);
 int dumpArmsMat(arms PreSt, FILE *ft);
 /*-------------------- end protos */
  
-int main () {
+int main (void)
+{
 /*----------------------------------------------------------
  * solves a system using ARMS preconditioned fgmres
  *----------------------------------------------------------*/
@@ -178,7 +179,7 @@ int main () {
 	goto NEXT_PARA;
       } 
       io.tm_p = tm2 - tm1;
-      io.fillfact = (double)nnz_arms(ArmsSt, flog)/(double)(nnz + 1); 
+      io.fillfact = nnz_arms(ArmsSt, flog)/(double)(nnz + 1); 
       fprintf(flog, "ARMS ends, fill factor (mem used) = %f\n",\
       io.fillfact);
 /*---------------- get rough idea of cond number - exit if too big */

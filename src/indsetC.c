@@ -70,7 +70,6 @@ int indsetC(csptr mat, int bsize, int *iord, int *nnod, double tol)
    int prog, n=mat->n, *riord;
    double *w;
    csptr matT,gmat;  
-   int weightsC(csptr, double *); 
 /*-----------------------------------------------------------------------*/
    riord = (int *) Malloc(n*sizeof(int), "indsetC:1" );
    w     = (double *) Malloc(n*sizeof(double), "indsetC:2" );

@@ -28,7 +28,8 @@ void randvec (double *v, int n);
 /*-------------------- end protos */
 
 /*------------------------------------------------------------*/
-int main(){
+int main(void)
+{
   int ierr = 0;
 /* --- plotting is for writing stats into OUT/... in raw form */
   int plotting = 0, skip_its = 0;
@@ -147,7 +148,7 @@ int main(){
 	exit(-1);
       }
       io.tm_p = tm2 - tm1;
-      io.fillfact = (double)nnz_ilu( lu )/(double)(io.nnz + 1);
+      io.fillfact = nnz_ilu( lu )/(double)(io.nnz + 1);
       fprintf( flog, "iluk ends, fill factor (mem used) = %f\n",\
       io.fillfact );
       if( skip_its ) {
