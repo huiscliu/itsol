@@ -18,6 +18,10 @@
 #define HAVE_GETTIMEOFDAY 1
 #define HAVE_GETRUSAGE 1
 
-#define USE_UNIX                 1
+/* Macros for Fortran names mangling defined by the configure script */
+#define F77_FUNC(s,S)	s ## _
+#define F77_FUNC_(s,S)	s ## __
+#define FC_FUNC(name,NAME) name ## _
+#define FC_FUNC_(name,NAME) name ## _
 
 #endif
