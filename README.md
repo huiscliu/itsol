@@ -7,3 +7,7 @@ ITERATIVE SOLVERS package created by Yousef Saad
     * Daniel Osei-Kuffuor
     * Ruipeng Li
     * Yousef Saad
+
+
+# Purpose
+The purpose is to refactorize the original ITSOL.
