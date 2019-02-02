@@ -236,10 +236,13 @@ typedef struct _io_t
     double tolMul;              /* multiplier for tol              */
     int fill_lev;               /* initial level of fill for ILUK  */
     int fill_lev_inc;           /* increment for level of fill for ILUK */
+
     /* value always set to 1           */
     int perm_type;               /* indset perms (0) or PQ perms (1)*/
+
     /*                  or coarsen (2) */
     int Bsize;                   /* block size - dual role. see input file */
+
     /* for explanations */
     /* result for output ----------------------------------------------*/
     double rt_v;                /* compression rate of vertices    */
@@ -254,6 +257,7 @@ typedef struct _io_t
     int its;                    /* number of iterations            */
     double enorm;               /* error norm:          || x- x0|| */
     double rnorm;               /* final residual norm: ||Ax-Ax0|| */
+
 } io_t;
 
 #endif  /* __VBLOCK_HEADER_H__ */

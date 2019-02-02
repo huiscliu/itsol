@@ -171,4 +171,3 @@ int fgmr(SMatptr Amat, SPreptr lu, double *rhs, double *sol,
   free(hh);
   return (retval); 
 }
-/*-----------------end of fgmr -----------------------------------*/
