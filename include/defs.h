@@ -43,6 +43,6 @@
 
 #define MAX_LINE        256
 #define MAX_HBNAME      64
-#define MAX_MAT	   100
+#define MAX_MAT	        100
 
 #endif
