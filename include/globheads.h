@@ -1,6 +1,8 @@
 #ifndef __VBLOCK_HEADER_H__
 #define __VBLOCK_HEADER_H__
 
+#include "config.h"
+
 #define MAX_BLOCK_SIZE   100
 
 /* FORTRAN style vblock format, compatible for many FORTRAN routines */
