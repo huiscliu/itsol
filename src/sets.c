@@ -990,8 +990,7 @@ int COOcs(int n, int nnz,  double *a, int *ja, int *ia, csptr bmat)
 |--------------------------------------------------------------------*/
 
 
-void coocsc(int n, int nnz, double *val, int *col, int *row, 
-            double **a, int **ja, int **ia, int job)
+void coocsc(int n, int nnz, double *val, int *col, int *row, double **a, int **ja, int **ia, int job)
 /* job == 0, input coo in 0-indexing
    job == 1, input coo in 1-indexing
 */

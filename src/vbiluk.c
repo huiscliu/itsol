@@ -1,6 +1,8 @@
 
 #include "vbiluk.h"
 
+#define SVD 1
+
 int vbilukC( int lofM, vbsptr vbmat, vbiluptr lu, FILE *fp )
 {
 /*----------------------------------------------------------------------------
@@ -49,7 +51,7 @@ int vbilukC( int lofM, vbsptr vbmat, vbiluptr lu, FILE *fp )
     U = lu->U;
 
     /* symbolic factorization to calculate level of fill index arrays */
-    if( ( ierr = lofC( lofM, vbmat, lu, fp ) ) != 0 ) {
+    if( ( ierr = vblofC( lofM, vbmat, lu, fp ) ) != 0 ) {
       fprintf( fp, "Error: lofC\n" );
       return -1;
     }
@@ -158,7 +160,7 @@ int vbilukC( int lofM, vbsptr vbmat, vbiluptr lu, FILE *fp )
     return 0;
 }
 
-int lofC( int lofM, vbsptr vbmat, vbiluptr lu, FILE *fp )
+int vblofC( int lofM, vbsptr vbmat, vbiluptr lu, FILE *fp )
 {
 /*--------------------------------------------------------------------
  * symbolic ilu factorization to calculate structure of ilu matrix

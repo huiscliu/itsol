@@ -1,7 +1,8 @@
 #ifndef __ITSOL_PQ_H__
 #define __ITSOL_PQ_H__
 
-#include "type-defs.h"
+#include "sets.h"
+#include "misc.h"
 
 int PQperm(csptr mat, int bsize, int *Pord, int *Qord, int *nnod, double tol);
 int add2is(int *last, int nod, int *iord, int *riord);

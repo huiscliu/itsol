@@ -2,7 +2,8 @@
 #ifndef __ITSOL_SETBLKS_H__
 #define __ITSOL_SETBLKS_H__
 
-#include "type-defs.h"
+#include "misc.h"
+#include "MatOps.h"
 
 int KeyComp( const void *vfst, const void *vsnd );
 

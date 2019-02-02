@@ -9,6 +9,7 @@
 #include <assert.h> 
 
 #include "config.h"
+#include "ext-protos.h"
 
 #define MAX_BLOCK_SIZE   100
 

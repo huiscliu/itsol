@@ -1,6 +1,9 @@
 
 #include "vbilut.h"
 
+void gauss (int *, double*, int*); 
+void bxinv (int*, int*, double*,double*,double*);
+
 /*----------------------------------------------------------------------------
  * Block ILUT (BILUT) preconditioner
  * Block incomplete LU factorization with dual truncation mechanism

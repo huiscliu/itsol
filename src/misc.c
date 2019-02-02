@@ -533,7 +533,8 @@ void qsort3i(int *wa, int *cor1, int *cor2, int left, int right)
    qsort3i(wa, cor1, cor2, last+1, right);
 }
 
-int dumpArmsMat(arms PreSt, FILE *ft){
+int dumpArmsMat(arms PreSt, FILE *ft)
+{
   int lev, nnz, nglob=0, old=0;
   p4ptr levmat = PreSt->levmat; 
   ilutptr ilus = PreSt->ilus; 
@@ -582,7 +583,8 @@ int dumpCooMat(csptr A, int shiftR, int shiftC, FILE *ft){
   return(0);
 }
 
-int outputLU( iluptr lu, char *filename ){
+int outputLU( iluptr lu, char *filename )
+{
 /*----------------------------------------------------------------------
 | Output the pattern of L\U, which can be loaded by matlab
 ----------------------------------------------------------------------*/

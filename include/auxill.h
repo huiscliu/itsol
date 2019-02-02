@@ -2,6 +2,9 @@
 #ifndef __ITSOL_AUXILL_H__
 #define __ITSOL_AUXILL_H__
 
+#include "type-defs.h"
+#include "sets.h"
+
 int read_inputs(char *in_file, io_t *pio);
 
 int get_matrix_info( FILE *fmat, io_t *pio );

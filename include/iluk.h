@@ -3,6 +3,7 @@
 #define __ITSOL_ILUK_H__
 
 #include "type-defs.h"
+#include "sets.h"
 
 int lofC( int lofM, csptr csmat, iluptr lu, FILE *fp ); 
 int ilukC( int lofM, csptr csmat, iluptr lu, FILE *fp );

@@ -2,6 +2,9 @@
 #ifndef __ITSOL_VBILUK_H__
 #define __ITSOL_VBILUK_H__
 
+#include "svdInvC.h"
+#include "sets.h"
+
 /*----------------------------------------------------------------------------
  * Block ILUK preconditioner
  * Block incomplete LU factorization with level of fill dropping
@@ -60,6 +63,6 @@ int vbilukC( int lofM, vbsptr vbmat, vbiluptr lu, FILE *fp );
  *   ->L    = L part -- stored in BSpaFmt format, patterns only in lofC
  *   ->U    = U part -- stored in BSpaFmt format, patterns only in lofC
  *------------------------------------------------------------------*/
-int lofC(int lofM, vbsptr vbmat, vbiluptr lu, FILE *fp);
+int vblofC(int lofM, vbsptr vbmat, vbiluptr lu, FILE *fp);
 
 #endif

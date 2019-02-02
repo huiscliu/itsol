@@ -55,7 +55,7 @@
  * will give the usual threshold strategy (however, fill-in is then
  * impredictible).
  *--------------------------------------------------------------------------*/
-int ilut( csptr csmat, iluptr lu, int lfil, double tol, FILE *fp )
+int ilut( csptr csmat, iluptr lu, int lfil, double tol, FILE *fp );
 
 int lutsolC( double *y, double *x, iluptr lu );
 

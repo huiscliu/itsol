@@ -2,7 +2,8 @@
 #ifndef __ITSOL_PILUNEW_H__
 #define __ITSOL_PILUNEW_H__
 
-#include "type-defs.h"
+#include "sets.h"
+#include "misc.h"
 
 /*---------------------------------------------------------------------- 
 | PARTIAL ILUT -

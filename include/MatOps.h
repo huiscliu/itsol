@@ -1,9 +1,9 @@
 #ifndef __ITSOL_MatOps_H__
 #define __ITSOL_MatOps_H__
 
-#include <stdio.h>
-#include "type-defs.h"
-#include "ext-protos.h"
+#include "sets.h"
+#include "misc.h"
+#include "svdInvC.h"
 
 /* MatOps.c */
 void matvecC(csptr mat, double *x, double *y );
@@ -42,6 +42,8 @@ int   Uvsol2(double *x, int nlev, int n, p4ptr levmat, ilutptr
 		    ilusch); 
 void  SchLsol(ilutptr ilusch, double *y) ;
 void  SchUsol(ilutptr ilusch, double *y) ;
+int lumsolC(double *y, double *x, iluptr lu );
+int condestLU( iluptr lu, FILE *fp );
 
 #ifndef _IBM
 void dgemv(char*, int *, int*, double*, double *, int*,
@@ -55,6 +57,5 @@ void dscal(int*, double*, double*, int*);
 #endif 
 
 int invGauss(int nn, double *A); 
-int invSVD(int nn, double *A) ;
 
 #endif 

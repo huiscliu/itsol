@@ -554,7 +554,8 @@ int lusolC( double *y, double *x, iluptr lu )
     return (0); 
 }
 
-int lumsolC(double *y, double *x, iluptr lu ){
+int lumsolC(double *y, double *x, iluptr lu )
+{
 /*----------------------------------------------------------------------
  *    performs a forward followed by a backward solve
  *    for LU matrix as produced by iluc

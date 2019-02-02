@@ -1,7 +1,6 @@
 #ifndef __ITSOL_MISC_H__
 #define __ITSOL_MISC_H__
 
-#include <stdio.h>
 #include "type-defs.h"
 
 /* misc.c */
@@ -20,5 +19,9 @@ int roscalC(csptr mata, double *diag, int nrm);
 void swapj(int v[], int i, int j);
 void swapm(double v[], int i, int j);
 double sys_timer(void);
+int dumpArmsMat(arms PreSt, FILE *ft);
+int outputLU( iluptr lu, char *filename);
+int checkperm(int *p, int n);
+void qsortR1I(double *wa, int *cor1, int left, int right);
 
 #endif 

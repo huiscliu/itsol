@@ -2,7 +2,9 @@
 #ifndef __ITSOL_ILUTPC_H__
 #define __ITSOL_ILUTPC_H__
 
-#include "type-defs.h"
+#include "sets.h"
+#include "misc.h"
+#include "MatOps.h"
 
 /*---------------------------------------------------------------------- 
 | ILUTP -- ILUT with column pivoting -- adapted from ILUTP [Sparskit] 

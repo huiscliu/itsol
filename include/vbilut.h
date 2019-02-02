@@ -2,6 +2,10 @@
 #ifndef __ITSOL_VBILUT_H__
 #define __ITSOL_VBILUT_H__
 
+#include "type-defs.h"
+#include "sets.h"
+#include "MatOps.h"
+
 /*----------------------------------------------------------------------------
  * Block ILUT (BILUT) preconditioner
  * Block incomplete LU factorization with dual truncation mechanism

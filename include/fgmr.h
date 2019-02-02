@@ -2,7 +2,7 @@
 #ifndef __ITSOL_FGMR_H__
 #define __ITSOL_FGMR_H__
 
-#include "type-defs.h"
+#include "sets.h"
 
 /*----------------------------------------------------------------------
 |                 *** Preconditioned FGMRES ***                  
