@@ -71,10 +71,10 @@ int main (void) {
     fprintf( flog, "Invalid count of matrices...\n" );
     exit(3);
   }
-/*-------------------- open file OUT/VBILUK.out for all performance
+/*-------------------- open file VBILUK.out for all performance
                        results of this run (all matrices and params) 
                        also set io->PrecMeth */
-  strcpy(io.outfile,"OUT/VBILUK.out");
+  strcpy(io.outfile,"VBILUK.out");
   strcpy(io.PrecMeth,"Variable Block ILUK (VBILUK)");
   if( NULL == ( io.fout = fopen( io.outfile, "w" ) ) ) {
     fprintf(flog,"Can't open output file %s...\n", io.outfile);
@@ -170,7 +170,7 @@ int main (void) {
       char matdata[MAX_LINE];
       FILE *fmatlab;
       int ii, jj;
-      sprintf( matdata, "OUT/%s.dat", io.MatNam );
+      sprintf( matdata, "%s.dat", io.MatNam );
       if( NULL != ( fmatlab = fopen( matdata, "w" ) ) ) {
 	fprintf( fmatlab, "%d %d 0\n", csmat->n, csmat->n );
 	for( ii = 0; ii < csmat->n; ii++ )
@@ -225,7 +225,7 @@ int main (void) {
 /*-------------------- create a file for printing
                        'its -- time -- res' info from fgmres */
       if (plotting ) {
-	sprintf( pltfile, "OUT/%s_VBILUK_F%05d", io.MatNam, lfil);
+	sprintf( pltfile, "%s_VBILUK_F%05d", io.MatNam, lfil);
 	if( NULL == ( fits = fopen( pltfile, "w" ) ) ) {
 	  fprintf( flog, "Can't open output file %s...\n", pltfile );
 	  exit(12);

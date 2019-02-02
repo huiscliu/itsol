@@ -76,10 +76,10 @@ int main(void)
     fprintf( flog, "Invalid count of matrices...\n" );
     exit(3); 
   }
-/*-------------------- open file OUT/ILUC.out for all performance
+/*-------------------- open file ILUC.out for all performance
                        results of this run (all matrices and params) 
                        also set io->PrecMeth */
-  strcpy(io.outfile,"OUT/ILUC.out");
+  strcpy(io.outfile,"ILUC.out");
   strcpy(io.PrecMeth,"ILUC");
   if( NULL == ( io.fout = fopen(io.outfile,"w" ) ) ) {
     fprintf(flog,"Can't open output file %s...\n", io.outfile);
@@ -163,7 +163,7 @@ int main(void)
       }
       if( output_lu ){
 	char matdata[MAX_LINE];
-	sprintf( matdata, "OUT/%s.dat",io.MatNam );
+	sprintf( matdata, "%s.dat",io.MatNam );
 	outputLU( lu, matdata );
       }
       io.tm_p = tm2 - tm1;
@@ -186,7 +186,7 @@ int main(void)
 /*-------------------- create a file for printing
                        'its -- time -- res' info from fgmres */
       if(plotting ) { 
-	sprintf( pltfile, "OUT/%s_ILUC_F%05d_T%08.6f",\
+	sprintf( pltfile, "%s_ILUC_F%05d_T%08.6f",\
         io.MatNam, lfil,tol);
 	if( NULL == ( fits = fopen( pltfile, "w" ) ) ) {
 	  fprintf( flog, "Can't open output file %s...\n",\

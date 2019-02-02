@@ -25,7 +25,7 @@ int main (void)
 /*--------------------------------------------------------------
  * options
  *-------------------------------------------------------------*/
-  /* -- plotting is for writing stats into OUT/... in raw form */
+  /* -- plotting is for writing stats into ... in raw form */
   int plotting = 0, output_lu = 0, diagscal = 0;
   char pltfile[256];
   FILE *fits = NULL;
@@ -67,10 +67,10 @@ int main (void)
     fprintf( flog, "Invalid count of matrices...\n" );
     exit(3);
   }
-/*-------------------- open file OUT/ILUT.out for all performance
+/*-------------------- open file ILUT.out for all performance
                        results of this run (all matrices and params) 
                        also set io->PrecMeth */
-  strcpy(io.outfile,"OUT/ILUT.out");
+  strcpy(io.outfile,"ILUT.out");
   strcpy(io.PrecMeth,"ILUT");
   if( NULL == ( io.fout = fopen( io.outfile, "w" ) ) ) {
     fprintf(flog,"Can't open output file %s...\n", io.outfile);
@@ -162,7 +162,7 @@ int main (void)
      }
      if(output_lu ) {
        char matdata[MAX_LINE];
-       sprintf( matdata, "OUT/%s.dat", io.MatNam );
+       sprintf( matdata, "%s.dat", io.MatNam );
        outputLU( lu, matdata );
      } 
      io.tm_p = tm2 - tm1;
@@ -185,7 +185,7 @@ int main (void)
 /*-------------------- create a file for printing
                        'its -- time -- res' info from fgmres */
      if(plotting ) { 
-       sprintf( pltfile, "OUT/%s_ILUT_F%05d_T%08.6f",\
+       sprintf( pltfile, "%s_ILUT_F%05d_T%08.6f",\
        io.MatNam,lfil,tol);
        if( NULL == ( fits = fopen( pltfile, "w" ) ) ) {
 	 fprintf( flog, "Can't open output file %s...\n", pltfile );

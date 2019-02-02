@@ -83,12 +83,12 @@ int main (void)
   }
 /*-------------------- set parameters for arms */
   set_arms_pars(&io, diagscal, ipar, dropcoef, lfil_arr);
-/*-------------------- open file OUT/ARMS.out for all performance
+/*-------------------- open file ARMS.out for all performance
                        results of this run (all matrices and params) 
                        also set io->PrecMeth */
-/*-------------------- open file OUT/ARMS.out for all performance
+/*-------------------- open file ARMS.out for all performance
   --- results of this run (all matrices) also set io->PrecMeth */
-  strcpy(io.outfile,"OUT/ARMS.out");
+  strcpy(io.outfile,"ARMS.out");
   strcpy(io.PrecMeth,"ARMS");
   if(NULL == (io.fout = fopen(io.outfile, "w"))) {
     fprintf(flog,"Can't open output file %s...\n", io.outfile);
@@ -189,7 +189,7 @@ int main (void)
 /*-------------------- create a file for printing
                        'its -- time -- res' info from fgmres */
       if(plotting) { 
-	sprintf(pltfile, "OUT/%s_ARMS_F%05d_T%08.6f", \
+	sprintf(pltfile, "%s_ARMS_F%05d_T%08.6f", \
         io.MatNam, lfil,tol);
 	if(NULL == (fits = fopen(pltfile, "w"))) {
 	  fprintf(flog, "Can't open output file %s...\n", pltfile);

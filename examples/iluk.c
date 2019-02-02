@@ -23,7 +23,7 @@ void randvec (double *v, int n);
 int main(void)
 {
   int ierr = 0;
-/* --- plotting is for writing stats into OUT/... in raw form */
+/* --- plotting is for writing stats into ... in raw form */
   int plotting = 0, skip_its = 0;
   char pltfile[256];
   FILE *fits = NULL;
@@ -63,10 +63,10 @@ int main(void)
     fprintf( flog, "Invalid count of matrices...\n" );
     exit(3);
   }
-/*-------------------- open file OUT/ILUK.out for all performance
+/*-------------------- open file ILUK.out for all performance
                        results of this run (all matrices and params) 
                        also set io->PrecMeth */
-  strcpy(io.outfile,"OUT/ILUK.out");
+  strcpy(io.outfile,"ILUK.out");
   strcpy(io.PrecMeth,"ILUK");
   if( NULL == ( io.fout = fopen( io.outfile, "w" ) ) ) {
     fprintf(flog,"Can't open output file %s...\n", io.outfile);
@@ -166,7 +166,7 @@ int main(void)
 /*-------------------- create a file for printing
                        'its -- time -- res' info from fgmres */
       if (plotting ) { 
-	sprintf( pltfile, "OUT/%s_ILUK_F%05d", io.MatNam, lfil);
+	sprintf( pltfile, "%s_ILUK_F%05d", io.MatNam, lfil);
 	if( NULL == ( fits = fopen( pltfile, "w" ) ) ) {
 	  fprintf( flog, "Can't open output file %s...\n", pltfile );
 	  exit(8);
