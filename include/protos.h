@@ -3,7 +3,6 @@
 
 #include <stdio.h>
 #include "type-defs.h"
-#include "ios.h"
 
 #if defined(_SGI) || defined(_LINUX)
 #define dnrm2   dnrm2_
