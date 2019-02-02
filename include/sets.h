@@ -32,7 +32,7 @@ int csrvbsrC(int job, int nBlk, int *nB, csptr csmat, vbsptr vbmat);
 int col2vbcol( int col, vbsptr vbmat );
 int nnz_vbilu(vbiluptr lu); 
 int nnz_lev4(p4ptr levmat, int *lev, FILE *ft);
-int setupILU( iluptr lu, int n );
+int setupILU(iluptr lu, int n );
 int CS2lum( int n, csptr Amat, iluptr mat, int typ);
 int COOcs(int n, int nnz,  double *a, int *ja, int *ia, csptr bmat);
 void coocsr_(int*, int*, double*, int*, int*, double*, int*, int*);

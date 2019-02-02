@@ -8,7 +8,7 @@ fgmr.o: fgmr.c ../include/config.h ../include/ext-protos.h ../include/fgmr.h ../
 
 iluk.o: iluk.c ../include/config.h ../include/ext-protos.h ../include/iluk.h ../include/sets.h ../include/type-defs.h
 
-ilut.o: ilut.c ../include/config.h ../include/ext-protos.h ../include/ilut.h ../include/type-defs.h
+ilut.o: ilut.c ../include/config.h ../include/ext-protos.h ../include/ilut.h ../include/sets.h ../include/type-defs.h
 
 ilutc.o: ilutc.c ../include/config.h ../include/ext-protos.h ../include/ilutc.h ../include/sets.h ../include/type-defs.h
 

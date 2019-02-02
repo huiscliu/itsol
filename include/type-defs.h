@@ -1,5 +1,5 @@
-#ifndef __VBLOCK_HEADER_H__
-#define __VBLOCK_HEADER_H__
+#ifndef __VBLOCK_TYPE_DEFS_H__
+#define __VBLOCK_TYPE_DEFS_H__
 
 #include <stdio.h>
 #include <stdlib.h>

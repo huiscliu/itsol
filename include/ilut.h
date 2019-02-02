@@ -3,7 +3,7 @@
 #define __ITSOL_ILUT_H__
 
 #include <math.h>
-#include "type-defs.h"
+#include "sets.h"
 
 /*----------------------------------------------------------------------------
  * ILUT preconditioner
