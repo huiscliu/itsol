@@ -66,13 +66,13 @@
 void readmtc(int*,  int*,  int*,  char*,  double*,  int*,
 	     int*,  double*, int*,  char*,  int*,  int*,  int*,
 	     char*,  char*, char*,  int*) ;
-void csrcsc (int*, int*, int*, double*, int*, int*, double*,
+void csrcsc(int*, int*, int*, double*, int*, int*, double*,
 		    int*, int*) ; 
 void qsplit(double *a, int *ind, int *n, int *ncut);	
 void dgesvd(char*, char*, int*, int*, double*, int*, double*,
 		   double *, int*, double*, int*, double*, int*,
 		   int*); 
-void csrcoo ( int *, int *, int *, double *, int *, int *, int *,
+void csrcoo( int *, int *, int *, double *, int *, int *, int *,
 		double *, int *, int *, int *);    
 
 #if defined(_IBM)
