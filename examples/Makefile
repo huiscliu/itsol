@@ -13,4 +13,4 @@ include ../Makefile.inc
 
 
 clean:
-	rm -f *.o
+	rm -f *.o $(BIN_C)
