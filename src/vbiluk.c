@@ -1,35 +1,5 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <math.h>
 
-#include "itsol.h"
-
-#ifndef min
-#define min(a,b) (((a)>(b))?(b):(a))
-#endif
-#ifndef max
-#define max(a,b) (((a)>(b))?(a):(b))
-#endif
-#define SVD 1
-#define dgemm dgemm_
-
-/*-------------------- protos */
-void *Malloc(int nbytes, char *msg); 
-int vblusolC(double *y, double *x, vbiluptr lu); 
-int invGauss(int nn, double *A); 
-int invSVD(int nn, double *A) ;
-void dgemm(char*, char*, int*, int*, int*, double*, double*, int*, 
-	   double*, int*, double*, double*, int*) ; 
-int setupVBMat(vbsptr vbmat, int n, int *nB);
-int mallocVBRow(vbiluptr lu, int nrow); 
-void zrmC(int m, int n, BData data); 
-int lofC( int lofM, vbsptr vbmat, vbiluptr lu, FILE *fp ); 
-int setupVBILU(vbiluptr lu, int n, int *bsz);
-void copyBData(int m, int n, BData dst, BData src, int isig);
-int lofC( int lofM, vbsptr vbmat, vbiluptr lu, FILE *fp ); 
-/*-------------------- END of protos */
-
+#include "vbiluk.h"
 
 int vbilukC( int lofM, vbsptr vbmat, vbiluptr lu, FILE *fp )
 {

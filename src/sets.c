@@ -1,11 +1,8 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <stdarg.h>
-#include <string.h>
-#include <math.h>
-#include "itsol.h"
 
-void errexit( char *f_str, ... ){
+#include "sets.h"
+
+void errexit( char *f_str, ... )
+{
   va_list argp;
   char out1[512], out2[1024];
 

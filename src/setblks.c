@@ -1,7 +1,5 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include "type-defs.h"
-#include "itsol.h"
+
+#include "setblks.h"
 
 typedef struct __KeyType
 {

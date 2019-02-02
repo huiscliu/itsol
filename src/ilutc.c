@@ -1,15 +1,5 @@
-/*-----------------------------------------------------------------------*
- * Crout version of ILU                                                  *
- *-----------------------------------------------------------------------*
- * Na Li, Apr 09, 2002 -- YS - August 22nd, 2002                         *
- *                                                                       *
- * Report bugs / send comments to: saad@cs.umn.edu, nli@cs.umn.edu       *
- *-----------------------------------------------------------------------*/
-#include <stdio.h>
-#include <stdlib.h>
-#include <math.h>
-#include "type-defs.h"
-#include "itsol.h"
+
+#include "ilutc.h"
 
 #ifndef MAXFLOAT
 #define MAXFLOAT (1e30)

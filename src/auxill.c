@@ -1,8 +1,5 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h> 
-#include <math.h>
-#include "itsol.h"
+
+#include "auxill.h"
 
 #define ERR_AUXIL  10
 #define MAX_NUM_LEV 10        /* maximum number of levels for arms    */ 

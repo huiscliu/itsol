@@ -1,8 +1,5 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <math.h>
-#include "type-defs.h"
-#include "itsol.h"
+
+#include "ilut.h"
 
 /*-------------------- end protos*/
 int ilut( csptr csmat, iluptr lu, int lfil, double tol, FILE *fp )

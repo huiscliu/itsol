@@ -1,9 +1,5 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <math.h>
-#include "type-defs.h"
-#include "itsol.h"
+
+#include "misc.h"
 
 #if TIME_WITH_SYS_TIME
 #include <sys/time.h>

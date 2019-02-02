@@ -1,12 +1,6 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <math.h>
-#include "type-defs.h"
-#include "itsol.h"
 
-int pilu(p4ptr amat, csptr B, csptr C, double *droptol, 
-	 int *lfil, csptr schur) {
+#include "piluNEW.h"
+
 /*---------------------------------------------------------------------- 
 | PARTIAL ILUT -
 | Converted to C so that dynamic memory allocation may be implememted
@@ -75,6 +69,8 @@ int pilu(p4ptr amat, csptr B, csptr C, double *droptol,
 |----------------------------------------------------------------------- 
 |     All processing is done using C indexing.
 |--------------------------------------------------------------------*/
+int pilu(p4ptr amat, csptr B, csptr C, double *droptol, int *lfil, csptr schur)
+{
    int i, ii, j, jj, jcol, jpos, jrow, k, *jw, *jwrev;
    int **lfja, *lflen, len, len2, lenu, lenl, rmax;
    int *jw2, *jwrev2, lsize, rsize;

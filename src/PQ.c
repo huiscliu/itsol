@@ -1,9 +1,5 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <math.h>
-#include "type-defs.h"
-#include "itsol.h"
+
+#include "PQ.h"
 
 #define  ALPHA  0.00001
 
@@ -421,7 +417,3 @@ int preSel(csptr mat, int *icor, int *jcor, int job, double tol, int *count)
   free(weight);
   return 0;
 }
-/*---------------------------------------------------------------------
-|---- end of preSel ---------------------------------------------------
-|--------------------------------------------------------------------*/
-

@@ -1,10 +1,5 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <math.h> 
-#include "type-defs.h"
-#include "itsol.h"
 
+#include "MatOps.h"
 
 int diag_scal( vbsptr vbmat ){
 /*----------------------------------------------------------------------------

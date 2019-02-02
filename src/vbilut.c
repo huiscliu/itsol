@@ -1,36 +1,6 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <math.h>
 
-#include "itsol.h"
+#include "vbilut.h"
 
-#ifndef min
-#define min(a,b) (((a)>(b))?(b):(a))
-#endif
-#ifndef max
-#define max(a,b) (((a)>(b))?(a):(b))
-#endif
-
-#define qsplit qsplit_ 
-#define gauss gauss_
-#define bxinv bxinv_
-#define dgemm dgemm_
-/*-------------------- protos */
-void *Malloc(int nbytes, char *msg); 
-void zrmC(int m, int n, BData data); 
-void copyBData(int m, int n, BData dst, BData src, int isig);
-void dgemm(char*, char*, int*, int*, int*, double*, double*, int*, 
-	   double*, int*, double*, double*, int*) ; 
-int vblusolC(double *y, double *x, vbiluptr lu); 
-void gauss (int *, double*, int*); 
-void bxinv (int*, int*, double*,double*,double*);
-int setupVBILU(vbiluptr lu, int n, int *bsz);
-void qsplit(double*, int*, int*, int*) ;
-/*-------------------- END protos */
-
-int vbilutC( vbsptr vbmat, vbiluptr lu, int lfil, double tol,
-             BData *w, FILE *fp )
-{
 /*----------------------------------------------------------------------------
  * Block ILUT (BILUT) preconditioner
  * Block incomplete LU factorization with dual truncation mechanism
@@ -85,6 +55,8 @@ int vbilutC( vbsptr vbmat, vbiluptr lu, int lfil, double tol,
  * will give the usual threshold strategy (however, fill-in is then
  * impredictible).
  *--------------------------------------------------------------------------*/
+int vbilutC( vbsptr vbmat, vbiluptr lu, int lfil, double tol, BData *w, FILE *fp )
+{
   int n = vbmat->n, *bsz = vbmat->bsz, ierr;
   double one = 1.0, zero = 0.0;
   int dim, szjrow, sz, len, lenu, lenl, col, jpos, jrow, upos, para;

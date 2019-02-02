@@ -1,20 +1,5 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <math.h>
-#include "type-defs.h"
-#include "itsol.h"
 
-#ifndef min
-#define min(a,b) (((a)>(b))?(b):(a))
-#endif
-#ifndef max
-#define max(a,b) (((a)>(b))?(a):(b))
-#endif
-
-/*--------------------protos */
-int lofC( int lofM, csptr csmat, iluptr lu, FILE *fp ); 
-/*--------------------end protos */
+#include "iluk.h"
 
 int ilukC( int lofM, csptr csmat, iluptr lu, FILE *fp )
 {

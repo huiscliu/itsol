@@ -1,10 +1,7 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <math.h>
+
+#include "arms2.h"
+
 #define  PERMTOL  0.99   /*  0 --> no permutation 0.01 to 0.1 good  */
-#include "type-defs.h"
-#include "itsol.h" 
 
 /*-------------------- end protos */
 int arms2(csptr Amat, int *ipar, double *droptol, int *lfil, 

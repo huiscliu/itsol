@@ -1,16 +1,5 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <math.h>
-#include "type-defs.h"
-#include "itsol.h"
 
-#ifdef ILUTIME
-void msg_timer_clear(int *);
-void msg_timer_start(int *);
-void msg_timer_stop(int *); 
-double msg_timer(int *);
-#endif
+#include "ilutpC.h"
 
 int ilutpC(csptr amat, double *droptol, int *lfil, double permtol,
 		int mband, ilutptr ilusch)
@@ -80,12 +69,6 @@ int ilutpC(csptr amat, double *droptol, int *lfil, double permtol,
    double *rowm, xmax, xmax0, tmp;
    int dec, decnt=0;
 
-#ifdef ILUTIME
-   int tt, t22=22, t23=23, t24=24, t25=25, t26=26, t27=27, t28=28,
-       t29=29, t30=30, t31=31, t32=32, t33=33, t34=34, t35=35;
-   for (tt=22; tt<36; tt++)
-      msg_timer_clear(&tt);
-#endif
    ilusch->n = rmax = amat->n;
    if (rmax == 0) return(0); 
    if (rmax > 0) {
@@ -103,9 +86,6 @@ int ilutpC(csptr amat, double *droptol, int *lfil, double permtol,
       iprev[j] = j;
    }
    for (ii=0; ii<rmax; ii++) {
-#ifdef ILUTIME
-msg_timer_start(&t22);
-#endif
       rowj = amat->ja[ii];
       rowm = amat->ma[ii];
       rowz = amat->nzcount[ii];
@@ -114,10 +94,6 @@ msg_timer_start(&t22);
 	 tnorm += fabs(rowm[k]);
       if (tnorm == 0.0) goto label9991;
       tnorm = tnorm / ((double) rowz);
-#ifdef ILUTIME
-msg_timer_stop(&t22);
-msg_timer_start(&t23);
-#endif
 /*---------------------------------------------------------------------
 |     unpack amat in arrays w, jw, jwrev
 |     WE ASSUME THERE IS A DIAGONAL ELEMENT
@@ -146,9 +122,6 @@ msg_timer_start(&t23);
 	    lenu++;
 	 }
       }
-#ifdef ILUTIME
-msg_timer_stop(&t23);
-#endif
 /*---------------------------------------------------------------------
 |     eliminate previous rows
 |--------------------------------------------------------------------*/
@@ -158,9 +131,6 @@ msg_timer_stop(&t23);
 |    in order to do the elimination in the correct order we must select
 |    the smallest column index among jw(k), k=jj+1, ..., lenl.
 |--------------------------------------------------------------------*/
-#ifdef ILUTIME
-msg_timer_start(&t24);
-#endif
 	 jrow = jw[jj];
 	 k = jj;
 /*---------------------------------------------------------------------
@@ -189,20 +159,12 @@ msg_timer_start(&t24);
 |     zero out element in row.
 |--------------------------------------------------------------------*/
          jwrev[jrow] = -1;
-/*
-#ifdef ILUTIME
-msg_timer_stop(&t24);
-#endif
-*/
 /*---------------------------------------------------------------------
 |     get the multiplier for row to be eliminated (jrow).
 |--------------------------------------------------------------------*/
 	 rowm = ilusch->U->ma[jrow];
 	 fact = w[jj] * rowm[0];
 	 if ( fabs(fact) > drop5 ) {    /*  DROPPING IN L  */
-#ifdef ILUTIME
-msg_timer_start(&t25);
-#endif
 	    rowj = ilusch->U->ja[jrow];
 	    rowz = ilusch->U->nzcount[jrow];
 /*---------------------------------------------------------------------
@@ -257,9 +219,6 @@ msg_timer_start(&t25);
 /*---------------------------------------------------------------------
 |     store this pivot element
 |--------------------------------------------------------------------*/
-#ifdef ILUTIME
-msg_timer_stop(&t25);
-#endif
 	    w[len] = fact;
 	    jw[len]  = jrow;
 	    len++;
@@ -268,20 +227,11 @@ msg_timer_stop(&t25);
 /*---------------------------------------------------------------------
 |     reset nonzero indicators
 |--------------------------------------------------------------------*/
-#ifdef ILUTIME
-msg_timer_start(&t26);
-#endif
       for (j=0; j<lenu; j++)    /*  U block  */
 	 jwrev[jw[ii+j]] = -1;
-#ifdef ILUTIME
-msg_timer_stop(&t26);
-#endif
 /*---------------------------------------------------------------------
 |     done reducing this row, now store L
 |--------------------------------------------------------------------*/
-#ifdef ILUTIME
-msg_timer_start(&t27);
-#endif
       lenl = len;
       len = lenl > fil5 ? fil5 : lenl;
       ilusch->L->nzcount[ii] = len;
@@ -300,10 +250,6 @@ msg_timer_start(&t27);
 /*---------------------------------------------------------------------
 |     apply dropping strategy to U  (entries after diagonal)
 |--------------------------------------------------------------------*/
-#ifdef ILUTIME
-msg_timer_stop(&t27);
-msg_timer_start(&t28);
-#endif
       len = 0;
       for (j=1; j<lenu; j++) {
 	 if ( fabs(w[ii+j]) > drop6*tnorm ) {
@@ -366,23 +312,12 @@ msg_timer_start(&t28);
       lenu = 0;
       for (k=ii+1; k<ii+len; k++)
 	 ilusch->U->ja[ii][++lenu] = iperm[jw[k]];
-#ifdef ILUTIME
-msg_timer_stop(&t28);
-#endif
    }
    cpermC(ilusch->U, iprev);
    cpermC(ilusch->L, iprev);
 /* DO NOT PERMUTE ORIGINAL MATRIX
    cpermC(amat, iprev);
 */
-#ifdef ILUTIME
-   tnorm = 0;
-   for (tt=22; tt<29; tt++) {
-      printf(" loop %d      %e \n",tt,msg_timer(&tt));
-      tnorm += msg_timer(&tt);
-   }
-   printf(" total        %e \n",tnorm);
-#endif
 /*---------------------------------------------------------------------
 |     end main loop - now do clean up
 |--------------------------------------------------------------------*/

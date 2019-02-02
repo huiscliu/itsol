@@ -1,8 +1,5 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <stdarg.h>
-#include "type-defs.h"
-#include "itsol.h"
+
+#include "svdInvC.h"
 
 #define TOL 1.e-17
 #define max(a,b) (((a)>(b))?(a):(b))

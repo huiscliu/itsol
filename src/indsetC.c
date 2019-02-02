@@ -1,11 +1,5 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <math.h>
-#include "type-defs.h"
-#include "itsol.h"
 
-void *Malloc( int, char * );
+#include "indsetC.h"
 
 int add2is(int *last, int nod, int *iord, int *riord)
 {
@@ -212,6 +206,3 @@ int weightsC(csptr mat, double *w)
       w[irow] = w[irow]/wmax;
    return 0;
 }
-/*---------------------------------------------------------------------
-|---- end of weightsC -------------------------------------------------
-|--------------------------------------------------------------------*/
