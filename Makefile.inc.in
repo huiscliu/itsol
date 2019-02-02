@@ -27,3 +27,7 @@ RPATH_FLAG	= @RPATH_FLAG@
 	${LINKER} ${LDFLAGS} -o $@ $*.o ${LIBS}
 	@echo
 
+% : %.c
+	${LINKER} ${LDFLAGS} ${CFLAGS} ${CPPFLAGS} -c $*.c ${LIBS}
+	@echo
+
