@@ -240,7 +240,7 @@ int itsol_pc_ilutpC(csptr amat, double *droptol, int *lfil, double permtol, int 
         len = lenl > fil5 ? fil5 : lenl;
         ilusch->L->nzcount[ii] = len;
         if (lenl > len)
-            qsplitC(w, jw, lenl, len);
+            itsol_qsplitC(w, jw, lenl, len);
         /*
            printf("  row %d   length of L = %d",ii,len);
            */
@@ -266,7 +266,7 @@ int itsol_pc_ilutpC(csptr amat, double *droptol, int *lfil, double permtol, int 
         len = lenu > fil6 ? fil6 : lenu;
         ilusch->U->nzcount[ii] = len;
         if (lenu > len + 1)
-            qsplitC(&w[ii + 1], &jw[ii + 1], lenu - 1, len);
+            itsol_qsplitC(&w[ii + 1], &jw[ii + 1], lenu - 1, len);
         ilusch->U->ma[ii] = (double *)itsol_malloc(len * sizeof(double), "ilutpC:7");
         ilusch->U->ja[ii] = (int *)itsol_malloc(len * sizeof(int), "ilutpC:8");
         /*---------------------------------------------------------------------
@@ -574,7 +574,7 @@ label40:
         lenl = len > fil5 ? fil5 : len;
         ilusch->L->nzcount[ii] = lenl;
         if (len > lenl)
-            qsplitC(w, jw, len, lenl);
+            itsol_qsplitC(w, jw, len, lenl);
         if (len > 0) {
             ilusch->L->ja[ii] = (int *)itsol_malloc(lenl * sizeof(int), "ilutD:4");
             ilusch->L->ma[ii] = (double *)itsol_malloc(lenl * sizeof(double), "ilutD:5");
@@ -600,7 +600,7 @@ label40:
         ilusch->U->nzcount[ii] = lenu;
         jpos = lenu - 1;
         if (len > jpos)
-            qsplitC(w, jw, len, jpos);
+            itsol_qsplitC(w, jw, len, jpos);
         ilusch->U->ma[ii] = (double *)itsol_malloc(lenu * sizeof(double), "ilutD:6");
         ilusch->U->ja[ii] = (int *)itsol_malloc(lenu * sizeof(int), "ilutD:7");
         if (t == 0.0)

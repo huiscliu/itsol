@@ -170,8 +170,8 @@ int itsol_pc_arms2(csptr Amat, int *ipar, double *droptol, int *lfil, double tol
         bsize = n - 1;
     levmat->n = n;
     levmat->nB = 0;
-    setupCS(schur, n, 1);
-    cscpy(Amat, schur);
+    itsol_setupCS(schur, n, 1);
+    itsol_cscpy(Amat, schur);
     levc = levmat;
     /*--------------------------------------- */
     levc->prev = levc->next = levp = NULL;
@@ -211,16 +211,16 @@ int itsol_pc_arms2(csptr Amat, int *ipar, double *droptol, int *lfil, double tol
         dd2 = NULL;
         if (methL[2]) {
             dd1 = (double *)itsol_malloc(nA * sizeof(double), "arms2:3");
-            j = roscalC(schur, dd1, 1);
+            j = itsol_roscalC(schur, dd1, 1);
             if (j)
                 printf("ERROR in roscalC -  row %d  is a zero row\n", j);
         }
 
         if (methL[3]) {
             dd2 = (double *)itsol_malloc(nA * sizeof(double), "arms2:4");
-            j = coscalC(schur, dd2, 1);
-            if (j)
-                printf("ERROR in coscalC - column %d is a zero column\n", j);
+            j = itsol_coscalC(schur, dd2, 1);
+
+            if (j) printf("ERROR in coscalC - column %d is a zero column\n", j);
         }
         /*--------------------independent-sets-permutation-------------------
           |  do reordering -- The matrix and its transpose are used.
@@ -255,7 +255,8 @@ int itsol_pc_arms2(csptr Amat, int *ipar, double *droptol, int *lfil, double tol
           +--------------------------------------------------------------------*/
         if (ilev > 0) {
             /*-   delete C matrix of any level except last one (no longer needed) */
-            cleanCS(C);
+            itsol_cleanCS(C);
+
             /*-------------------- create the next level */
             levn = (p4ptr) itsol_malloc(sizeof(Per4Mat), "arms2:6");
             /* levc->prev = levp; */
@@ -269,8 +270,9 @@ int itsol_pc_arms2(csptr Amat, int *ipar, double *droptol, int *lfil, double tol
         E = (csptr) itsol_malloc(sizeof(SparMat), "arms2:8");
         F = (csptr) itsol_malloc(sizeof(SparMat), "arms2:9");
         C = (csptr) itsol_malloc(sizeof(SparMat), "arms2:10");
-        csSplit4(schur, nB, nC, B, F, E, C);
-        setupP4(levc, nB, nC, F, E);
+        itsol_csSplit4(schur, nB, nC, B, F, E, C);
+        itsol_setupP4(levc, nB, nC, F, E);
+
         /*--------------------     copy a few pointers       ---- */
         levc->perm = iwork;
         levc->rperm = uwork;
@@ -296,9 +298,10 @@ int itsol_pc_arms2(csptr Amat, int *ipar, double *droptol, int *lfil, double tol
           | destroy current Schur  complement - no longer needed  - and set-up new
           | one for next level...
           +--------------------------------------------------------------------*/
-        cleanCS(schur);
+        itsol_cleanCS(schur);
         schur = (csptr) itsol_malloc(sizeof(SparMat), "arms2:11");
-        setupCS(schur, nC, 1);
+        itsol_setupCS(schur, nC, 1);
+
         /*----------------------------------------------------------------------
           | calling PILU to construct this level block factorization
           | ! core dump in extreme case of empty matrices.
@@ -309,8 +312,10 @@ int itsol_pc_arms2(csptr Amat, int *ipar, double *droptol, int *lfil, double tol
             fprintf(ft, " ERROR IN  PILU  -- IERR = %d\n", ierr);
             return (1);
         }
-        cleanCS(B);
+
+        itsol_cleanCS(B);
     }
+
     /*---------------------------------------------------------------------
       |   done with the reduction. Record the number of levels in ipar[0] 
       |**********************************************************************
@@ -322,7 +327,8 @@ int itsol_pc_arms2(csptr Amat, int *ipar, double *droptol, int *lfil, double tol
     PreMat->nlev = ilev;
     PreMat->n = n;
     nC = schur->n;
-    setupILUT(ilsch, nC);
+    itsol_setupILUT(ilsch, nC);
+
     /*--------------------------------------------------------------------*/
     /* define C-matrix (member of ilsch) to be last C matrix */
     if (ilev > 0)
@@ -333,18 +339,19 @@ int itsol_pc_arms2(csptr Amat, int *ipar, double *droptol, int *lfil, double tol
     ilsch->D1 = NULL;
     if (methS[2]) {
         ilsch->D1 = (double *)itsol_malloc(nC * sizeof(double), "arms2:iluschD1");
-        j = roscalC(schur, ilsch->D1, 1);
-        if (j)
-            printf("ERROR in roscalC - row %d is a zero row\n", j);
+        j = itsol_roscalC(schur, ilsch->D1, 1);
+
+        if (j) printf("ERROR in roscalC - row %d is a zero row\n", j);
     }
 
     ilsch->D2 = NULL;
     if (methS[3]) {
         ilsch->D2 = (double *)itsol_malloc(nC * sizeof(double), "arms2:iluschD1");
-        j = coscalC(schur, ilsch->D2, 1);
-        if (j)
-            printf("ERROR in coscalC - column %d is a zero column\n", j);
+        j = itsol_coscalC(schur, ilsch->D2, 1);
+
+        if (j) printf("ERROR in coscalC - column %d is a zero column\n", j);
     }
+
     /*---------------------------------------------------------------------
       |     get ILUT factorization for the last reduced system.
       +--------------------------------------------------------------------*/
@@ -381,6 +388,7 @@ int itsol_pc_arms2(csptr Amat, int *ipar, double *droptol, int *lfil, double tol
     }
 
     /*-------------------- Last Schur complement no longer needed */
-    cleanCS(schur);
+    itsol_cleanCS(schur);
+
     return 0;
 }

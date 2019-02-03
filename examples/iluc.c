@@ -103,7 +103,7 @@ int main(void)
 
             /*-------------------- conversion from COO to CS format 
              * NOTE: csmat is in colum format   */
-            if ((ierr = COOcs(n, nnz, AA, IA, JA, csmat)) != 0) {
+            if ((ierr = itsol_COOcs(n, nnz, AA, IA, JA, csmat)) != 0) {
                 fprintf(stderr, "mainILUC: COOcs error\n");
                 return ierr;
             }
@@ -120,7 +120,7 @@ int main(void)
             nnz = io.nnz;
 
             /*-------------------- convert matrix to cs format for matvecs */
-            if ((ierr = CSRcs(n, AA, JA, IA, csmat, rsa)) != 0) {
+            if ((ierr = itsol_CSRcs(n, AA, JA, IA, csmat, rsa)) != 0) {
                 fprintf(flog, "CSRcs error\n");
                 return (ierr);
             }
@@ -129,7 +129,7 @@ int main(void)
         /*-------------------- convert to lum format for iluc + symmetrize */
         if (rsa == 0 && pattern_symm)
             rsa = 2;
-        if ((ierr = CSClumC(csmat, lumat, rsa)) != 0) {
+        if ((ierr = itsol_CSClumC(csmat, lumat, rsa)) != 0) {
             fprintf(stderr, " error: CSClum error\n");
             return (ierr);
         }
@@ -172,11 +172,11 @@ int main(void)
             if (output_lu) {
                 char matdata[MAX_LINE];
                 sprintf(matdata, "%s.dat", io.MatNam);
-                outputLU(lu, matdata);
+                itsol_outputLU(lu, matdata);
             }
 
             io.tm_p = tm2 - tm1;
-            io.fillfact = nnz_ilu(lu) / (double)(io.nnz + 1);
+            io.fillfact = itsol_nnz_ilu(lu) / (double)(io.nnz + 1);
             fprintf(flog, "ilutc ends, fill factor (mem used) = %f\n", io.fillfact);
 
             if (itsol_CondestC(lu, flog) != 0) {
@@ -243,12 +243,12 @@ NEXT_PARA:
             output_result(lfil, &io, iparam);
             lfil += io.lfilInc;
             tol *= io.tolMul;
-            cleanILU(lu);
+            itsol_cleanILU(lu);
         }
 
         /*-------------------- NEXT_MAT: */
-        cleanCS(csmat);
-        cleanILU(lumat);
+        itsol_cleanCS(csmat);
+        itsol_cleanILU(lumat);
         free(sol);
         free(x);
         free(rhs);

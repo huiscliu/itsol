@@ -95,7 +95,7 @@ int main(void)
             nnz = io.nnz;
 
             /*-------------------- conversion from COO to CSR format */
-            if ((ierr = COOcs(n, nnz, AA, JA, IA, csmat)) != 0) {
+            if ((ierr = itsol_COOcs(n, nnz, AA, JA, IA, csmat)) != 0) {
                 fprintf(stderr, "mainARMS: COOcs error\n");
                 return ierr;
             }
@@ -111,7 +111,7 @@ int main(void)
 
             nnz = io.nnz;
 
-            if ((ierr = CSRcs(n, AA, JA, IA, csmat, rsa)) != 0) {
+            if ((ierr = itsol_CSRcs(n, AA, JA, IA, csmat, rsa)) != 0) {
                 fprintf(flog, "readhb_c: CSRcs error\n");
                 return ierr;
             }
@@ -148,7 +148,7 @@ int main(void)
 
             if (ierr == -2) {
                 fprintf(io.fout, "zero diagonal element found...\n");
-                cleanILU(lu);
+                itsol_cleanILU(lu);
                 goto NEXT_MAT;
             }
             else if (ierr != 0) {
@@ -157,7 +157,7 @@ int main(void)
             }
 
             io.tm_p = tm2 - tm1;
-            io.fillfact = nnz_ilu(lu) / (double)(io.nnz + 1);
+            io.fillfact = itsol_nnz_ilu(lu) / (double)(io.nnz + 1);
             fprintf(flog, "iluk ends, fill factor (mem used) = %f\n", io.fillfact);
 
             if (skip_its) {
@@ -233,12 +233,12 @@ int main(void)
 NEXT_PARA:
             output_result(lfil, &io, iparam);
             lfil += io.fill_lev_inc;
-            cleanILU(lu);
+            itsol_cleanILU(lu);
         }
 
         /*-------------------- Test with next matrix   */
 NEXT_MAT:
-        cleanCS(csmat);
+        itsol_cleanCS(csmat);
         free(sol);
         free(x);
         free(rhs);

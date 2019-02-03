@@ -74,7 +74,7 @@ int itsol_pc_vbilutC(vbsptr vbmat, vbiluptr lu, int lfil, double tol, BData * w,
         return -1;
     }
 
-    setupVBILU(lu, n, bsz);
+    itsol_setupVBILU(lu, n, bsz);
     L = lu->L;
     U = lu->U;
     D = lu->D;

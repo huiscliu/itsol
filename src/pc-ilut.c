@@ -65,7 +65,7 @@ int itsol_pc_ilut(csptr csmat, iluptr lu, int lfil, double tol, FILE * fp)
         return -1;
     }
 
-    setupILU(lu, n);
+    itsol_setupILU(lu, n);
     L = lu->L;
     U = lu->U;
     D = lu->D;

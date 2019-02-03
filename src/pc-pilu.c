@@ -305,7 +305,7 @@ label41:
         lenl = len > fil0 ? fil0 : len;
         amat->L->nzcount[ii] = lenl;
         if (lenl < len)
-            qsplitC(w, jw, len, lenl);
+            itsol_qsplitC(w, jw, len, lenl);
         if (len > 0) {
             amat->L->ja[ii] = (int *)itsol_malloc(lenl * sizeof(int), "pilu:10");
             amat->L->ma[ii] = (double *)itsol_malloc(lenl * sizeof(double), "pilu:11");
@@ -329,8 +329,8 @@ label41:
         lenu = len + 1 > fil1 ? fil1 : len + 1;
         amat->U->nzcount[ii] = lenu;
         jpos = lenu - 1;
-        if (jpos < len)
-            qsplitC(w, jw, len, jpos);
+        if (jpos < len) itsol_qsplitC(w, jw, len, jpos);
+
         amat->U->ma[ii] = (double *)itsol_malloc(lenu * sizeof(double), "pilu:12");
         amat->U->ja[ii] = (int *)itsol_malloc(lenu * sizeof(int), "pilu:13");
         if (t == 0.0)
@@ -355,7 +355,7 @@ label41:
         }
         lenu = len > fil2 ? fil2 : len;
         if (lenu < len)
-            qsplitC(w, jw, len, lenu);
+            itsol_qsplitC(w, jw, len, lenu);
         lflen[ii] = lenu;
 
         if (lenu > 0) {
@@ -557,7 +557,7 @@ label42:
         schur->nzcount[ii] = lenu;
         jpos = lenu;
         if (jpos < len)
-            qsplitC(w, jw, len, jpos);
+            itsol_qsplitC(w, jw, len, jpos);
         schur->ma[ii] = (double *)itsol_malloc(lenu * sizeof(double), "pilu:16");
         schur->ja[ii] = (int *)itsol_malloc(lenu * sizeof(int), "pilu:17");
         /*---------------------------------------------------------------------

@@ -109,7 +109,7 @@ int main(void)
             nnz = io.nnz;
 
             /*-------------------- conversion from COO to CSR format */
-            if ((ierr = COOcs(n, nnz, AA, JA, IA, csmat)) != 0) {
+            if ((ierr = itsol_COOcs(n, nnz, AA, JA, IA, csmat)) != 0) {
                 fprintf(stderr, "mainARMS: COOcs error\n");
                 return ierr;
             }
@@ -124,7 +124,7 @@ int main(void)
                 exit(7);
             }
             nnz = io.nnz;
-            if ((ierr = CSRcs(n, AA, JA, IA, csmat, rsa)) != 0) {
+            if ((ierr = itsol_CSRcs(n, AA, JA, IA, csmat, rsa)) != 0) {
                 fprintf(flog, "readhb_c: CSRcs error\n");
                 return ierr;
             }
@@ -176,7 +176,7 @@ int main(void)
             }
 
             io.tm_p = tm2 - tm1;
-            io.fillfact = nnz_arms(ArmsSt, flog) / (double)(nnz + 1);
+            io.fillfact = itsol_nnz_arms(ArmsSt, flog) / (double)(nnz + 1);
             fprintf(flog, "ARMS ends, fill factor (mem used) = %f\n", io.fillfact);
 
             /*---------------- get rough idea of cond number - exit if too big */
@@ -245,11 +245,11 @@ int main(void)
             output_result(lfil, &io, iparam);
             lfil += io.lfilInc;
             tol *= io.tolMul;
-            cleanARMS(ArmsSt);
+            itsol_cleanARMS(ArmsSt);
         }
 
         /*-------------------- NEXT_MATRIX: */
-        cleanCS(csmat);
+        itsol_cleanCS(csmat);
         free(sol);
         free(x);
         free(rhs);

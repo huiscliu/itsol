@@ -214,9 +214,9 @@ int itsol_indsetC(csptr mat, int bsize, int *iord, int *nnod, double tol)
     w = (double *)itsol_malloc(n * sizeof(double), "indsetC:2");
     matT = (csptr) itsol_malloc(sizeof(SparMat), "indsetC:3");
     /*  	 call weights to compute the weights for  input matrix.. */
-    setupCS(matT, mat->n, 1);
-    SparTran(mat, matT, 1, 0);
-    SparTran(matT, mat, 1, 1);
+    itsol_setupCS(matT, mat->n, 1);
+    itsol_SparTran(mat, matT, 1, 0);
+    itsol_SparTran(matT, mat, 1, 1);
     itsol_weightsC(mat, w);
     /*---------------------------------------------------------------------- 
       | scan all nodes first to eliminate those not satisfying DD criterion 
@@ -318,7 +318,7 @@ label50:
     for (j = 0; j < n; j++)
         iord[riord[j]] = j;
     (*nnod)++;
-    cleanCS(matT);
+    itsol_cleanCS(matT);
     free(riord);
     free(w);
     return 0;

@@ -46,7 +46,7 @@ int itsol_pc_vbilukC(int lofM, vbsptr vbmat, vbiluptr lu, FILE * fp)
     double alpha1 = 1.0, beta1 = 0.0, alpha2 = -1.0, beta2 = 1.0;
     vbsptr L, U;
 
-    setupVBILU(lu, n, bsz);
+    itsol_setupVBILU(lu, n, bsz);
     L = lu->L;
     U = lu->U;
 
@@ -66,7 +66,7 @@ int itsol_pc_vbilukC(int lofM, vbsptr vbmat, vbiluptr lu, FILE * fp)
         dim = B_DIM(bsz, i);    /* number of rows of blocks in i-th row */
         /* set up the i-th row accroding to the nonzero information from
            symbolic factorization */
-        mallocVBRow(lu, i);
+        itsol_mallocVBRow(lu, i);
 
         /* setup array jw[], and initial i-th row */
         for (j = 0; j < L->nzcount[i]; j++) {   /* initialize L part   */

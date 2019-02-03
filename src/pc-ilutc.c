@@ -263,7 +263,8 @@ int itsol_pc_ilutc(iluptr mt, iluptr lu, int lfil, double tol, int drop, FILE * 
         fprintf(fp, "ilutc: Illegal value for lfil.\n");
         return -1;
     }
-    setupILU(lu, n);
+
+    itsol_setupILU(lu, n);
     L = lu->L;
     U = lu->U;
     D = lu->D;

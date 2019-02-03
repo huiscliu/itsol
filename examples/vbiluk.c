@@ -102,7 +102,7 @@ int main(void)
             nnz = io.nnz;
 
             /*-------------------- conversion from COO to CSR format */
-            if ((ierr = COOcs(n, nnz, AA, JA, IA, csmat)) != 0) {
+            if ((ierr = itsol_COOcs(n, nnz, AA, JA, IA, csmat)) != 0) {
                 fprintf(stderr, "mainARMS: COOcs error\n");
                 return ierr;
             }
@@ -118,7 +118,7 @@ int main(void)
 
             nnz = io.nnz;
 
-            if ((ierr = CSRcs(n, AA, JA, IA, csmat, rsa)) != 0) {
+            if ((ierr = itsol_CSRcs(n, AA, JA, IA, csmat, rsa)) != 0) {
                 fprintf(flog, "readhb_c: CSRcs error\n");
                 return ierr;
             }
@@ -138,14 +138,14 @@ int main(void)
             double *diag;
 
             diag = (double *)itsol_malloc(sizeof(double) * n, "mainILUC:diag");
-            ierr = roscalC(csmat, diag, nrm);
+            ierr = itsol_roscalC(csmat, diag, nrm);
 
             if (ierr != 0) {
                 fprintf(stderr, "main-vbiluk: roscal: a zero row...\n");
                 return ierr;
             }
 
-            ierr = coscalC(csmat, diag, nrm);
+            ierr = itsol_coscalC(csmat, diag, nrm);
             if (ierr != 0) {
                 fprintf(stderr, "main-vbiluk: roscal: a zero col...\n");
                 return ierr;
@@ -177,7 +177,7 @@ int main(void)
 
         /*-------------------- convert to block matrix. */
         vbmat = (vbsptr) itsol_malloc(sizeof(VBSparMat), "main");
-        ierr = csrvbsrC(1, nBlock, nB, csmat, vbmat);
+        ierr = itsol_csrvbsrC(1, nBlock, nB, csmat, vbmat);
 
         if (ierr != 0) {
             fprintf(flog, "*** in csrvbsr ierr != 0 ***\n");
@@ -202,8 +202,8 @@ int main(void)
 
         /*------------- info of Block matrix */
         io.rt_v = (double)csmat->n / (double)vbmat->n;
-        io.rt_e = nnz_cs(csmat) / 1. / nnzVBMat(vbmat);
-        io.ceff = nnz_cs(csmat) / 1. / memVBMat(vbmat) * 100;
+        io.rt_e = itsol_nnz_cs(csmat) / 1. / itsol_nnzVBMat(vbmat);
+        io.ceff = itsol_nnz_cs(csmat) / 1. / itsol_memVBMat(vbmat) * 100;
 
         /*---------------------------*/
         output_header_vb(&io);
@@ -226,7 +226,7 @@ int main(void)
 
             if (ierr == -2) {
                 fprintf(io.fout, "Singular diagonal block...\n");
-                cleanVBILU(lu);
+                itsol_cleanVBILU(lu);
                 goto NEXT_MAT;
             }
             else if (ierr != 0) {
@@ -235,7 +235,7 @@ int main(void)
             }
 
             io.tm_p = tm2 - tm1;
-            io.fillfact = nnz_vbilu(lu) / (double)(io.nnz + 1);
+            io.fillfact = itsol_nnz_vbilu(lu) / (double)(io.nnz + 1);
             fprintf(flog, "vbiluk ends, fill factor (mem used) = %f\n", io.fillfact);
 
             /*------------- get rough idea of cond number - exit if too big */
@@ -302,13 +302,14 @@ int main(void)
 NEXT_PARA:
             output_result(lfil, &io, iparam);
             lfil += io.fill_lev_inc;
-            cleanVBILU(lu);
+            itsol_cleanVBILU(lu);
         }
+
         /*-------------------- next matrix */
 NEXT_MAT:
         /*  output_blocks( nBlock, nB, io.fout ); */
-        cleanCS(csmat);
-        cleanVBMat(vbmat);
+        itsol_cleanCS(csmat);
+        itsol_cleanVBMat(vbmat);
         free(nB);
         free(perm);
         free(sol);

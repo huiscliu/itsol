@@ -40,7 +40,7 @@ int itsol_pc_ilukC(int lofM, csptr csmat, iluptr lu, FILE * fp)
     csptr L, U;
     double *D;
 
-    setupILU(lu, n);
+    itsol_setupILU(lu, n);
     L = lu->L;
     U = lu->U;
     D = lu->D;
@@ -60,7 +60,7 @@ int itsol_pc_ilukC(int lofM, csptr csmat, iluptr lu, FILE * fp)
     for (i = 0; i < n; i++) {
         /* set up the i-th row accroding to the nonzero information from
            symbolic factorization */
-        mallocRow(lu, i);
+        itsol_mallocRow(lu, i);
 
         /* setup array jw[], and initial i-th row */
         for (j = 0; j < L->nzcount[i]; j++) {   /* initialize L part   */

@@ -1248,9 +1248,9 @@ int itsol_init_blocks(csptr csmat, int *pnBlock, int **pnB, int **pperm, double 
     /*-------------------- compress matrix based on angle algorithm */
     /*-------------------- calculate compressed A^T                 */
     at = (csptr) itsol_malloc(sizeof(SparMat), "init_blocks");
-    setupCS(at, n, 0);
-    if (itsol_CSparTran(csmat, at, compress) != 0)
-        return -1;
+    itsol_setupCS(at, n, 0);
+
+    if (itsol_CSparTran(csmat, at, compress) != 0) return -1;
 
     /*----------------------------------------------------------------------------
      * only the row representing beginning of block satisfies:
@@ -1348,7 +1348,7 @@ int itsol_init_blocks(csptr csmat, int *pnBlock, int **pnB, int **pperm, double 
     *t_angle = t2 - t1;
     *pperm = perm;
 
-    cleanCS(at);
+    itsol_cleanCS(at);
     free(nB);
     free(jbuf);
     free(compress);
