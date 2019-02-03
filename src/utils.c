@@ -987,7 +987,7 @@ void itsol_coocsc(int n, int nnz, double *val, int *col, int *row, double **a, i
         jc = col;
     }
 
-    coocsr_(&n, &nnz, val, jc, ir, *a, *ja, *ia);
+    itsol_coocsr_(&n, &nnz, val, jc, ir, *a, *ja, *ia);
 
     if (job == 0) {
         free(ir);

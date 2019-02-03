@@ -39,7 +39,7 @@ int nnz_lev4(p4ptr levmat, int *lev, FILE *ft);
 int setupILU(iluptr lu, int n);
 int CS2lum(int n, csptr Amat, iluptr mat, int typ);
 int COOcs(int n, int nnz,  double *a, int *ja, int *ia, csptr bmat);
-void coocsr_(int*, int*, double*, int*, int*, double*, int*, int*);
+void itsol_coocsr_(int*, int*, double*, int*, int*, double*, int*, int*);
 
 int csSplit4(csptr amat, int bsize, int csize, csptr B, csptr F, csptr E, csptr C);
 void itsol_setup_arms (arms Levmat);
