@@ -205,11 +205,11 @@ int read_coo(double **VAL, int **COL, int **ROW, io_t * pio, double **rhs, doubl
     pio->ndim = n;
     pio->nnz = nnz;
     /*-------------------- allocate memory for matrix and rhs --- */
-    *rhs = (double *)Malloc(n * sizeof(double), "read_coo:1");
-    *sol = (double *)Malloc(n * sizeof(double), "read_coo:2");
-    aa = (double *)Malloc(nnz * sizeof(double), "read_coo:3");
-    jj = (int *)Malloc(nnz * sizeof(int), "read_coo:4");
-    ii = (int *)Malloc(nnz * sizeof(int), "read_coo:5");
+    *rhs = (double *)itsol_malloc(n * sizeof(double), "read_coo:1");
+    *sol = (double *)itsol_malloc(n * sizeof(double), "read_coo:2");
+    aa = (double *)itsol_malloc(nnz * sizeof(double), "read_coo:3");
+    jj = (int *)itsol_malloc(nnz * sizeof(int), "read_coo:4");
+    ii = (int *)itsol_malloc(nnz * sizeof(int), "read_coo:5");
     /*-------------------- long live fortran77 --- */
     for (k = 0; k < nnz; k++) {
         fscanf(matf, "%d  %d  %s", &ii[k], &jj[k], str);
@@ -272,11 +272,11 @@ int readhb_c(int *NN, double **AA, int **JA, int **IA, io_t * pio, double **rhs,
     if (type[1] == 'S' || type[1] == 's')
         *rsa = 1;
     /* allocate space --------------------------------------------------- */
-    Tia = (int *)Malloc(sizeof(int) * (n + 1), "readhb");
-    Tja = (int *)Malloc(sizeof(int) * nnz, "readhb");
-    Ta = (double *)Malloc(sizeof(double) * nnz, "readhb");
-    *rhs = (double *)Malloc(sizeof(double) * n, "readhb");
-    *sol = (double *)Malloc(sizeof(double) * n, "readhb");
+    Tia = (int *)itsol_malloc(sizeof(int) * (n + 1), "readhb");
+    Tja = (int *)itsol_malloc(sizeof(int) * nnz, "readhb");
+    Ta = (double *)itsol_malloc(sizeof(double) * nnz, "readhb");
+    *rhs = (double *)itsol_malloc(sizeof(double) * n, "readhb");
+    *sol = (double *)itsol_malloc(sizeof(double) * n, "readhb");
     /* read matrix ------------------------------------------------------ */
     job = 2;
     tmp1 = n + 1;
@@ -288,9 +288,9 @@ int readhb_c(int *NN, double **AA, int **JA, int **IA, io_t * pio, double **rhs,
         return (ERR_AUXIL + 7);
     }
     tmp1 = tmp2 = 1;
-    ia = (int *)Malloc(sizeof(int) * (n + 1), "readhb");
-    ja = (int *)Malloc(sizeof(int) * nnz, "readhb");
-    a = (double *)Malloc(sizeof(double) * nnz, "readhb");
+    ia = (int *)itsol_malloc(sizeof(int) * (n + 1), "readhb");
+    ja = (int *)itsol_malloc(sizeof(int) * nnz, "readhb");
+    a = (double *)itsol_malloc(sizeof(double) * nnz, "readhb");
     /*----------- convert to row format */
     csrcsc(&n, &tmp1, &tmp2, Ta, Tja, Tia, a, ja, ia);
     /*-------------------- io struct update */
@@ -356,11 +356,11 @@ int readhb_2(int *NN, double **AA, int **JA, int **IA, io_t * pio, double **rhs,
     if (type[1] == 'S' || type[1] == 's')
         *rsa = 1;
     /* allocate space --------------------------------------------------- */
-    Tia = (int *)Malloc(sizeof(int) * (n + 1), "readhb");
-    Tja = (int *)Malloc(sizeof(int) * nnz, "readhb");
-    Ta = (double *)Malloc(sizeof(double) * nnz, "readhb");
-    *rhs = (double *)Malloc(sizeof(double) * n, "readhb");
-    *sol = (double *)Malloc(sizeof(double) * n, "readhb");
+    Tia = (int *)itsol_malloc(sizeof(int) * (n + 1), "readhb");
+    Tja = (int *)itsol_malloc(sizeof(int) * nnz, "readhb");
+    Ta = (double *)itsol_malloc(sizeof(double) * nnz, "readhb");
+    *rhs = (double *)itsol_malloc(sizeof(double) * n, "readhb");
+    *sol = (double *)itsol_malloc(sizeof(double) * n, "readhb");
     /* read matrix ------------------------------------------------------ */
     job = 2;
     tmp1 = n + 1;
@@ -375,9 +375,9 @@ int readhb_2(int *NN, double **AA, int **JA, int **IA, io_t * pio, double **rhs,
 
     if (fmt == 1) {
         /*------------------- CSR */
-        ia = (int *)Malloc(sizeof(int) * (n + 1), "readhb");
-        ja = (int *)Malloc(sizeof(int) * nnz, "readhb");
-        a = (double *)Malloc(sizeof(double) * nnz, "readhb");
+        ia = (int *)itsol_malloc(sizeof(int) * (n + 1), "readhb");
+        ja = (int *)itsol_malloc(sizeof(int) * nnz, "readhb");
+        a = (double *)itsol_malloc(sizeof(double) * nnz, "readhb");
         /*----------- convert to row format */
         csrcsc(&n, &tmp1, &tmp2, Ta, Tja, Tia, a, ja, ia);
     }

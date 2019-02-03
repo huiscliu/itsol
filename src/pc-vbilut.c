@@ -80,11 +80,11 @@ int itsol_pc_vbilutC(vbsptr vbmat, vbiluptr lu, int lfil, double tol, BData * w,
     D = lu->D;
 
     iw = lu->work;
-    jbuf = (int *)Malloc(n * sizeof(int), "vbilut");
-    buf_fact = (BData) Malloc(max_blk_sz, "vbilut");
-    buf_ns = (BData) Malloc(max_blk_sz, "vbilut");
-    xnrm = (double *)Malloc(n * sizeof(double), "vbilut");
-    wn = (double *)Malloc(n * sizeof(double), "vbilut");
+    jbuf = (int *)itsol_malloc(n * sizeof(int), "vbilut");
+    buf_fact = (BData) itsol_malloc(max_blk_sz, "vbilut");
+    buf_ns = (BData) itsol_malloc(max_blk_sz, "vbilut");
+    xnrm = (double *)itsol_malloc(n * sizeof(double), "vbilut");
+    wn = (double *)itsol_malloc(n * sizeof(double), "vbilut");
 
     /* set indicator array jw to -1 */
     for (i = 0; i < n; i++)
@@ -112,7 +112,7 @@ int itsol_pc_vbilutC(vbsptr vbmat, vbiluptr lu, int lfil, double tol, BData * w,
         lenu = 1;
         lenl = 0;
         jbuf[i] = i;
-        zrmC(dim, dim, w[i]);
+        itsol_zrmC(dim, dim, w[i]);
         iw[i] = i;
 
         for (j = 0; j < nzcount; j++) {
@@ -124,17 +124,17 @@ int itsol_pc_vbilutC(vbsptr vbmat, vbiluptr lu, int lfil, double tol, BData * w,
             if (col < i) {
                 jbuf[lenl] = col;
                 iw[col] = lenl;
-                copyBData(dim, sz, w[lenl], ba[j], 0);
+                itsol_copyBData(dim, sz, w[lenl], ba[j], 0);
                 lenl++;
             }
             else if (col == i) {
-                copyBData(dim, dim, w[i], ba[j], 0);
+                itsol_copyBData(dim, dim, w[i], ba[j], 0);
             }
             else {
                 jpos = i + lenu;
                 jbuf[jpos] = col;
                 iw[col] = jpos;
-                copyBData(dim, sz, w[jpos], ba[j], 0);
+                itsol_copyBData(dim, sz, w[jpos], ba[j], 0);
                 lenu++;
             }
         }
@@ -164,9 +164,9 @@ int itsol_pc_vbilutC(vbsptr vbmat, vbiluptr lu, int lfil, double tol, BData * w,
                 iw[jrow] = j;
                 iw[col] = jpos;
                 sz = B_DIM(bsz, col);
-                copyBData(dim, sz, buf_ns, w[j], 0);
-                copyBData(dim, szjrow, w[j], w[jpos], 0);
-                copyBData(dim, sz, w[jpos], buf_ns, 0);
+                itsol_copyBData(dim, sz, buf_ns, w[j], 0);
+                itsol_copyBData(dim, szjrow, w[j], w[jpos], 0);
+                itsol_copyBData(dim, sz, w[jpos], buf_ns, 0);
             }
             /* get the multiplier for row to be eliminated (jrow). */
             /* fact = w(jj)*alu(jrow)                              */
@@ -200,7 +200,7 @@ int itsol_pc_vbilutC(vbsptr vbmat, vbiluptr lu, int lfil, double tol, BData * w,
                         upos = i + lenu;
                         jbuf[upos] = col;
                         iw[col] = upos;
-                        copyBData(dim, sz, w[upos], buf_ns, 0);
+                        itsol_copyBData(dim, sz, w[upos], buf_ns, 0);
                         lenu++;
                     }
                     else {
@@ -216,7 +216,7 @@ int itsol_pc_vbilutC(vbsptr vbmat, vbiluptr lu, int lfil, double tol, BData * w,
                         /* this is a fill-in element */
                         jbuf[lenl] = col;
                         iw[col] = lenl;
-                        copyBData(dim, sz, w[lenl], buf_ns, 0);
+                        itsol_copyBData(dim, sz, w[lenl], buf_ns, 0);
                         lenl++;
                     }
                     else {
@@ -226,7 +226,7 @@ int itsol_pc_vbilutC(vbsptr vbmat, vbiluptr lu, int lfil, double tol, BData * w,
                     }
                 }
                 }
-                copyBData(dim, szjrow, w[len], buf_fact, 1);
+                itsol_copyBData(dim, szjrow, w[len], buf_fact, 1);
                 jbuf[len] = jrow;
                 len++;
             }
@@ -242,8 +242,8 @@ int itsol_pc_vbilutC(vbsptr vbmat, vbiluptr lu, int lfil, double tol, BData * w,
             qsplit(wn, iw, &lenl, &len);
             L->nzcount[i] = len;
             if (len > 0) {
-                L->ja[i] = (int *)Malloc(len * sizeof(int), "vbilut");
-                L->ba[i] = (BData *) Malloc(len * sizeof(BData), "vbilut");
+                L->ja[i] = (int *)itsol_malloc(len * sizeof(int), "vbilut");
+                L->ba[i] = (BData *) itsol_malloc(len * sizeof(BData), "vbilut");
             }
             ja = L->ja[i];
             ba = L->ba[i];
@@ -251,8 +251,8 @@ int itsol_pc_vbilutC(vbsptr vbmat, vbiluptr lu, int lfil, double tol, BData * w,
                 jpos = iw[j];
                 ja[j] = jbuf[jpos];
                 sz = B_DIM(bsz, ja[j]);
-                ba[j] = (BData) Malloc(dim * sz * sizeof(double), "vbilut");
-                copyBData(dim, sz, ba[j], w[jpos], 0);
+                ba[j] = (BData) itsol_malloc(dim * sz * sizeof(double), "vbilut");
+                itsol_copyBData(dim, sz, ba[j], w[jpos], 0);
             }
             for (j = 0; j < lenl; j++)
                 iw[j] = -1;
@@ -269,8 +269,8 @@ int itsol_pc_vbilutC(vbsptr vbmat, vbiluptr lu, int lfil, double tol, BData * w,
             qsplit(wn, iw, &para, &len);
             nzcount = U->nzcount[i] = len - 1;
             if (nzcount > 0) {
-                U->ja[i] = (int *)Malloc(nzcount * sizeof(int), "vbilut");
-                U->ba[i] = (BData *) Malloc(nzcount * sizeof(BData), "vbilut");
+                U->ja[i] = (int *)itsol_malloc(nzcount * sizeof(int), "vbilut");
+                U->ba[i] = (BData *) itsol_malloc(nzcount * sizeof(BData), "vbilut");
             }
             ja = U->ja[i];
             ba = U->ba[i];
@@ -279,8 +279,8 @@ int itsol_pc_vbilutC(vbsptr vbmat, vbiluptr lu, int lfil, double tol, BData * w,
                 jpos = iw[j];
                 ja[j] = jbuf[jpos];
                 sz = B_DIM(bsz, ja[j]);
-                ba[j] = (BData) Malloc(dim * sz * sizeof(double), "vbilut");
-                copyBData(dim, sz, ba[j], w[jpos], 0);
+                ba[j] = (BData) itsol_malloc(dim * sz * sizeof(double), "vbilut");
+                itsol_copyBData(dim, sz, ba[j], w[jpos], 0);
                 t = max(t, wn[j]);
             }
             for (j = 0; j < lenu - 1; j++)
@@ -290,8 +290,8 @@ int itsol_pc_vbilutC(vbsptr vbmat, vbiluptr lu, int lfil, double tol, BData * w,
             xnrm[i] = t;
 
             /* store inverse of diagonal element of u */
-            D[i] = (BData) Malloc(dim * dim * sizeof(double), "vbilut");
-            copyBData(dim, dim, D[i], w[i], 0);
+            D[i] = (BData) itsol_malloc(dim * dim * sizeof(double), "vbilut");
+            itsol_copyBData(dim, dim, D[i], w[i], 0);
 
             gauss(&dim, D[i], &ierr);
 

@@ -45,8 +45,8 @@ int main(void)
     double terr;
     char line[MAX_LINE];
 
-    MAT = (SMatptr) Malloc(sizeof(SMat), "main:MAT");
-    PRE = (SPreptr) Malloc(sizeof(SPre), "main:PRE");
+    MAT = (SMatptr) itsol_malloc(sizeof(SMat), "main:MAT");
+    PRE = (SPreptr) itsol_malloc(sizeof(SPre), "main:PRE");
 
     /*------------------ read and set parameters and other inputs */
     memset(&io, 0, sizeof(io));
@@ -94,7 +94,7 @@ int main(void)
         fprintf(flog, "MATRIX: %s...\n", io.MatNam);
 
         /*-------------------- Read matrix - case: COO formats */
-        csmat = (csptr) Malloc(sizeof(SparMat), "main:csmat");
+        csmat = (csptr) itsol_malloc(sizeof(SparMat), "main:csmat");
 
         if (io.Fmt > HB) {
             ierr = read_coo(&AA, &JA, &IA, &io, &rhs, &sol, 0);
@@ -140,7 +140,7 @@ int main(void)
 
         /*----------------------------------------------------------*/
         n = csmat->n;
-        x = (double *)Malloc(n * sizeof(double), "main:x");
+        x = (double *)itsol_malloc(n * sizeof(double), "main:x");
         output_header(&io);
 
         /*-------------------- set initial lfil and tol */
@@ -155,8 +155,8 @@ int main(void)
                 droptol[j] = tol * dropcoef[j];
             }
 
-            ArmsSt = (arms) Malloc(sizeof(armsMat), "main:ArmsSt");
-            setup_arms(ArmsSt);
+            ArmsSt = (arms) itsol_malloc(sizeof(armsMat), "main:ArmsSt");
+            itsol_setup_arms(ArmsSt);
             fprintf(flog, "begin arms\n");
             tm1 = sys_timer();
 

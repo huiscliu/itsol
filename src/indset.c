@@ -210,9 +210,9 @@ int itsol_indsetC(csptr mat, int bsize, int *iord, int *nnod, double tol)
     csptr matT, gmat;
 
     /*-----------------------------------------------------------------------*/
-    riord = (int *)Malloc(n * sizeof(int), "indsetC:1");
-    w = (double *)Malloc(n * sizeof(double), "indsetC:2");
-    matT = (csptr) Malloc(sizeof(SparMat), "indsetC:3");
+    riord = (int *)itsol_malloc(n * sizeof(int), "indsetC:1");
+    w = (double *)itsol_malloc(n * sizeof(double), "indsetC:2");
+    matT = (csptr) itsol_malloc(sizeof(SparMat), "indsetC:3");
     /*  	 call weights to compute the weights for  input matrix.. */
     setupCS(matT, mat->n, 1);
     SparTran(mat, matT, 1, 0);
@@ -404,7 +404,7 @@ int itsol_preSel(csptr mat, int *icor, int *jcor, int job, double tol, int *coun
         countL++;
     }
     /*-------------------- sort them  */
-    qsortR2I(weight, icor, jcor, 0, countL - 1);
+    itsol_qsortR2I(weight, icor, jcor, 0, countL - 1);
     *count = countL;
     free(weight);
     return 0;

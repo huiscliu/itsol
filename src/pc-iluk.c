@@ -177,9 +177,9 @@ int itsol_pc_lofC(int lofM, csptr csmat, iluptr lu, FILE * fp)
 
     (void)fp;
 
-    levls = (int *)Malloc(n * sizeof(int), "lofC");
-    jbuf = (int *)Malloc(n * sizeof(int), "lofC");
-    ulvl = (int **)Malloc(n * sizeof(int *), "lofC");
+    levls = (int *)itsol_malloc(n * sizeof(int), "lofC");
+    jbuf = (int *)itsol_malloc(n * sizeof(int), "lofC");
+    ulvl = (int **)itsol_malloc(n * sizeof(int *), "lofC");
 
     /* initilize iw */
     for (j = 0; j < n; j++)
@@ -258,17 +258,17 @@ int itsol_pc_lofC(int lofM, csptr csmat, iluptr lu, FILE * fp)
         /*-------------------- copy L-part */
         L->nzcount[i] = incl;
         if (incl > 0) {
-            L->ja[i] = (int *)Malloc(incl * sizeof(int), "lofC");
+            L->ja[i] = (int *)itsol_malloc(incl * sizeof(int), "lofC");
             memcpy(L->ja[i], jbuf, sizeof(int) * incl);
         }
         /*-------------------- copy U - part        */
         k = incu - i;
         U->nzcount[i] = k;
         if (k > 0) {
-            U->ja[i] = (int *)Malloc(sizeof(int) * k, "lofC");
+            U->ja[i] = (int *)itsol_malloc(sizeof(int) * k, "lofC");
             memcpy(U->ja[i], jbuf + i, sizeof(int) * k);
             /*-------------------- update matrix of levels */
-            ulvl[i] = (int *)Malloc(k * sizeof(int), "lofC");
+            ulvl[i] = (int *)itsol_malloc(k * sizeof(int), "lofC");
             memcpy(ulvl[i], levls + i, k * sizeof(int));
         }
     }

@@ -36,8 +36,8 @@ int main(void)
     double terr;
     char line[MAX_LINE];
 
-    MAT = (SMatptr) Malloc(sizeof(SMat), "main:MAT");
-    PRE = (SPreptr) Malloc(sizeof(SPre), "main:PRE");
+    MAT = (SMatptr) itsol_malloc(sizeof(SMat), "main:MAT");
+    PRE = (SPreptr) itsol_malloc(sizeof(SPre), "main:PRE");
 
     /*------------------ read and set parameters and other inputs  */
     memset(&io, 0, sizeof(io));
@@ -85,7 +85,7 @@ int main(void)
         fprintf(flog, "MATRIX: %s...\n", io.MatNam);
 
         /* ------------------- Read in matrix and allocate memory */
-        csmat = (csptr) Malloc(sizeof(SparMat), "main");
+        csmat = (csptr) itsol_malloc(sizeof(SparMat), "main");
 
         /*-------------------- case: COO formats */
         if (io.Fmt > HB) {
@@ -137,7 +137,7 @@ int main(void)
             int nrm = 1;
             double *diag;
 
-            diag = (double *)Malloc(sizeof(double) * n, "mainILUC:diag");
+            diag = (double *)itsol_malloc(sizeof(double) * n, "mainILUC:diag");
             ierr = roscalC(csmat, diag, nrm);
 
             if (ierr != 0) {
@@ -155,7 +155,7 @@ int main(void)
         }
 
         /*------------------------------------------------------------*/
-        x = (double *)Malloc(io.ndim * sizeof(double), "main");
+        x = (double *)itsol_malloc(io.ndim * sizeof(double), "main");
         ierr = itsol_init_blocks(csmat, &nBlock, &nB, &perm, io.eps, &io.tm_h, &io.tm_a);
         io.tm_b = io.tm_h + io.tm_a;
 
@@ -171,12 +171,12 @@ int main(void)
         }
 
         /*-------------------- permute the right-hand-side  */
-        prhs = (double *)Malloc(n * sizeof(double), "main");
+        prhs = (double *)itsol_malloc(n * sizeof(double), "main");
         for (i = 0; i < n; i++)
             prhs[perm[i]] = rhs[i];
 
         /*-------------------- convert to block matrix. */
-        vbmat = (vbsptr) Malloc(sizeof(VBSparMat), "main");
+        vbmat = (vbsptr) itsol_malloc(sizeof(VBSparMat), "main");
         ierr = csrvbsrC(1, nBlock, nB, csmat, vbmat);
 
         if (ierr != 0) {
@@ -213,7 +213,7 @@ int main(void)
         /*---------------------- LOOP through parameters */
         for (iparam = 1; iparam <= io.nparam; iparam++) {
             fprintf(flog, "iparam = %d\n", iparam);
-            lu = (vbiluptr) Malloc(sizeof(VBILUSpar), "main");
+            lu = (vbiluptr) itsol_malloc(sizeof(VBILUSpar), "main");
             fprintf(flog, "begin vbiluk\n");
 
             tm1 = sys_timer();

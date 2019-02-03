@@ -42,8 +42,8 @@ int main(void)
     double terr;
     char line[MAX_LINE];
 
-    MAT = (SMatptr) Malloc(sizeof(SMat), "main:MAT");
-    PRE = (SPreptr) Malloc(sizeof(SPre), "main:PRE");
+    MAT = (SMatptr) itsol_malloc(sizeof(SMat), "main:MAT");
+    PRE = (SPreptr) itsol_malloc(sizeof(SPre), "main:PRE");
 
     /*------------------ read and set parameters and other inputs  */
     memset(&io, 0, sizeof(io));
@@ -85,8 +85,8 @@ int main(void)
         fprintf(flog, "MATRIX: %s...\n", io.MatNam);
 
         /*-------------------- Read  matrix */
-        lumat = (iluptr) Malloc(sizeof(LDUmat), "main:lumat");
-        csmat = (csptr) Malloc(sizeof(SparMat), "main:csmat");
+        lumat = (iluptr) itsol_malloc(sizeof(LDUmat), "main:lumat");
+        csmat = (csptr) itsol_malloc(sizeof(SparMat), "main:csmat");
 
         /*-------------------- case: COO formats (0-indexing) */
         if (io.Fmt > HB) {
@@ -143,7 +143,7 @@ int main(void)
         JA = NULL;
 
         /*---------------------------------------------------------*/
-        x = (double *)Malloc(io.ndim * sizeof(double), "main");
+        x = (double *)itsol_malloc(io.ndim * sizeof(double), "main");
         output_header(&io);
 
         /*-------------------- set initial lfil and tol */
@@ -153,7 +153,7 @@ int main(void)
         /*-------------------- LOOP through parameters */
         for (iparam = 1; iparam <= io.nparam; iparam++) {
             fprintf(flog, "iparam = %d\n", iparam);
-            lu = (iluptr) Malloc(sizeof(ILUSpar), "main");
+            lu = (iluptr) itsol_malloc(sizeof(ILUSpar), "main");
             tm1 = sys_timer();
 
             /*-------------------- call ILUC preconditioner set-up  */

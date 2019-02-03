@@ -161,7 +161,7 @@ int itsol_pc_arms2(csptr Amat, int *ipar, double *droptol, int *lfil, double tol
     /*   schur matrix starts being original A */
 
     /*-------------------- begin                                         */
-    schur = (csptr) Malloc(sizeof(SparMat), "arms2:1");
+    schur = (csptr) itsol_malloc(sizeof(SparMat), "arms2:1");
     /*---------------------------------------------------------------------
       | The matrix (a,ja,ia) plays role of Schur compl. from the 0th level.
       +--------------------------------------------------------------------*/
@@ -198,10 +198,10 @@ int itsol_pc_arms2(csptr Amat, int *ipar, double *droptol, int *lfil, double tol
         if (nA <= bsize)
             goto label1000;
         /*-------------------- allocate work space                        */
-        iwork = (int *)Malloc(nA * sizeof(int), "arms2:2.5");
+        iwork = (int *)itsol_malloc(nA * sizeof(int), "arms2:2.5");
         symperm = 0;            /* 0nly needed in cleanP4 */
         if (ipar[1] == 1)
-            uwork = (int *)Malloc(nA * sizeof(int), "arms2:2.5");
+            uwork = (int *)itsol_malloc(nA * sizeof(int), "arms2:2.5");
         else {
             symperm = 1;
             uwork = iwork;
@@ -210,14 +210,14 @@ int itsol_pc_arms2(csptr Amat, int *ipar, double *droptol, int *lfil, double tol
         dd1 = NULL;
         dd2 = NULL;
         if (methL[2]) {
-            dd1 = (double *)Malloc(nA * sizeof(double), "arms2:3");
+            dd1 = (double *)itsol_malloc(nA * sizeof(double), "arms2:3");
             j = roscalC(schur, dd1, 1);
             if (j)
                 printf("ERROR in roscalC -  row %d  is a zero row\n", j);
         }
 
         if (methL[3]) {
-            dd2 = (double *)Malloc(nA * sizeof(double), "arms2:4");
+            dd2 = (double *)itsol_malloc(nA * sizeof(double), "arms2:4");
             j = coscalC(schur, dd2, 1);
             if (j)
                 printf("ERROR in coscalC - column %d is a zero column\n", j);
@@ -257,7 +257,7 @@ int itsol_pc_arms2(csptr Amat, int *ipar, double *droptol, int *lfil, double tol
             /*-   delete C matrix of any level except last one (no longer needed) */
             cleanCS(C);
             /*-------------------- create the next level */
-            levn = (p4ptr) Malloc(sizeof(Per4Mat), "arms2:6");
+            levn = (p4ptr) itsol_malloc(sizeof(Per4Mat), "arms2:6");
             /* levc->prev = levp; */
             levc->next = levn;
             levp = levc;
@@ -265,10 +265,10 @@ int itsol_pc_arms2(csptr Amat, int *ipar, double *droptol, int *lfil, double tol
             levc->prev = levp;
         }
         /*-------------------- p4ptr struct for current schur complement */
-        B = (csptr) Malloc(sizeof(SparMat), "arms2:7");
-        E = (csptr) Malloc(sizeof(SparMat), "arms2:8");
-        F = (csptr) Malloc(sizeof(SparMat), "arms2:9");
-        C = (csptr) Malloc(sizeof(SparMat), "arms2:10");
+        B = (csptr) itsol_malloc(sizeof(SparMat), "arms2:7");
+        E = (csptr) itsol_malloc(sizeof(SparMat), "arms2:8");
+        F = (csptr) itsol_malloc(sizeof(SparMat), "arms2:9");
+        C = (csptr) itsol_malloc(sizeof(SparMat), "arms2:10");
         csSplit4(schur, nB, nC, B, F, E, C);
         setupP4(levc, nB, nC, F, E);
         /*--------------------     copy a few pointers       ---- */
@@ -297,7 +297,7 @@ int itsol_pc_arms2(csptr Amat, int *ipar, double *droptol, int *lfil, double tol
           | one for next level...
           +--------------------------------------------------------------------*/
         cleanCS(schur);
-        schur = (csptr) Malloc(sizeof(SparMat), "arms2:11");
+        schur = (csptr) itsol_malloc(sizeof(SparMat), "arms2:11");
         setupCS(schur, nC, 1);
         /*----------------------------------------------------------------------
           | calling PILU to construct this level block factorization
@@ -332,7 +332,7 @@ int itsol_pc_arms2(csptr Amat, int *ipar, double *droptol, int *lfil, double tol
 
     ilsch->D1 = NULL;
     if (methS[2]) {
-        ilsch->D1 = (double *)Malloc(nC * sizeof(double), "arms2:iluschD1");
+        ilsch->D1 = (double *)itsol_malloc(nC * sizeof(double), "arms2:iluschD1");
         j = roscalC(schur, ilsch->D1, 1);
         if (j)
             printf("ERROR in roscalC - row %d is a zero row\n", j);
@@ -340,7 +340,7 @@ int itsol_pc_arms2(csptr Amat, int *ipar, double *droptol, int *lfil, double tol
 
     ilsch->D2 = NULL;
     if (methS[3]) {
-        ilsch->D2 = (double *)Malloc(nC * sizeof(double), "arms2:iluschD1");
+        ilsch->D2 = (double *)itsol_malloc(nC * sizeof(double), "arms2:iluschD1");
         j = coscalC(schur, ilsch->D2, 1);
         if (j)
             printf("ERROR in coscalC - column %d is a zero column\n", j);
@@ -351,8 +351,8 @@ int itsol_pc_arms2(csptr Amat, int *ipar, double *droptol, int *lfil, double tol
     uwork = NULL;
     iwork = NULL;
     if (methS[0]) {
-        iwork = (int *)Malloc(nC * sizeof(int), "arms2:3");
-        uwork = (int *)Malloc(nC * sizeof(int), "arms2:3.5");
+        iwork = (int *)itsol_malloc(nC * sizeof(int), "arms2:3");
+        uwork = (int *)itsol_malloc(nC * sizeof(int), "arms2:3.5");
         tolind = 0.0;
         itsol_PQperm(schur, bsize, uwork, iwork, &nB, tolind);
         itsol_rpermC(schur, uwork);
@@ -366,7 +366,7 @@ int itsol_pc_arms2(csptr Amat, int *ipar, double *droptol, int *lfil, double tol
     if (methS[1] == 0)
         ierr = itsol_pc_ilutD(schur, droptol, lfil, ilsch);
     else {
-        ilsch->perm2 = (int *)Malloc(nC * sizeof(int), "arms2:ilutpC");
+        ilsch->perm2 = (int *)itsol_malloc(nC * sizeof(int), "arms2:ilutpC");
         for (j = 0; j < nC; j++)
             ilsch->perm2[j] = j;
         ierr = itsol_pc_ilutpC(schur, droptol, lfil, PERMTOL, nC, ilsch);

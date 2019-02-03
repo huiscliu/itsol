@@ -37,8 +37,8 @@ int main(void)
     double terr;
     char line[MAX_LINE];
 
-    MAT = (SMatptr) Malloc(sizeof(SMat), "main:MAT");
-    PRE = (SPreptr) Malloc(sizeof(SPre), "main:PRE");
+    MAT = (SMatptr) itsol_malloc(sizeof(SMat), "main:MAT");
+    PRE = (SPreptr) itsol_malloc(sizeof(SPre), "main:PRE");
 
     /*------------------ read and set parameters and other inputs  */
     memset(&io, 0, sizeof(io));
@@ -83,7 +83,7 @@ int main(void)
         fprintf(flog, "MATRIX: %s...\n", io.MatNam);
 
         /*-------------------- Read matrix */
-        csmat = (csptr) Malloc(sizeof(SparMat), "main");
+        csmat = (csptr) itsol_malloc(sizeof(SparMat), "main");
 
         /*-------------------- case: COO formats */
         if (io.Fmt > HB) {
@@ -134,7 +134,7 @@ int main(void)
             int nrm = 1;
             double *diag;
 
-            diag = (double *)Malloc(sizeof(double) * n, "mainILUC:diag");
+            diag = (double *)itsol_malloc(sizeof(double) * n, "mainILUC:diag");
             ierr = roscalC(csmat, diag, nrm);
 
             if (ierr != 0) {
@@ -151,7 +151,7 @@ int main(void)
         }
 
         /*---------------------------------------------------------*/
-        x = (double *)Malloc(io.ndim * sizeof(double), "main");
+        x = (double *)itsol_malloc(io.ndim * sizeof(double), "main");
         output_header(&io);
 
         /*-------------------- set initial lfil and tol */
@@ -161,7 +161,7 @@ int main(void)
         /*-------------------- LOOP through parameters */
         for (iparam = 1; iparam <= io.nparam; iparam++) {
             fprintf(flog, "iparam = %d\n", iparam);
-            lu = (iluptr) Malloc(sizeof(ILUSpar), "main");
+            lu = (iluptr) itsol_malloc(sizeof(ILUSpar), "main");
             fprintf(flog, "begin ilut\n");
             tm1 = sys_timer();
 

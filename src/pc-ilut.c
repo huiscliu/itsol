@@ -70,10 +70,10 @@ int itsol_pc_ilut(csptr csmat, iluptr lu, int lfil, double tol, FILE * fp)
     U = lu->U;
     D = lu->D;
 
-    iw = (int *)Malloc(n * sizeof(int), "ilut");
-    jbuf = (int *)Malloc(n * sizeof(int), "ilut");
-    wn = (double *)Malloc(n * sizeof(double), "ilut");
-    w = (double *)Malloc(n * sizeof(double), "ilut");
+    iw = (int *)itsol_malloc(n * sizeof(int), "ilut");
+    jbuf = (int *)itsol_malloc(n * sizeof(int), "ilut");
+    wn = (double *)itsol_malloc(n * sizeof(double), "ilut");
+    w = (double *)itsol_malloc(n * sizeof(double), "ilut");
 
     /* set indicator array jw to -1 */
     for (i = 0; i < n; i++)
@@ -237,8 +237,8 @@ int itsol_pc_ilut(csptr csmat, iluptr lu, int lfil, double tol, FILE * fp)
         qsplit(wn, iw, &lenl, &len);
         L->nzcount[i] = len;
         if (len > 0) {
-            ja = L->ja[i] = (int *)Malloc(len * sizeof(int), "ilut");
-            ma = L->ma[i] = (double *)Malloc(len * sizeof(double), "ilut");
+            ja = L->ja[i] = (int *)itsol_malloc(len * sizeof(int), "ilut");
+            ma = L->ma[i] = (double *)itsol_malloc(len * sizeof(double), "ilut");
         }
         for (j = 0; j < len; j++) {
             jpos = iw[j];
@@ -259,8 +259,8 @@ int itsol_pc_ilut(csptr csmat, iluptr lu, int lfil, double tol, FILE * fp)
         qsplit(wn, iw, &lenu, &len);
         U->nzcount[i] = len;
         if (len > 0) {
-            ja = U->ja[i] = (int *)Malloc(len * sizeof(int), "ilut");
-            ma = U->ma[i] = (double *)Malloc(len * sizeof(double), "ilut");
+            ja = U->ja[i] = (int *)itsol_malloc(len * sizeof(int), "ilut");
+            ma = U->ma[i] = (double *)itsol_malloc(len * sizeof(double), "ilut");
         }
 
         for (j = 0; j < len; j++) {

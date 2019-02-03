@@ -7,8 +7,8 @@ int itsol_CondestC(iluptr lu, FILE * fp)
 {
     int n = lu->n, i;
     double norm = 0.0;
-    double *y = (double *)Malloc(n * sizeof(double), "condestC");
-    double *x = (double *)Malloc(n * sizeof(double), "condestC");
+    double *y = (double *)itsol_malloc(n * sizeof(double), "condestC");
+    double *x = (double *)itsol_malloc(n * sizeof(double), "condestC");
 
     for (i = 0; i < n; i++)
         y[i] = 1.0;
@@ -161,8 +161,8 @@ int itsol_diag_scal(vbsptr vbmat)
     int bufsz = sizeof(double) * MAX_BLOCK_SIZE * MAX_BLOCK_SIZE;
     BData *ba, *D, buf;
 
-    D = (BData *) Malloc(sizeof(BData) * n, "diag_scal");
-    buf = (BData) Malloc(bufsz, "diag_scal");
+    D = (BData *) itsol_malloc(sizeof(BData) * n, "diag_scal");
+    buf = (BData) itsol_malloc(bufsz, "diag_scal");
 
     for (i = 0; i < n; i++) {
         nzcount = vbmat->nzcount[i];
@@ -174,7 +174,7 @@ int itsol_diag_scal(vbsptr vbmat)
 
             dim = B_DIM(bsz, i);
             size = sizeof(double) * dim * dim;
-            D[i] = (BData) Malloc(size, "diag_scal");
+            D[i] = (BData) itsol_malloc(size, "diag_scal");
             memcpy(D[i], vbmat->ba[i][j], size);
 
             ierr = itsol_invSVD(dim, D[i]);
@@ -198,7 +198,7 @@ int itsol_diag_scal(vbsptr vbmat)
             col = ja[j];
             sz = B_DIM(bsz, col);
             DGEMM("n", "n", dim, sz, dim, one, D[i], dim, ba[j], dim, zero, buf, dim);
-            copyBData(dim, sz, ba[j], buf, 0);
+            itsol_copyBData(dim, sz, ba[j], buf, 0);
         }
     }
 
@@ -458,7 +458,7 @@ p4ptr itsol_Lvsol2(double *x, int nlev, p4ptr levmat, ilutptr ilusch)
         lenB = levmat->nB;
         /*-------------------- left scaling                                  */
         if (levmat->D1 != NULL)
-            dscale(nloc, levmat->D1, &x[first], &x[first]);
+            itsol_dscale(nloc, levmat->D1, &x[first], &x[first]);
         /*--------------------  RESTRICTION/ DESCENT OPERATION  */
         if (lenB) itsol_descend(levmat, &x[first], &x[first]);
 
@@ -503,7 +503,7 @@ int itsol_Uvsol2(double *x, int nlev, int n, p4ptr levmat, ilutptr ilusch)
         if (levmat->n) itsol_ascend(levmat, &x[first], &x[first]);
 
         /*-------------------- right scaling */
-        if (levmat->D2 != NULL) dscale(nloc, levmat->D2, &x[first], &x[first]);
+        if (levmat->D2 != NULL) itsol_dscale(nloc, levmat->D2, &x[first], &x[first]);
 
         levmat = levmat->prev;
     }
@@ -558,7 +558,7 @@ void itsol_SchLsol(ilutptr ilusch, double *y)
 
     /*-------------------- begin: right scaling                          */
     if (ilusch->D1 != NULL)
-        dscale(n, ilusch->D1, y, y);
+        itsol_dscale(n, ilusch->D1, y, y);
     /*-------------------- ONE SIDED ROW PERMS */
     if (perm != NULL) {
         for (j = 0; j < n; j++)
@@ -606,7 +606,7 @@ void itsol_SchUsol(ilutptr ilusch, double *y)
         memcpy(y, work, n * sizeof(double));
 
     /*-------------------- case when diagonal scaling is done on columns    */
-    if (ilusch->D2 != NULL) dscale(n, ilusch->D2, y, y);
+    if (ilusch->D2 != NULL) itsol_dscale(n, ilusch->D2, y, y);
 }
 
 /*--------------------------------------------------------
@@ -813,9 +813,9 @@ int itsol_rpermC(csptr mat, int *perm)
 {
     int **addj, *nnz, i, size = mat->n;
     double **addm;
-    addj = (int **)Malloc(size * sizeof(int *), "rpermC");
-    addm = (double **)Malloc(size * sizeof(double *), "rpermC");
-    nnz = (int *)Malloc(size * sizeof(int), "rpermC");
+    addj = (int **)itsol_malloc(size * sizeof(int *), "rpermC");
+    addm = (double **)itsol_malloc(size * sizeof(double *), "rpermC");
+    nnz = (int *)itsol_malloc(size * sizeof(int), "rpermC");
     for (i = 0; i < size; i++) {
         addj[perm[i]] = mat->ja[i];
         addm[perm[i]] = mat->ma[i];
@@ -858,7 +858,7 @@ int itsol_cpermC(csptr mat, int *perm)
 {
     int i, j, *newj, size = mat->n, *aja;
 
-    newj = (int *)Malloc(size * sizeof(int), "cpermC");
+    newj = (int *)itsol_malloc(size * sizeof(int), "cpermC");
     for (i = 0; i < size; i++) {
         aja = mat->ja[i];
         for (j = 0; j < mat->nzcount[i]; j++)
@@ -946,7 +946,7 @@ int itsol_CSparTran(csptr amat, csptr bmat, CompressType * compress)
             bmat->ja[i] = NULL;
             continue;
         }
-        bmat->ja[i] = (int *)Malloc(ind[i] * sizeof(int), "CSparTran");
+        bmat->ja[i] = (int *)itsol_malloc(ind[i] * sizeof(int), "CSparTran");
         ind[i] = 0;             /* indicate next available position of each row */
     }
     /*--------------------  now do the actual copying  */
@@ -978,8 +978,8 @@ int itsol_condestLU(iluptr lu, FILE * fp)
 {
     int n = lu->n, i;
     double norm = 0.0;
-    double *y = (double *)Malloc(n * sizeof(double), "condestLU");
-    double *x = (double *)Malloc(n * sizeof(double), "condestLU");
+    double *y = (double *)itsol_malloc(n * sizeof(double), "condestLU");
+    double *x = (double *)itsol_malloc(n * sizeof(double), "condestLU");
 
     for (i = 0; i < n; i++) y[i] = 1.0;
 
@@ -1021,8 +1021,8 @@ int itsol_VBcondestC(vbiluptr lu, FILE * fp)
 {
     int n = lu->n, i, ndim = lu->bsz[n];
     double norm = 0.0;
-    double *y = (double *)Malloc(ndim * sizeof(double), "condestLU");
-    double *x = (double *)Malloc(ndim * sizeof(double), "condestLU");
+    double *y = (double *)itsol_malloc(ndim * sizeof(double), "condestLU");
+    double *x = (double *)itsol_malloc(ndim * sizeof(double), "condestLU");
 
     for (i = 0; i < ndim; i++) y[i] = 1.0;
 
@@ -1173,9 +1173,9 @@ int itsol_init_blocks(csptr csmat, int *pnBlock, int **pnB, int **pperm, double 
     double eps_2 = eps * eps, t1, t2;
 
     t1 = sys_timer();           /* begin Hash method timer */
-    group = (KeyType *) Malloc(n * sizeof(KeyType), "init_blocks");
-    compress = (CompressType *) Malloc(n * sizeof(CompressType), "init_blocks");
-    perm = (int *)Malloc(n * sizeof(int), "init_blocks");
+    group = (KeyType *) itsol_malloc(n * sizeof(KeyType), "init_blocks");
+    compress = (CompressType *) itsol_malloc(n * sizeof(CompressType), "init_blocks");
+    perm = (int *)itsol_malloc(n * sizeof(int), "init_blocks");
     iw = perm;                  /* iw and perm array can share memory here because they will
                                  * never be used at the same time */
     for (i = 0; i < n; i++) {
@@ -1242,12 +1242,12 @@ int itsol_init_blocks(csptr csmat, int *pnBlock, int **pnB, int **pperm, double 
     *t_hash = t2 - t1;
 
     t1 = sys_timer();           /* begin angle method timer */
-    nB = (int *)Malloc(n * sizeof(int), "init_blocks");
-    jbuf = (int *)Malloc(n * sizeof(int), "init_blocks");
+    nB = (int *)itsol_malloc(n * sizeof(int), "init_blocks");
+    jbuf = (int *)itsol_malloc(n * sizeof(int), "init_blocks");
 
     /*-------------------- compress matrix based on angle algorithm */
     /*-------------------- calculate compressed A^T                 */
-    at = (csptr) Malloc(sizeof(SparMat), "init_blocks");
+    at = (csptr) itsol_malloc(sizeof(SparMat), "init_blocks");
     setupCS(at, n, 0);
     if (itsol_CSparTran(csmat, at, compress) != 0)
         return -1;
@@ -1316,7 +1316,7 @@ int itsol_init_blocks(csptr csmat, int *pnBlock, int **pnB, int **pperm, double 
     }
 
     *pnBlock = nBlock;
-    *pnB = (int *)Malloc(nBlock * sizeof(int), "init_blocks");
+    *pnB = (int *)itsol_malloc(nBlock * sizeof(int), "init_blocks");
     for (i = 0; i < nBlock; i++) {
         if (nB[i] > MAX_BLOCK_SIZE) {
             fprintf(stderr, "Block of size = %d exceeds MAX_BLOCK_SIZE\n", nB[i]);

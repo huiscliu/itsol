@@ -50,14 +50,18 @@ int itsol_solver_fgmres(SMatptr Amat, SPreptr lu, double *rhs, double *sol, doub
     int i, i1, ii, j, k, k1, its, im1, pti, pti1, ptih = 0, retval, one = 1;
     double *hh, *c, *s, *rs, t;
     double negt, beta, eps1 = 0, gam, *vv, *z;
+
     im1 = im + 1;
-    vv = (double *)Malloc(im1 * n * sizeof(double), "fgmres:vv");
-    z = (double *)Malloc(im * n * sizeof(double), "fgmres:z");
+
+    vv = (double *)itsol_malloc(im1 * n * sizeof(double), "fgmres:vv");
+    z = (double *)itsol_malloc(im * n * sizeof(double), "fgmres:z");
+
     im1 = im + 1;
-    hh = (double *)Malloc((im1 * (im + 3)) * sizeof(double), "fgmres:hh");
+    hh = (double *)itsol_malloc((im1 * (im + 3)) * sizeof(double), "fgmres:hh");
     c = hh + im1 * im;
     s = c + im1;
     rs = s + im1;
+
     /*-------------------- outer loop starts here */
     retval = 0;
     its = 0;

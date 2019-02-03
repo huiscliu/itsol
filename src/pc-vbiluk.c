@@ -73,15 +73,15 @@ int itsol_pc_vbilukC(int lofM, vbsptr vbmat, vbiluptr lu, FILE * fp)
             col = L->ja[i][j];
             sz = B_DIM(bsz, col);
             jw[col] = j;
-            zrmC(dim, sz, L->ba[i][j]);
+            itsol_zrmC(dim, sz, L->ba[i][j]);
         }
         jw[i] = i;
-        zrmC(dim, dim, lu->D[i]);       /* initialize diagonal */
+        itsol_zrmC(dim, dim, lu->D[i]);       /* initialize diagonal */
         for (j = 0; j < U->nzcount[i]; j++) {   /* initialize U part   */
             col = U->ja[i][j];
             sz = B_DIM(bsz, col);
             jw[col] = j;
-            zrmC(dim, sz, U->ba[i][j]);
+            itsol_zrmC(dim, sz, U->ba[i][j]);
         }
 
         /* copy row from vbmat into lu */
@@ -90,13 +90,13 @@ int itsol_pc_vbilukC(int lofM, vbsptr vbmat, vbiluptr lu, FILE * fp)
             sz = B_DIM(bsz, col);       /* number of columns of current block */
             jpos = jw[col];
             if (col < i) {
-                copyBData(dim, sz, L->ba[i][jpos], vbmat->ba[i][j], 0);
+                itsol_copyBData(dim, sz, L->ba[i][jpos], vbmat->ba[i][j], 0);
             }
             else if (col == i) {
-                copyBData(dim, sz, lu->D[i], vbmat->ba[i][j], 0);
+                itsol_copyBData(dim, sz, lu->D[i], vbmat->ba[i][j], 0);
             }
             else {
-                copyBData(dim, sz, U->ba[i][jpos], vbmat->ba[i][j], 0);
+                itsol_copyBData(dim, sz, U->ba[i][jpos], vbmat->ba[i][j], 0);
             }
         }
 
@@ -107,7 +107,7 @@ int itsol_pc_vbilukC(int lofM, vbsptr vbmat, vbiluptr lu, FILE * fp)
             nn = B_DIM(bsz, jrow);      /* number of cols of current block */
             /* get the multiplier for row to be eliminated (jrow) */
             dgemm("n", "n", &mm, &nn, &nn, &alpha1, L->ba[i][j], &mm, lu->D[jrow], &nn, &beta1, lu->bf, &mm);
-            copyBData(mm, nn, L->ba[i][j], lu->bf, 0);
+            itsol_copyBData(mm, nn, L->ba[i][j], lu->bf, 0);
 
             /* combine current row and row jrow */
             for (k = 0; k < U->nzcount[jrow]; k++) {
@@ -204,9 +204,9 @@ int itsol_pc_vblofC(int lofM, vbsptr vbmat, vbiluptr lu, FILE * fp)
     int incl, incu, jmin, kmin;
 
     (void)fp;
-    levls = (int *)Malloc(n * sizeof(int), "lofC");
-    jbuf = (int *)Malloc(n * sizeof(int), "lofC");
-    ulvl = (int **)Malloc(n * sizeof(int *), "lofC");
+    levls = (int *)itsol_malloc(n * sizeof(int), "lofC");
+    jbuf = (int *)itsol_malloc(n * sizeof(int), "lofC");
+    ulvl = (int **)itsol_malloc(n * sizeof(int *), "lofC");
 
     /* initilize iw */
     for (j = 0; j < n; j++)
@@ -285,17 +285,17 @@ int itsol_pc_vblofC(int lofM, vbsptr vbmat, vbiluptr lu, FILE * fp)
         /*-------------------- copy L-part */
         L->nzcount[i] = incl;
         if (incl > 0) {
-            L->ja[i] = (int *)Malloc(incl * sizeof(int), "lofC");
+            L->ja[i] = (int *)itsol_malloc(incl * sizeof(int), "lofC");
             memcpy(L->ja[i], jbuf, sizeof(int) * incl);
         }
         /*-------------------- copy U - part        */
         k = incu - i;
         U->nzcount[i] = k;
         if (k > 0) {
-            U->ja[i] = (int *)Malloc(sizeof(int) * k, "lofC");
+            U->ja[i] = (int *)itsol_malloc(sizeof(int) * k, "lofC");
             memcpy(U->ja[i], jbuf + i, sizeof(int) * k);
             /*-------------------- update matrix of levels */
-            ulvl[i] = (int *)Malloc(k * sizeof(int), "lofC");
+            ulvl[i] = (int *)itsol_malloc(k * sizeof(int), "lofC");
             memcpy(ulvl[i], levls + i, k * sizeof(int));
         }
     }

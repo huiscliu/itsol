@@ -84,17 +84,17 @@ int itsol_pc_pilu(p4ptr amat, csptr B, csptr C, double *droptol, int *lfil, cspt
     lsize = amat->nB;
     rsize = C->n;
     rmax = lsize > rsize ? lsize : rsize;
-    jw = (int *)Malloc(rmax * sizeof(int), "pilu:1");
-    w = (double *)Malloc(rmax * sizeof(double), "pilu:2");
-    jwrev = (int *)Malloc(rmax * sizeof(int), "pilu:3");
-    jw2 = (int *)Malloc(rmax * sizeof(int), "pilu:4");
-    w2 = (double *)Malloc(rmax * sizeof(double), "pilu:5");
-    jwrev2 = (int *)Malloc(rmax * sizeof(int), "pilu:6");
+    jw = (int *)itsol_malloc(rmax * sizeof(int), "pilu:1");
+    w = (double *)itsol_malloc(rmax * sizeof(double), "pilu:2");
+    jwrev = (int *)itsol_malloc(rmax * sizeof(int), "pilu:3");
+    jw2 = (int *)itsol_malloc(rmax * sizeof(int), "pilu:4");
+    w2 = (double *)itsol_malloc(rmax * sizeof(double), "pilu:5");
+    jwrev2 = (int *)itsol_malloc(rmax * sizeof(int), "pilu:6");
     if (fil0 < 0 || fil1 < 0 || amat->L->n <= 0)
         goto label9995;
-    lfma = (double **)Malloc(lsize * sizeof(double *), "pilu:7");
-    lfja = (int **)Malloc(lsize * sizeof(int *), "pilu:8");
-    lflen = (int *)Malloc(lsize * sizeof(int), "pilu:9");
+    lfma = (double **)itsol_malloc(lsize * sizeof(double *), "pilu:7");
+    lfja = (int **)itsol_malloc(lsize * sizeof(int *), "pilu:8");
+    lflen = (int *)itsol_malloc(lsize * sizeof(int), "pilu:9");
     /*---------------------------------------------------------------------
       |    beginning of first main loop - L, U, L^{-1}F calculations
       |--------------------------------------------------------------------*/
@@ -307,8 +307,8 @@ label41:
         if (lenl < len)
             qsplitC(w, jw, len, lenl);
         if (len > 0) {
-            amat->L->ja[ii] = (int *)Malloc(lenl * sizeof(int), "pilu:10");
-            amat->L->ma[ii] = (double *)Malloc(lenl * sizeof(double), "pilu:11");
+            amat->L->ja[ii] = (int *)itsol_malloc(lenl * sizeof(int), "pilu:10");
+            amat->L->ma[ii] = (double *)itsol_malloc(lenl * sizeof(double), "pilu:11");
             memcpy(amat->L->ja[ii], jw, lenl * sizeof(int));
             memcpy(amat->L->ma[ii], w, lenl * sizeof(double));
         }
@@ -331,8 +331,8 @@ label41:
         jpos = lenu - 1;
         if (jpos < len)
             qsplitC(w, jw, len, jpos);
-        amat->U->ma[ii] = (double *)Malloc(lenu * sizeof(double), "pilu:12");
-        amat->U->ja[ii] = (int *)Malloc(lenu * sizeof(int), "pilu:13");
+        amat->U->ma[ii] = (double *)itsol_malloc(lenu * sizeof(double), "pilu:12");
+        amat->U->ja[ii] = (int *)itsol_malloc(lenu * sizeof(int), "pilu:13");
         if (t == 0.0)
             t = (0.0001 + drop1);
         amat->U->ma[ii][0] = 1.0 / t;
@@ -359,8 +359,8 @@ label41:
         lflen[ii] = lenu;
 
         if (lenu > 0) {
-            lfja[ii] = (int *)Malloc(lenu * sizeof(int), "pilu:14");
-            lfma[ii] = (double *)Malloc(lenu * sizeof(double), "pilu:15");
+            lfja[ii] = (int *)itsol_malloc(lenu * sizeof(int), "pilu:14");
+            lfma[ii] = (double *)itsol_malloc(lenu * sizeof(double), "pilu:15");
             memcpy(lfma[ii], w, lenu * sizeof(double));
             memcpy(lfja[ii], jw, lenu * sizeof(int));
         }
@@ -558,8 +558,8 @@ label42:
         jpos = lenu;
         if (jpos < len)
             qsplitC(w, jw, len, jpos);
-        schur->ma[ii] = (double *)Malloc(lenu * sizeof(double), "pilu:16");
-        schur->ja[ii] = (int *)Malloc(lenu * sizeof(int), "pilu:17");
+        schur->ma[ii] = (double *)itsol_malloc(lenu * sizeof(double), "pilu:16");
+        schur->ja[ii] = (int *)itsol_malloc(lenu * sizeof(int), "pilu:17");
         /*---------------------------------------------------------------------
           |     copy ---
           |--------------------------------------------------------------------*/

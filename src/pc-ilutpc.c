@@ -72,10 +72,10 @@ int itsol_pc_ilutpC(csptr amat, double *droptol, int *lfil, double permtol, int 
     if (rmax == 0)
         return (0);
     if (rmax > 0) {
-        jw = (int *)Malloc(rmax * sizeof(int), "ilutpC:1");
-        w = (double *)Malloc(rmax * sizeof(double), "ilutpC:2");
-        jwrev = (int *)Malloc(rmax * sizeof(int), "ilutpC:3");
-        iprev = (int *)Malloc(rmax * sizeof(int), "ilutpC:4");
+        jw = (int *)itsol_malloc(rmax * sizeof(int), "ilutpC:1");
+        w = (double *)itsol_malloc(rmax * sizeof(double), "ilutpC:2");
+        jwrev = (int *)itsol_malloc(rmax * sizeof(int), "ilutpC:3");
+        iprev = (int *)itsol_malloc(rmax * sizeof(int), "ilutpC:4");
     }
     if (fil5 < 0 || fil6 < 0 || rmax <= 0)
         goto label998;
@@ -245,8 +245,8 @@ int itsol_pc_ilutpC(csptr amat, double *droptol, int *lfil, double permtol, int 
            printf("  row %d   length of L = %d",ii,len);
            */
         if (len > 0) {
-            ilusch->L->ja[ii] = (int *)Malloc(len * sizeof(int), "ilutpC:5");
-            ilusch->L->ma[ii] = (double *)Malloc(len * sizeof(double), "ilutpC:6");
+            ilusch->L->ja[ii] = (int *)itsol_malloc(len * sizeof(int), "ilutpC:5");
+            ilusch->L->ma[ii] = (double *)itsol_malloc(len * sizeof(double), "ilutpC:6");
             memcpy(ilusch->L->ma[ii], w, len * sizeof(double));
             for (j = 0; j < len; j++)
                 ilusch->L->ja[ii][j] = iperm[jw[j]];
@@ -267,8 +267,8 @@ int itsol_pc_ilutpC(csptr amat, double *droptol, int *lfil, double permtol, int 
         ilusch->U->nzcount[ii] = len;
         if (lenu > len + 1)
             qsplitC(&w[ii + 1], &jw[ii + 1], lenu - 1, len);
-        ilusch->U->ma[ii] = (double *)Malloc(len * sizeof(double), "ilutpC:7");
-        ilusch->U->ja[ii] = (int *)Malloc(len * sizeof(int), "ilutpC:8");
+        ilusch->U->ma[ii] = (double *)itsol_malloc(len * sizeof(double), "ilutpC:7");
+        ilusch->U->ja[ii] = (int *)itsol_malloc(len * sizeof(int), "ilutpC:8");
         /*---------------------------------------------------------------------
           |     determine next pivot
           |--------------------------------------------------------------------*/
@@ -409,9 +409,9 @@ int itsol_pc_ilutD(csptr amat, double *droptol, int *lfil, ilutptr ilusch)
     if (rmax == 0)
         return (0);
     if (rmax > 0) {
-        jw = (int *)Malloc(rmax * sizeof(int), "ilutD:1");
-        w = (double *)Malloc(rmax * sizeof(double), "ilutD:2");
-        jwrev = (int *)Malloc(rmax * sizeof(int), "ilutD:3");
+        jw = (int *)itsol_malloc(rmax * sizeof(int), "ilutD:1");
+        w = (double *)itsol_malloc(rmax * sizeof(double), "ilutD:2");
+        jwrev = (int *)itsol_malloc(rmax * sizeof(int), "ilutD:3");
     }
     if (fil5 < 0 || fil6 < 0 || rmax <= 0)
         goto label9995;
@@ -576,8 +576,8 @@ label40:
         if (len > lenl)
             qsplitC(w, jw, len, lenl);
         if (len > 0) {
-            ilusch->L->ja[ii] = (int *)Malloc(lenl * sizeof(int), "ilutD:4");
-            ilusch->L->ma[ii] = (double *)Malloc(lenl * sizeof(double), "ilutD:5");
+            ilusch->L->ja[ii] = (int *)itsol_malloc(lenl * sizeof(int), "ilutD:4");
+            ilusch->L->ma[ii] = (double *)itsol_malloc(lenl * sizeof(double), "ilutD:5");
             memcpy(ilusch->L->ja[ii], jw, lenl * sizeof(int));
             memcpy(ilusch->L->ma[ii], w, lenl * sizeof(double));
         }
@@ -601,8 +601,8 @@ label40:
         jpos = lenu - 1;
         if (len > jpos)
             qsplitC(w, jw, len, jpos);
-        ilusch->U->ma[ii] = (double *)Malloc(lenu * sizeof(double), "ilutD:6");
-        ilusch->U->ja[ii] = (int *)Malloc(lenu * sizeof(int), "ilutD:7");
+        ilusch->U->ma[ii] = (double *)itsol_malloc(lenu * sizeof(double), "ilutD:6");
+        ilusch->U->ja[ii] = (int *)itsol_malloc(lenu * sizeof(int), "ilutD:7");
         if (t == 0.0)
             t = (0.0001 + drop6) * tnorm;
         ilusch->U->ma[ii][0] = 1.0 / t;

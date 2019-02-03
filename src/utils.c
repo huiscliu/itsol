@@ -11,7 +11,8 @@
 #include <time.h>
 #endif
 #endif
-void errexit(char *f_str, ...)
+
+void itsol_errexit(char *f_str, ...)
 {
     va_list argp;
     char out1[512], out2[1024];
@@ -28,16 +29,15 @@ void errexit(char *f_str, ...)
     exit(-1);
 }
 
-void *Malloc(int nbytes, char *msg)
+void * itsol_malloc(int nbytes, char *msg)
 {
     void *ptr;
 
-    if (nbytes == 0)
-        return NULL;
+    if (nbytes == 0) return NULL;
 
     ptr = (void *)malloc(nbytes);
     if (ptr == NULL)
-        errexit("Not enough mem for %s. Requested size: %d bytes", msg, nbytes);
+        itsol_errexit("Not enough mem for %s. Requested size: %d bytes", msg, nbytes);
 
     return ptr;
 }
@@ -67,10 +67,10 @@ void *Malloc(int nbytes, char *msg)
 int setupCS(csptr amat, int len, int job)
 {
     amat->n = len;
-    amat->nzcount = (int *)Malloc(len * sizeof(int), "setupCS");
-    amat->ja = (int **)Malloc(len * sizeof(int *), "setupCS");
+    amat->nzcount = (int *)itsol_malloc(len * sizeof(int), "setupCS");
+    amat->ja = (int **)itsol_malloc(len * sizeof(int *), "setupCS");
     if (job == 1)
-        amat->ma = (double **)Malloc(len * sizeof(double *), "setupCS");
+        amat->ma = (double **)itsol_malloc(len * sizeof(double *), "setupCS");
     else
         amat->ma = NULL;
     return 0;
@@ -132,8 +132,8 @@ int cscpy(csptr amat, csptr bmat)
     for (j = 0; j < size; j++) {
         len = bmat->nzcount[j] = amat->nzcount[j];
         if (len > 0) {
-            bja = (int *)Malloc(len * sizeof(int), "cscpy:1");
-            bma = (double *)Malloc(len * sizeof(double), "cscpy:2");
+            bja = (int *)itsol_malloc(len * sizeof(int), "cscpy:1");
+            bma = (double *)itsol_malloc(len * sizeof(double), "cscpy:2");
             memcpy(bja, amat->ja[j], len * sizeof(int));
             memcpy(bma, amat->ma[j], len * sizeof(double));
             bmat->ja[j] = bja;
@@ -168,12 +168,12 @@ int cscpy(csptr amat, csptr bmat)
 int setupILU(iluptr lu, int n)
 {
     lu->n = n;
-    lu->D = (double *)Malloc(sizeof(double) * n, "setupILU");
-    lu->L = (csptr) Malloc(sizeof(SparMat), "setupILU");
+    lu->D = (double *)itsol_malloc(sizeof(double) * n, "setupILU");
+    lu->L = (csptr) itsol_malloc(sizeof(SparMat), "setupILU");
     setupCS(lu->L, n, 1);
-    lu->U = (csptr) Malloc(sizeof(SparMat), "setupILU");
+    lu->U = (csptr) itsol_malloc(sizeof(SparMat), "setupILU");
     setupCS(lu->U, n, 1);
-    lu->work = (int *)Malloc(sizeof(int) * n, "setupILU");
+    lu->work = (int *)itsol_malloc(sizeof(int) * n, "setupILU");
     return 0;
 }
 
@@ -229,7 +229,7 @@ int setupVBMat(vbsptr vbmat, int n, int *nB)
     int i;
     vbmat->n = n;
     if (nB) {
-        vbmat->bsz = (int *)Malloc(sizeof(int) * (n + 1), "setupVBMat");
+        vbmat->bsz = (int *)itsol_malloc(sizeof(int) * (n + 1), "setupVBMat");
         vbmat->bsz[0] = 0;
         for (i = 1; i <= n; i++) {
             vbmat->bsz[i] = vbmat->bsz[i - 1] + nB[i - 1];
@@ -237,9 +237,9 @@ int setupVBMat(vbsptr vbmat, int n, int *nB)
     }
     else
         vbmat->bsz = NULL;
-    vbmat->nzcount = (int *)Malloc(sizeof(int) * n, "setupVBMat");
-    vbmat->ja = (int **)Malloc(sizeof(int *) * n, "setupVBMat");
-    vbmat->ba = (BData **) Malloc(sizeof(BData *) * n, "setupVBMat");
+    vbmat->nzcount = (int *)itsol_malloc(sizeof(int) * n, "setupVBMat");
+    vbmat->ja = (int **)itsol_malloc(sizeof(int *) * n, "setupVBMat");
+    vbmat->ba = (BData **) itsol_malloc(sizeof(BData *) * n, "setupVBMat");
     vbmat->D = NULL;
     return 0;
 }
@@ -336,16 +336,16 @@ int setupVBILU(vbiluptr lu, int n, int *bsz)
     int i;
     int max_block_size = sizeof(double) * MAX_BLOCK_SIZE * MAX_BLOCK_SIZE;
     lu->n = n;
-    lu->bsz = (int *)Malloc(sizeof(int) * (n + 1), "setupVBILU");
+    lu->bsz = (int *)itsol_malloc(sizeof(int) * (n + 1), "setupVBILU");
     for (i = 0; i <= n; i++)
         lu->bsz[i] = bsz[i];
-    lu->D = (BData *) Malloc(sizeof(BData) * n, "setupVBILU");
-    lu->L = (vbsptr) Malloc(sizeof(VBSparMat), "setupVBILU");
+    lu->D = (BData *) itsol_malloc(sizeof(BData) * n, "setupVBILU");
+    lu->L = (vbsptr) itsol_malloc(sizeof(VBSparMat), "setupVBILU");
     setupVBMat(lu->L, n, NULL);
-    lu->U = (vbsptr) Malloc(sizeof(VBSparMat), "setupVBILU");
+    lu->U = (vbsptr) itsol_malloc(sizeof(VBSparMat), "setupVBILU");
     setupVBMat(lu->U, n, NULL);
-    lu->work = (int *)Malloc(sizeof(int) * n, "setupVBILU");
-    lu->bf = (BData) Malloc(max_block_size, "setupVBILU");
+    lu->work = (int *)itsol_malloc(sizeof(int) * n, "setupVBILU");
+    lu->bf = (BData) itsol_malloc(max_block_size, "setupVBILU");
     return 0;
 }
 
@@ -401,9 +401,9 @@ int cleanVBILU(vbiluptr lu)
 int mallocRow(iluptr lu, int nrow)
 {
     int nzcount = lu->L->nzcount[nrow];
-    lu->L->ma[nrow] = (double *)Malloc(sizeof(double) * nzcount, "mallocRow");
+    lu->L->ma[nrow] = (double *)itsol_malloc(sizeof(double) * nzcount, "mallocRow");
     nzcount = lu->U->nzcount[nrow];
-    lu->U->ma[nrow] = (double *)Malloc(sizeof(double) * nzcount, "mallocRow");
+    lu->U->ma[nrow] = (double *)itsol_malloc(sizeof(double) * nzcount, "mallocRow");
     return 0;
 }
 
@@ -432,34 +432,34 @@ int mallocVBRow(vbiluptr lu, int nrow)
     int *bsz = lu->bsz;
 
     nzcount = lu->L->nzcount[nrow];
-    lu->L->ba[nrow] = (BData *) Malloc(sizeof(BData) * nzcount, "mallocVBRow");
+    lu->L->ba[nrow] = (BData *) itsol_malloc(sizeof(BData) * nzcount, "mallocVBRow");
     for (j = 0; j < nzcount; j++) {
         ncol = lu->L->ja[nrow][j];
         szOfBlock = B_DIM(bsz, nrow) * B_DIM(bsz, ncol) * sizeof(double);
-        lu->L->ba[nrow][j] = (BData) Malloc(szOfBlock, "mallocVBRow");
+        lu->L->ba[nrow][j] = (BData) itsol_malloc(szOfBlock, "mallocVBRow");
     }
 
     szOfBlock = sizeof(double) * B_DIM(bsz, nrow) * B_DIM(bsz, nrow);
-    lu->D[nrow] = (BData) Malloc(szOfBlock, "mallocVBRow");
+    lu->D[nrow] = (BData) itsol_malloc(szOfBlock, "mallocVBRow");
 
     nzcount = lu->U->nzcount[nrow];
-    lu->U->ba[nrow] = (BData *) Malloc(sizeof(BData) * nzcount, "mallocVBRow");
+    lu->U->ba[nrow] = (BData *) itsol_malloc(sizeof(BData) * nzcount, "mallocVBRow");
     for (j = 0; j < nzcount; j++) {
         ncol = lu->U->ja[nrow][j];
         szOfBlock = B_DIM(bsz, nrow) * B_DIM(bsz, ncol) * sizeof(double);
-        lu->U->ba[nrow][j] = (BData) Malloc(szOfBlock, "mallocVBRow");
+        lu->U->ba[nrow][j] = (BData) itsol_malloc(szOfBlock, "mallocVBRow");
     }
     return 0;
 }
 
-void zrmC(int m, int n, BData data)
+void itsol_zrmC(int m, int n, BData data)
 {
     int mn = m * n, i;
     for (i = 0; i < mn; i++)
         data[i] = 0;
 }
 
-void copyBData(int m, int n, BData dst, BData src, int isig)
+void itsol_copyBData(int m, int n, BData dst, BData src, int isig)
 {
     int mm = m * n, i;
     if (isig == 0)
@@ -504,20 +504,20 @@ int setupP4(p4ptr amat, int Bn, int Cn, csptr F, csptr E)
     /* size n */
     n = amat->n = Bn + Cn;
     amat->nB = Bn;
-    /* amat->perm = (int *) Malloc(n*sizeof(int), "setupP4:1" ); */
+    /* amat->perm = (int *) itsol_malloc(n*sizeof(int), "setupP4:1" ); */
     /*   assign space for wk -- note that this is only done at 1st level
          at other levels, copy pointer of wk from previous level */
     if (amat->prev == NULL)     /* wk has 2 * n entries now */
-        amat->wk = (double *)Malloc(2 * n * sizeof(double), "setupP4:2");
+        amat->wk = (double *)itsol_malloc(2 * n * sizeof(double), "setupP4:2");
     else
         amat->wk = (amat->prev)->wk;
 
     /*-------------------- L and U */
-    amat->L = (csptr) Malloc(sizeof(SparMat), "setupP4:3");
+    amat->L = (csptr) itsol_malloc(sizeof(SparMat), "setupP4:3");
     if (setupCS(amat->L, Bn, 1))
         return 1;
     /*    fprintf(stdout,"  -- BN %d   Cn   %d \n", Bn,Cn);  */
-    amat->U = (csptr) Malloc(sizeof(SparMat), "setupP4:4");
+    amat->U = (csptr) itsol_malloc(sizeof(SparMat), "setupP4:4");
     if (setupCS(amat->U, Bn, 1))
         return 1;
 
@@ -604,11 +604,11 @@ int cleanP4(p4ptr amat)
 int setupILUT(ilutptr amat, int len)
 {
     amat->n = len;
-    amat->wk = (double *)Malloc(2 * len * sizeof(double), "setupILUT:5");
-    amat->L = (csptr) Malloc(sizeof(SparMat), "setupILUT:6");
+    amat->wk = (double *)itsol_malloc(2 * len * sizeof(double), "setupILUT:5");
+    amat->L = (csptr) itsol_malloc(sizeof(SparMat), "setupILUT:6");
     if (setupCS(amat->L, len, 1))
         return 1;
-    amat->U = (csptr) Malloc(sizeof(SparMat), "setupILUT:7");
+    amat->U = (csptr) itsol_malloc(sizeof(SparMat), "setupILUT:7");
     if (setupCS(amat->U, len, 1))
         return 1;
     return 0;
@@ -650,10 +650,10 @@ int cleanILUT(ilutptr amat, int indic)
     return 0;
 }
 
-void setup_arms(arms Levmat)
+void itsol_setup_arms(arms Levmat)
 {
-    Levmat->ilus = (ilutptr) Malloc(sizeof(IluSpar), "setup_arms:ilus");
-    Levmat->levmat = (p4ptr) Malloc(sizeof(Per4Mat), "setup_arms:levmat");
+    Levmat->ilus = (ilutptr) itsol_malloc(sizeof(IluSpar), "setup_arms:ilus");
+    Levmat->levmat = (p4ptr) itsol_malloc(sizeof(Per4Mat), "setup_arms:levmat");
 }
 
 /*----------------------------------------------------------------------
@@ -733,10 +733,10 @@ int csSplit4(csptr amat, int bsize, int csize, csptr B, csptr F, csptr E, csptr 
     if (setupCS(E, csize, 1)) goto label111;
     if (setupCS(C, csize, 1)) goto label111;
 
-    new1j = (int *)Malloc(bsize * sizeof(int), "csSplit4:1");
-    new2j = (int *)Malloc(csize * sizeof(int), "csSplit4:2");
-    new1m = (double *)Malloc(bsize * sizeof(double), "csSplit4:3");
-    new2m = (double *)Malloc(csize * sizeof(double), "csSplit4:4");
+    new1j = (int *)itsol_malloc(bsize * sizeof(int), "csSplit4:1");
+    new2j = (int *)itsol_malloc(csize * sizeof(int), "csSplit4:2");
+    new1m = (double *)itsol_malloc(bsize * sizeof(double), "csSplit4:3");
+    new2m = (double *)itsol_malloc(csize * sizeof(double), "csSplit4:4");
     /* B and F blocks */
     for (j = 0; j < bsize; j++) {
         numl = numr = 0;
@@ -751,10 +751,10 @@ int csSplit4(csptr amat, int bsize, int csize, csptr B, csptr F, csptr E, csptr 
         }
         B->nzcount[j] = numl;
         F->nzcount[j] = numr;
-        B->ja[j] = (int *)Malloc(numl * sizeof(int), "csSplit4:5");
-        B->ma[j] = (double *)Malloc(numl * sizeof(double), "csSplit4:6");
-        F->ja[j] = (int *)Malloc(numr * sizeof(int), "csSplit4:7");
-        F->ma[j] = (double *)Malloc(numr * sizeof(double), "csSplit4:8");
+        B->ja[j] = (int *)itsol_malloc(numl * sizeof(int), "csSplit4:5");
+        B->ma[j] = (double *)itsol_malloc(numl * sizeof(double), "csSplit4:6");
+        F->ja[j] = (int *)itsol_malloc(numr * sizeof(int), "csSplit4:7");
+        F->ma[j] = (double *)itsol_malloc(numr * sizeof(double), "csSplit4:8");
         numl = numr = 0;
         for (j1 = 0; j1 < rowz; j1++) {
             newj = rowj[j1];
@@ -793,10 +793,10 @@ int csSplit4(csptr amat, int bsize, int csize, csptr B, csptr F, csptr E, csptr 
         }
         E->nzcount[j] = numl;
         C->nzcount[j] = numr;
-        E->ja[j] = (int *)Malloc(numl * sizeof(int), "csSplit4:9");
-        E->ma[j] = (double *)Malloc(numl * sizeof(double), "csSplit4:10");
-        C->ja[j] = (int *)Malloc(numr * sizeof(int), "csSplit4:11");
-        C->ma[j] = (double *)Malloc(numr * sizeof(double), "csSplit4:12");
+        E->ja[j] = (int *)itsol_malloc(numl * sizeof(int), "csSplit4:9");
+        E->ma[j] = (double *)itsol_malloc(numl * sizeof(double), "csSplit4:10");
+        C->ja[j] = (int *)itsol_malloc(numr * sizeof(int), "csSplit4:11");
+        C->ma[j] = (double *)itsol_malloc(numr * sizeof(double), "csSplit4:12");
         numl = numr = 0;
         for (j1 = 0; j1 < rowz; j1++) {
             newj = rowj[j1];
@@ -873,8 +873,8 @@ int CSRcs(int n, double *a, int *ja, int *ia, csptr mat, int rsa)
         }
         for (j = 0; j < n; j++) {
             nnz = mat->nzcount[j];
-            mat->ja[j] = (int *)Malloc(nnz * sizeof(int), "CSRcs");
-            mat->ma[j] = (double *)Malloc(nnz * sizeof(double), "CSRcs");
+            mat->ja[j] = (int *)itsol_malloc(nnz * sizeof(int), "CSRcs");
+            mat->ma[j] = (double *)itsol_malloc(nnz * sizeof(double), "CSRcs");
             mat->nzcount[j] = 0;
         }
         for (j = 0; j < n; j++) {
@@ -897,8 +897,8 @@ int CSRcs(int n, double *a, int *ja, int *ia, csptr mat, int rsa)
         len = ia[j + 1] - ia[j];
         mat->nzcount[j] = len;
         if (len > 0) {
-            bja = (int *)Malloc(len * sizeof(int), "CSRcs");
-            bra = (double *)Malloc(len * sizeof(double), "CSRcs");
+            bja = (int *)itsol_malloc(len * sizeof(int), "CSRcs");
+            bra = (double *)itsol_malloc(len * sizeof(double), "CSRcs");
             i = 0;
             for (j1 = ia[j] - 1; j1 < ia[j + 1] - 1; j1++) {
                 bja[i] = ja[j1] - 1;
@@ -939,7 +939,7 @@ int COOcs(int n, int nnz, double *a, int *ja, int *ia, csptr bmat)
         exit(0);
     }
     /*-------------------- determine lengths */
-    len = (int *)Malloc(n * sizeof(int), "COOcs:0");
+    len = (int *)itsol_malloc(n * sizeof(int), "COOcs:0");
     for (k = 0; k < n; k++)
         len[k] = 0;
     for (k = 0; k < nnz; k++)
@@ -949,8 +949,8 @@ int COOcs(int n, int nnz, double *a, int *ja, int *ia, csptr bmat)
         l = len[k];
         bmat->nzcount[k] = l;
         if (l > 0) {
-            bmat->ja[k] = (int *)Malloc(l * sizeof(int), "COOcs:1");
-            bmat->ma[k] = (double *)Malloc(l * sizeof(double), "COOcs:2");
+            bmat->ja[k] = (int *)itsol_malloc(l * sizeof(int), "COOcs:1");
+            bmat->ma[k] = (double *)itsol_malloc(l * sizeof(double), "COOcs:2");
         }
         len[k] = 0;
     }
@@ -966,17 +966,17 @@ int COOcs(int n, int nnz, double *a, int *ja, int *ia, csptr bmat)
     return 0;
 }
 
-void coocsc(int n, int nnz, double *val, int *col, int *row, double **a, int **ja, int **ia, int job)
+void itsol_coocsc(int n, int nnz, double *val, int *col, int *row, double **a, int **ja, int **ia, int job)
 {
     int i, *ir, *jc;
 
-    *a = (double *)Malloc(nnz * sizeof(double), "coocsc");
-    *ja = (int *)Malloc(nnz * sizeof(int), "coocsc");
-    *ia = (int *)Malloc((n + 1) * sizeof(int), "coocsc");
+    *a = (double *)itsol_malloc(nnz * sizeof(double), "coocsc");
+    *ja = (int *)itsol_malloc(nnz * sizeof(int), "coocsc");
+    *ia = (int *)itsol_malloc((n + 1) * sizeof(int), "coocsc");
 
     if (job == 0) {
-        ir = (int *)Malloc(nnz * sizeof(int), "coocsc");
-        jc = (int *)Malloc(nnz * sizeof(int), "coocsc");
+        ir = (int *)itsol_malloc(nnz * sizeof(int), "coocsc");
+        jc = (int *)itsol_malloc(nnz * sizeof(int), "coocsc");
         for (i = 0; i < nnz; i++) {
             ir[i] = row[i] + 1;
             jc[i] = col[i] + 1;
@@ -1034,7 +1034,7 @@ int csrvbsrC(int job, int nBlk, int *nB, csptr csmat, vbsptr vbmat)
 
     n = csmat->n;               /* size of the original matrix          */
     setupVBMat(vbmat, nBlk, nB);
-    iw = (int *)Malloc(sizeof(int) * nBlk, "csrvbsrC_1");
+    iw = (int *)itsol_malloc(sizeof(int) * nBlk, "csrvbsrC_1");
     for (i = 0; i < nBlk; i++)
         iw[i] = 0;
     b_row = -1;
@@ -1056,7 +1056,7 @@ int csrvbsrC(int job, int nBlk, int *nB, csptr csmat, vbsptr vbmat)
         }
         if (0 == (nnz = vbmat->nzcount[b_row]))
             continue;
-        vbmat->ja[b_row] = (int *)Malloc(sizeof(int) * nnz, "csrvbsrC_2");
+        vbmat->ja[b_row] = (int *)itsol_malloc(sizeof(int) * nnz, "csrvbsrC_2");
 
         /* calculate the pattern of the (b_row)-th row of the block matrix */
         for (j = 0, ipos = 0; j < nBlk; j++) {
@@ -1071,10 +1071,10 @@ int csrvbsrC(int job, int nBlk, int *nB, csptr csmat, vbsptr vbmat)
 
         /* copy data to the (b_row)-th row of the block matrix from the
            original matrix */
-        vbmat->ba[b_row] = (BData *) Malloc(sizeof(BData) * nnz, "csrvbsrC_3");
+        vbmat->ba[b_row] = (BData *) itsol_malloc(sizeof(BData) * nnz, "csrvbsrC_3");
         for (j = 0; j < nnz; j++) {
             szofBlock = sizeof(double) * nB[b_row] * nB[vbmat->ja[b_row][j]];
-            vbmat->ba[b_row][j] = (BData) Malloc(szofBlock, "csrvbsrC_4");
+            vbmat->ba[b_row][j] = (BData) itsol_malloc(szofBlock, "csrvbsrC_4");
             memset(vbmat->ba[b_row][j], 0, szofBlock);
         }
         for (j = i; j < i + nB[b_row]; j++) {
@@ -1272,21 +1272,21 @@ int CSClum(int n, double *a, int *ja, int *ia, iluptr mat, int rsa)
         if (rsa == 2) {
             /* nzcount(A + A^T) <= nzcount(A) + nnzcol(A^T) */
             nnz = L->nzcount[i] + U->nzcount[i];
-            L->ja[i] = (int *)Malloc(nnz * sizeof(int), "CSClum1");
-            L->ma[i] = (double *)Malloc(nnz * sizeof(double), "CSClum2");
+            L->ja[i] = (int *)itsol_malloc(nnz * sizeof(int), "CSClum1");
+            L->ma[i] = (double *)itsol_malloc(nnz * sizeof(double), "CSClum2");
             L->nzcount[i] = 0;
-            U->ja[i] = (int *)Malloc(nnz * sizeof(int), "CSClum3");
-            U->ma[i] = (double *)Malloc(nnz * sizeof(double), "CSClum4");
+            U->ja[i] = (int *)itsol_malloc(nnz * sizeof(int), "CSClum3");
+            U->ma[i] = (double *)itsol_malloc(nnz * sizeof(double), "CSClum4");
             U->nzcount[i] = 0;
         }
         else {
             nnz = L->nzcount[i];
-            L->ja[i] = (int *)Malloc(nnz * sizeof(int), "CSClum4");
-            L->ma[i] = (double *)Malloc(nnz * sizeof(double), "CSClum5");
+            L->ja[i] = (int *)itsol_malloc(nnz * sizeof(int), "CSClum4");
+            L->ma[i] = (double *)itsol_malloc(nnz * sizeof(double), "CSClum5");
             L->nzcount[i] = 0;
             nnz = U->nzcount[i];
-            U->ja[i] = (int *)Malloc(nnz * sizeof(int), "CSClum6");
-            U->ma[i] = (double *)Malloc(nnz * sizeof(double), "CSClum7");
+            U->ja[i] = (int *)itsol_malloc(nnz * sizeof(int), "CSClum6");
+            U->ma[i] = (double *)itsol_malloc(nnz * sizeof(double), "CSClum7");
             U->nzcount[i] = 0;
         }
     }
@@ -1334,8 +1334,8 @@ int CSClum(int n, double *a, int *ja, int *ia, iluptr mat, int rsa)
         /* add zeros to make pattern symmetrization */
         int *idU, *idL;
         int nzcount, nnzcol, nnzU, nnzL, j;
-        idU = (int *)Malloc(n * sizeof(int), "CSClum6");
-        idL = (int *)Malloc(n * sizeof(int), "CSClum7");
+        idU = (int *)itsol_malloc(n * sizeof(int), "CSClum6");
+        idL = (int *)itsol_malloc(n * sizeof(int), "CSClum7");
         for (i = 0; i < n; i++) {
             idU[i] = 0;
             idL[i] = 0;
@@ -1441,21 +1441,21 @@ int CSClumC(csptr amat, iluptr mat, int rsa)
         if (rsa == 2) {
             /* nzcount(A + A^T) <= nzcount(A) + nnzcol(A^T) */
             nnz = L->nzcount[i] + U->nzcount[i];
-            L->ja[i] = (int *)Malloc(nnz * sizeof(int), "CSClum1");
-            L->ma[i] = (double *)Malloc(nnz * sizeof(double), "CSClum2");
+            L->ja[i] = (int *)itsol_malloc(nnz * sizeof(int), "CSClum1");
+            L->ma[i] = (double *)itsol_malloc(nnz * sizeof(double), "CSClum2");
             L->nzcount[i] = 0;
-            U->ja[i] = (int *)Malloc(nnz * sizeof(int), "CSClum3");
-            U->ma[i] = (double *)Malloc(nnz * sizeof(double), "CSClum4");
+            U->ja[i] = (int *)itsol_malloc(nnz * sizeof(int), "CSClum3");
+            U->ma[i] = (double *)itsol_malloc(nnz * sizeof(double), "CSClum4");
             U->nzcount[i] = 0;
         }
         else {
             nnz = L->nzcount[i];
-            L->ja[i] = (int *)Malloc(nnz * sizeof(int), "CSClum4");
-            L->ma[i] = (double *)Malloc(nnz * sizeof(double), "CSClum5");
+            L->ja[i] = (int *)itsol_malloc(nnz * sizeof(int), "CSClum4");
+            L->ma[i] = (double *)itsol_malloc(nnz * sizeof(double), "CSClum5");
             L->nzcount[i] = 0;
             nnz = U->nzcount[i];
-            U->ja[i] = (int *)Malloc(nnz * sizeof(int), "CSClum6");
-            U->ma[i] = (double *)Malloc(nnz * sizeof(double), "CSClum7");
+            U->ja[i] = (int *)itsol_malloc(nnz * sizeof(int), "CSClum6");
+            U->ma[i] = (double *)itsol_malloc(nnz * sizeof(double), "CSClum7");
             U->nzcount[i] = 0;
         }
     }
@@ -1503,8 +1503,8 @@ int CSClumC(csptr amat, iluptr mat, int rsa)
         /* add zeros to make pattern symmetrization */
         int *idU, *idL;
         int nzcount, nnzcol, nnzU, nnzL, j;
-        idU = (int *)Malloc(n * sizeof(int), "CSClum6");
-        idL = (int *)Malloc(n * sizeof(int), "CSClum7");
+        idU = (int *)itsol_malloc(n * sizeof(int), "CSClum6");
+        idL = (int *)itsol_malloc(n * sizeof(int), "CSClum7");
         for (i = 0; i < n; i++) {
             idU[i] = 0;
             idL[i] = 0;
@@ -1657,7 +1657,7 @@ int SparTran(csptr amat, csptr bmat, int job, int flag)
 {
     int i, j, *ind, pos, size = amat->n, *aja;
     double *ama = NULL;
-    ind = (int *)Malloc(size * sizeof(int), "SparTran:1");
+    ind = (int *)itsol_malloc(size * sizeof(int), "SparTran:1");
     for (i = 0; i < size; i++)
         ind[i] = 0;
     if (!flag) {
@@ -1669,10 +1669,10 @@ int SparTran(csptr amat, csptr bmat, int job, int flag)
         }
         /*--------------------  allocate space  */
         for (i = 0; i < size; i++) {
-            bmat->ja[i] = (int *)Malloc(ind[i] * sizeof(int), "SparTran:2");
+            bmat->ja[i] = (int *)itsol_malloc(ind[i] * sizeof(int), "SparTran:2");
             bmat->nzcount[i] = ind[i];
             if (job == 1) {
-                bmat->ma[i] = (double *)Malloc(ind[i] * sizeof(double), "SparTran:3");
+                bmat->ma[i] = (double *)itsol_malloc(ind[i] * sizeof(double), "SparTran:3");
             }
             ind[i] = 0;
         }
@@ -1694,7 +1694,7 @@ int SparTran(csptr amat, csptr bmat, int job, int flag)
     return 0;
 }
 
-void swapj(int v[], int i, int j)
+void itsol_swapj(int v[], int i, int j)
 {
     int temp;
     temp = v[i];
@@ -1702,7 +1702,7 @@ void swapj(int v[], int i, int j)
     v[j] = temp;
 }
 
-void swapm(double v[], int i, int j)
+void itsol_swapm(double v[], int i, int j)
 {
     double temp;
     temp = v[i];
@@ -1834,7 +1834,7 @@ int coscalC(csptr mata, double *diag, int nrm)
 
 /* Computes  y == DD * x                               */
 /* scales the vector x by the diagonal dd - output in y */
-void dscale(int n, double *dd, double *x, double *y)
+void itsol_dscale(int n, double *dd, double *x, double *y)
 {
     int k;
     for (k = 0; k < n; k++) y[k] = dd[k] * x[k];
@@ -1842,7 +1842,7 @@ void dscale(int n, double *dd, double *x, double *y)
 
 /*----------------------------------------------------------------------
   |
-  | qqsort: sort ma[left]...ma[right] into decreasing order
+  | itsol_qqsort: sort ma[left]...ma[right] into decreasing order
   | from Kernighan & Ritchie
   |
   | ja holds the column indices
@@ -1850,48 +1850,48 @@ void dscale(int n, double *dd, double *x, double *y)
   |         0: values
   |
   |---------------------------------------------------------------------*/
-void qsortC(int *ja, double *ma, int left, int right, int abval)
+void itsol_qsortC(int *ja, double *ma, int left, int right, int abval)
 {
     int i, last;
 
     if (left >= right)
         return;
     if (abval) {
-        swapj(ja, left, (left + right) / 2);
-        swapm(ma, left, (left + right) / 2);
+        itsol_swapj(ja, left, (left + right) / 2);
+        itsol_swapm(ma, left, (left + right) / 2);
         last = left;
         for (i = left + 1; i <= right; i++) {
             if (fabs(ma[i]) > fabs(ma[left])) {
-                swapj(ja, ++last, i);
-                swapm(ma, last, i);
+                itsol_swapj(ja, ++last, i);
+                itsol_swapm(ma, last, i);
             }
         }
-        swapj(ja, left, last);
-        swapm(ma, left, last);
-        qsortC(ja, ma, left, last - 1, abval);
-        qsortC(ja, ma, last + 1, right, abval);
+        itsol_swapj(ja, left, last);
+        itsol_swapm(ma, left, last);
+        itsol_qsortC(ja, ma, left, last - 1, abval);
+        itsol_qsortC(ja, ma, last + 1, right, abval);
     }
     else {
-        swapj(ja, left, (left + right) / 2);
-        swapm(ma, left, (left + right) / 2);
+        itsol_swapj(ja, left, (left + right) / 2);
+        itsol_swapm(ma, left, (left + right) / 2);
         last = left;
         for (i = left + 1; i <= right; i++) {
             if (ma[i] > ma[left]) {
-                swapj(ja, ++last, i);
-                swapm(ma, last, i);
+                itsol_swapj(ja, ++last, i);
+                itsol_swapm(ma, last, i);
             }
         }
-        swapj(ja, left, last);
-        swapm(ma, left, last);
-        qsortC(ja, ma, left, last - 1, abval);
-        qsortC(ja, ma, last + 1, right, abval);
+        itsol_swapj(ja, left, last);
+        itsol_swapm(ma, left, last);
+        itsol_qsortC(ja, ma, left, last - 1, abval);
+        itsol_qsortC(ja, ma, last + 1, right, abval);
     }
 }
 
 /*-------------------------------------------------------------+
   | to dump rows i0 to i1 of matrix for debugging purposes       |
   |--------------------------------------------------------------*/
-void printmat(FILE * ft, csptr A, int i0, int i1)
+void itsol_printmat(FILE * ft, csptr A, int i0, int i1)
 {
     int i, k, nzi;
     int *row;
@@ -1908,37 +1908,37 @@ void printmat(FILE * ft, csptr A, int i0, int i1)
 
 /*----------------------------------------------------------------------
   |
-  | qqsort: sort wa[left]...wa[right] into decreasing order
+  | itsol_qqsort: sort wa[left]...wa[right] into decreasing order
   | from Kernighan & Ritchie
   |
   |---------------------------------------------------------------------*/
-void qsortR2I(double *wa, int *cor1, int *cor2, int left, int right)
+void itsol_qsortR2I(double *wa, int *cor1, int *cor2, int left, int right)
 {
     int i, last;
 
     if (left >= right) return;
 
-    swapm(wa, left, (left + right) / 2);
-    swapj(cor1, left, (left + right) / 2);
-    swapj(cor2, left, (left + right) / 2);
+    itsol_swapm(wa, left, (left + right) / 2);
+    itsol_swapj(cor1, left, (left + right) / 2);
+    itsol_swapj(cor2, left, (left + right) / 2);
     last = left;
     for (i = left + 1; i <= right; i++) {
         if (wa[i] > wa[left]) {
-            swapm(wa, ++last, i);
-            swapj(cor1, last, i);
-            swapj(cor2, last, i);
+            itsol_swapm(wa, ++last, i);
+            itsol_swapj(cor1, last, i);
+            itsol_swapj(cor2, last, i);
         }
     }
-    swapm(wa, left, last);
-    swapj(cor1, left, last);
-    swapj(cor2, left, last);
-    qsortR2I(wa, cor1, cor2, left, last - 1);
-    qsortR2I(wa, cor1, cor2, last + 1, right);
+    itsol_swapm(wa, left, last);
+    itsol_swapj(cor1, left, last);
+    itsol_swapj(cor2, left, last);
+    itsol_qsortR2I(wa, cor1, cor2, left, last - 1);
+    itsol_qsortR2I(wa, cor1, cor2, last + 1, right);
 }
 
 /*----------------------------------------------------------------------
   |
-  | qqsort: sort ma[left]...ma[right] into increasing order
+  | itsol_qqsort: sort ma[left]...ma[right] into increasing order
   | from Kernighan & Ritchie
   |
   | ja holds the column indices
@@ -1946,70 +1946,70 @@ void qsortR2I(double *wa, int *cor1, int *cor2, int left, int right)
   |         0: values
   |
   |---------------------------------------------------------------------*/
-void qsort2C(int *ja, double *ma, int left, int right, int abval)
+void itsol_qsort2C(int *ja, double *ma, int left, int right, int abval)
 {
     int i, last;
     if (left >= right)
         return;
     if (abval) {
-        swapj(ja, left, (left + right) / 2);
-        swapm(ma, left, (left + right) / 2);
+        itsol_swapj(ja, left, (left + right) / 2);
+        itsol_swapm(ma, left, (left + right) / 2);
         last = left;
         for (i = left + 1; i <= right; i++) {
             if (fabs(ma[i]) < fabs(ma[left])) {
-                swapj(ja, ++last, i);
-                swapm(ma, last, i);
+                itsol_swapj(ja, ++last, i);
+                itsol_swapm(ma, last, i);
             }
         }
-        swapj(ja, left, last);
-        swapm(ma, left, last);
-        qsort2C(ja, ma, left, last - 1, abval);
-        qsort2C(ja, ma, last + 1, right, abval);
+        itsol_swapj(ja, left, last);
+        itsol_swapm(ma, left, last);
+        itsol_qsort2C(ja, ma, left, last - 1, abval);
+        itsol_qsort2C(ja, ma, last + 1, right, abval);
     }
 
     else {
-        swapj(ja, left, (left + right) / 2);
-        swapm(ma, left, (left + right) / 2);
+        itsol_swapj(ja, left, (left + right) / 2);
+        itsol_swapm(ma, left, (left + right) / 2);
         last = left;
         for (i = left + 1; i <= right; i++) {
             if (ma[i] < ma[left]) {
-                swapj(ja, ++last, i);
-                swapm(ma, last, i);
+                itsol_swapj(ja, ++last, i);
+                itsol_swapm(ma, last, i);
             }
         }
-        swapj(ja, left, last);
-        swapm(ma, left, last);
-        qsort2C(ja, ma, left, last - 1, abval);
-        qsort2C(ja, ma, last + 1, right, abval);
+        itsol_swapj(ja, left, last);
+        itsol_swapm(ma, left, last);
+        itsol_qsort2C(ja, ma, left, last - 1, abval);
+        itsol_qsort2C(ja, ma, last + 1, right, abval);
     }
 }
 
 /*----------------------------------------------------------------------
   |
-  | qqsort: sort ja[left]...ja[right] into increasing order
+  | itsol_qqsort: sort ja[left]...ja[right] into increasing order
   | from Kernighan & Ritchie
   |
   | ma holds the real values
   |
   |---------------------------------------------------------------------*/
-void qqsort(int *ja, double *ma, int left, int right)
+void itsol_qqsort(int *ja, double *ma, int left, int right)
 {
     int i, last;
     if (left >= right)
         return;
-    swapj(ja, left, (left + right) / 2);
-    swapm(ma, left, (left + right) / 2);
+    itsol_swapj(ja, left, (left + right) / 2);
+    itsol_swapm(ma, left, (left + right) / 2);
     last = left;
     for (i = left + 1; i <= right; i++) {
         if (ja[i] < ja[left]) {
-            swapj(ja, ++last, i);
-            swapm(ma, last, i);
+            itsol_swapj(ja, ++last, i);
+            itsol_swapm(ma, last, i);
         }
     }
-    swapj(ja, left, last);
-    swapm(ma, left, last);
-    qqsort(ja, ma, left, last - 1);
-    qqsort(ja, ma, last + 1, right);
+    itsol_swapj(ja, left, last);
+    itsol_swapm(ma, left, last);
+    itsol_qqsort(ja, ma, left, last - 1);
+    itsol_qqsort(ja, ma, last + 1, right);
 }
 
 /*----------------------------------------------------------------------
@@ -2033,50 +2033,50 @@ void qqsort(int *ja, double *ma, int left, int right)
   | (mat) = (mat) where each row is sorted.
   |
   |---------------------------------------------------------------------*/
-void hilosort(csptr mat, int abval, int hilo)
+void itsol_hilosort(csptr mat, int abval, int hilo)
 {
     int j, n = mat->n, *nnz = mat->nzcount;
 
     if (hilo)
         for (j = 0; j < n; j++)
-            qsortC(mat->ja[j], mat->ma[j], 0, nnz[j] - 1, abval);
+            itsol_qsortC(mat->ja[j], mat->ma[j], 0, nnz[j] - 1, abval);
 
     else
         for (j = 0; j < n; j++)
-            qsort2C(mat->ja[j], mat->ma[j], 0, nnz[j] - 1, abval);
+            itsol_qsort2C(mat->ja[j], mat->ma[j], 0, nnz[j] - 1, abval);
 
     return;
 }
 
 /*----------------------------------------------------------------------
   |
-  | qqsort: sort wa[left]...wa[right] into increasing order
+  | itsol_qqsort: sort wa[left]...wa[right] into increasing order
   | from Kernighan & Ritchie
   |
   |---------------------------------------------------------------------*/
-void qsort3i(int *wa, int *cor1, int *cor2, int left, int right)
+void itsol_qsort3i(int *wa, int *cor1, int *cor2, int left, int right)
 {
     int i, last;
 
     if (left >= right)
         return;
 
-    swapj(wa, left, (left + right) / 2);
-    swapj(cor1, left, (left + right) / 2);
-    swapj(cor2, left, (left + right) / 2);
+    itsol_swapj(wa, left, (left + right) / 2);
+    itsol_swapj(cor1, left, (left + right) / 2);
+    itsol_swapj(cor2, left, (left + right) / 2);
     last = left;
     for (i = left + 1; i <= right; i++) {
         if (wa[i] < wa[left]) {
-            swapj(wa, ++last, i);
-            swapj(cor1, last, i);
-            swapj(cor2, last, i);
+            itsol_swapj(wa, ++last, i);
+            itsol_swapj(cor1, last, i);
+            itsol_swapj(cor2, last, i);
         }
     }
-    swapj(wa, left, last);
-    swapj(cor1, left, last);
-    swapj(cor2, left, last);
-    qsort3i(wa, cor1, cor2, left, last - 1);
-    qsort3i(wa, cor1, cor2, last + 1, right);
+    itsol_swapj(wa, left, last);
+    itsol_swapj(cor1, left, last);
+    itsol_swapj(cor2, left, last);
+    itsol_qsort3i(wa, cor1, cor2, left, last - 1);
+    itsol_qsort3i(wa, cor1, cor2, last + 1, right);
 }
 
 int dumpArmsMat(arms PreSt, FILE * ft)
@@ -2168,7 +2168,7 @@ int checkperm(int *p, int n)
 {
     int *work;
     int k, i;
-    work = Malloc(n * sizeof(int), " check perm:work ");
+    work = itsol_malloc(n * sizeof(int), " check perm:work ");
     for (k = 0; k < n; k++)
         work[k] = -1;
     for (k = 0; k < n; k++) {
@@ -2185,29 +2185,29 @@ int checkperm(int *p, int n)
 
 /*----------------------------------------------------------------------
   |
-  | qqsort: sort wa[left]...wa[right] into decreasing order
+  | itsol_qqsort: sort wa[left]...wa[right] into decreasing order
   | from Kernighan & Ritchie
   |
   |---------------------------------------------------------------------*/
-void qsortR1I(double *wa, int *cor1, int left, int right)
+void itsol_qsortR1I(double *wa, int *cor1, int left, int right)
 {
     int i, last;
 
     if (left >= right)
         return;
 
-    swapm(wa, left, (left + right) / 2);
-    swapj(cor1, left, (left + right) / 2);
+    itsol_swapm(wa, left, (left + right) / 2);
+    itsol_swapj(cor1, left, (left + right) / 2);
     last = left;
     for (i = left + 1; i <= right; i++) {
         if (wa[i] > wa[left]) {
-            swapm(wa, ++last, i);
-            swapj(cor1, last, i);
+            itsol_swapm(wa, ++last, i);
+            itsol_swapj(cor1, last, i);
         }
     }
-    swapm(wa, left, last);
-    swapj(cor1, left, last);
-    qsortR1I(wa, cor1, left, last - 1);
-    qsortR1I(wa, cor1, last + 1, right);
+    itsol_swapm(wa, left, last);
+    itsol_swapj(cor1, left, last);
+    itsol_qsortR1I(wa, cor1, left, last - 1);
+    itsol_qsortR1I(wa, cor1, last + 1, right);
 }
 

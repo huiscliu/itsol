@@ -101,8 +101,8 @@ static int std_drop(int lfil, int i, double tolL, double tolU, double toldiag)
     /*-------------------- update U */
     U->nzcount[i] = len;
     if (len > 0) {
-        ja = U->ja[i] = (int *)Malloc(len * sizeof(int), "std_drop 1");
-        ma = U->ma[i] = (double *)Malloc(len * sizeof(double), "std_drop 2");
+        ja = U->ja[i] = (int *)itsol_malloc(len * sizeof(int), "std_drop 1");
+        ma = U->ma[i] = (double *)itsol_malloc(len * sizeof(double), "std_drop 2");
     }
     for (j = 0; j < len; j++) {
         ipos = Uid[j];
@@ -133,8 +133,8 @@ static int std_drop(int lfil, int i, double tolL, double tolU, double toldiag)
     /*-------------------- update L                                           */
     L->nzcount[i] = len;
     if (len > 0) {
-        ia = L->ja[i] = (int *)Malloc(len * sizeof(int), "std_drop 3");
-        ma = L->ma[i] = (double *)Malloc(len * sizeof(double), "std_drop 4");
+        ia = L->ja[i] = (int *)itsol_malloc(len * sizeof(int), "std_drop 3");
+        ma = L->ma[i] = (double *)itsol_malloc(len * sizeof(double), "std_drop 4");
     }
     for (j = 0; j < len; j++) {
         ipos = Lid[j];
@@ -268,19 +268,19 @@ int itsol_pc_ilutc(iluptr mt, iluptr lu, int lfil, double tol, int drop, FILE * 
     U = lu->U;
     D = lu->D;
 
-    Lfirst = (int *)Malloc(n * sizeof(int), "ilutc 1");
-    Llist = (int *)Malloc(n * sizeof(int), "ilutc 2");
-    Lid = (int *)Malloc(n * sizeof(int), "ilutc 3");
-    wL = (double *)Malloc(n * sizeof(double), "ilutc 4");
-    Ufirst = (int *)Malloc(n * sizeof(int), "ilutc 5");
-    Ulist = (int *)Malloc(n * sizeof(int), "ilutc 6");
-    Uid = (int *)Malloc(n * sizeof(int), "ilutc 7");
-    wU = (double *)Malloc(n * sizeof(double), "ilutc 8");
-    w = (double *)Malloc(n * sizeof(double), "ilutc 9");
-    wsym = (double *)Malloc(n * sizeof(double), "ilutc 10");
+    Lfirst = (int *)itsol_malloc(n * sizeof(int), "ilutc 1");
+    Llist = (int *)itsol_malloc(n * sizeof(int), "ilutc 2");
+    Lid = (int *)itsol_malloc(n * sizeof(int), "ilutc 3");
+    wL = (double *)itsol_malloc(n * sizeof(double), "ilutc 4");
+    Ufirst = (int *)itsol_malloc(n * sizeof(int), "ilutc 5");
+    Ulist = (int *)itsol_malloc(n * sizeof(int), "ilutc 6");
+    Uid = (int *)itsol_malloc(n * sizeof(int), "ilutc 7");
+    wU = (double *)itsol_malloc(n * sizeof(double), "ilutc 8");
+    w = (double *)itsol_malloc(n * sizeof(double), "ilutc 9");
+    wsym = (double *)itsol_malloc(n * sizeof(double), "ilutc 10");
     if (drop == 2 || drop == 3 || drop == 4) {
-        eL = (double *)Malloc(n * sizeof(double), "ilutc 11");
-        eU = (double *)Malloc(n * sizeof(double), "ilutc 12");
+        eL = (double *)itsol_malloc(n * sizeof(double), "ilutc 11");
+        eU = (double *)itsol_malloc(n * sizeof(double), "ilutc 12");
     }
 
     /*-------------------- initialize a few things */
