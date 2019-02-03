@@ -44,27 +44,33 @@ int main(void)
     int mat, numat, iparam, i;
     double terr;
     char line[MAX_LINE];
+
     MAT = (SMatptr) Malloc(sizeof(SMat), "main:MAT");
     PRE = (SPreptr) Malloc(sizeof(SPre), "main:PRE");
+
     /*------------------ read and set parameters and other inputs */
     memset(&io, 0, sizeof(io));
     if (read_inputs("inputs", &io) != 0) {
         fprintf(flog, "ERROR reading inputs from file...\n");
         exit(1);
     }
+
     /*------------------ file "matfile" contains paths to matrices*/
     if (NULL == (fmat = fopen("matfile", "r"))) {
         fprintf(flog, "Can't open matfile...\n");
         exit(2);
     }
+
     memset(line, 0, MAX_LINE);
     fscanf(fmat, "%d", &numat);
     if (numat <= 0) {
         fprintf(flog, "Invalid count of matrices...\n");
         exit(3);
     }
+
     /*-------------------- set parameters for arms */
     set_arms_pars(&io, diagscal, ipar, dropcoef, lfil_arr);
+
     /*-------------------- open file ARMS.out for all performance
       results of this run (all matrices and params) 
       also set io->PrecMeth */
@@ -72,19 +78,24 @@ int main(void)
       --- results of this run (all matrices) also set io->PrecMeth */
     strcpy(io.outfile, "ARMS.out");
     strcpy(io.PrecMeth, "ARMS");
+
     if (NULL == (io.fout = fopen(io.outfile, "w"))) {
         fprintf(flog, "Can't open output file %s...\n", io.outfile);
         exit(4);
     }
+
     /*-------------------- LOOP through matrices -*/
     for (mat = 1; mat <= numat; mat++) {
         if (get_matrix_info(fmat, &io) != 0) {
             fprintf(flog, "Invalid format in matfile ...\n");
             exit(5);
         }
+
         fprintf(flog, "MATRIX: %s...\n", io.MatNam);
+
         /*-------------------- Read matrix - case: COO formats */
         csmat = (csptr) Malloc(sizeof(SparMat), "main:csmat");
+
         if (io.Fmt > HB) {
             ierr = read_coo(&AA, &JA, &IA, &io, &rhs, &sol, 0);
             if (ierr == 0)
@@ -93,14 +104,17 @@ int main(void)
                 fprintf(flog, "read_coo error = %d\n", ierr);
                 exit(6);
             }
+
             n = io.ndim;
             nnz = io.nnz;
+
             /*-------------------- conversion from COO to CSR format */
             if ((ierr = COOcs(n, nnz, AA, JA, IA, csmat)) != 0) {
                 fprintf(stderr, "mainARMS: COOcs error\n");
                 return ierr;
             }
         }
+
         /*-------------------- Read matrix - case: HB formats */
         if (io.Fmt == HB) {
             /* NOTE: (AA,JA,IA) is in CSR format */
@@ -115,6 +129,7 @@ int main(void)
                 return ierr;
             }
         }
+
         /*---------------- COO / HB arrays no longer needed -- free */
         free(IA);
         IA = NULL;
@@ -122,13 +137,16 @@ int main(void)
         AA = NULL;
         free(JA);
         JA = NULL;
+
         /*----------------------------------------------------------*/
         n = csmat->n;
         x = (double *)Malloc(n * sizeof(double), "main:x");
         output_header(&io);
+
         /*-------------------- set initial lfil and tol */
         lfil = io.lfil0;
         tol = io.tol0;
+
         /*-------------------- LOOP THROUGH PARAMETERS */
         for (iparam = 1; iparam <= io.nparam; iparam++) {
             fprintf(flog, "Parameter case = %d\n", iparam);
@@ -141,10 +159,13 @@ int main(void)
             setup_arms(ArmsSt);
             fprintf(flog, "begin arms\n");
             tm1 = sys_timer();
+
             /*-------------------- call ARMS preconditioner set-up  */
             ierr = itsol_pc_arms2(csmat, ipar, droptol, lfil_arr, tolind, ArmsSt, flog);
+
             /*----------------------------------------------------- */
             tm2 = sys_timer();
+
             if (ierr != 0) {
                 fprintf(io.fout, " ** ARMS2 error - code %d...\n", ierr);
                 io.its = -1;
@@ -153,9 +174,11 @@ int main(void)
                 io.rnorm = -1;
                 goto NEXT_PARA;
             }
+
             io.tm_p = tm2 - tm1;
             io.fillfact = nnz_arms(ArmsSt, flog) / (double)(nnz + 1);
             fprintf(flog, "ARMS ends, fill factor (mem used) = %f\n", io.fillfact);
+
             /*---------------- get rough idea of cond number - exit if too big */
             if (itsol_condestArms(ArmsSt, x, flog) != 0) {
                 fprintf(flog, "Not attempting iterative solution.\n");
@@ -166,9 +189,11 @@ int main(void)
                 io.rnorm = -1;
                 goto NEXT_PARA;
             }
+
             /*-------------------- initial guess */
             /*    for(i=0; i < io.ndim; i++) x[i] = 0.0 */
             randvec(x, n);
+
             /*-------------------- create a file for printing
               'its -- time -- res' info from fgmres */
             if (plotting) {
@@ -180,12 +205,14 @@ int main(void)
             }
             else
                 fits = NULL;
+
             /*-------------------- set up the structs before calling itsol_solver_fgmres */
             MAT->n = n;
             MAT->CS = csmat;
             MAT->matvec = itsol_matvecCSR;
             PRE->ARMS = ArmsSt;
             PRE->precon = itsol_preconARMS;
+
             /*-------------------- call itsol_solver_fgmres */
             io.its = io.maxits;
             tm1 = sys_timer();
@@ -197,19 +224,22 @@ int main(void)
             else
                 fprintf(flog, "not converged in %d steps...\n", io.maxits);
 
-            if (fits)
-                fclose(fits);
+            if (fits) fclose(fits);
+
             /*-------------------- actual error norm */
             terr = 0.0;
-            for (i = 0; i < n; i++)
-                terr += (x[i] - sol[i]) * (x[i] - sol[i]);
+            for (i = 0; i < n; i++) terr += (x[i] - sol[i]) * (x[i] - sol[i]);
+
             io.enorm = sqrt(terr);
+
             /*-------------------- calculate residual norm from generated rhs */
             itsol_matvec(csmat, x, sol);
+
             terr = 0.0;
-            for (i = 0; i < io.ndim; i++)
-                terr += (rhs[i] - sol[i]) * (rhs[i] - sol[i]);
+            for (i = 0; i < io.ndim; i++) terr += (rhs[i] - sol[i]) * (rhs[i] - sol[i]);
+
             io.rnorm = sqrt(terr);
+
             /*-------------------- go to next param case */
  NEXT_PARA:
             output_result(lfil, &io, iparam);
@@ -217,6 +247,7 @@ int main(void)
             tol *= io.tolMul;
             cleanARMS(ArmsSt);
         }
+
         /*-------------------- NEXT_MATRIX: */
         cleanCS(csmat);
         free(sol);
@@ -225,8 +256,9 @@ int main(void)
     }
 
     fclose(io.fout);
-    if (flog != stdout)
-        fclose(flog);
+
+    if (flog != stdout) fclose(flog);
+
     fclose(fmat);
     free(MAT);
     free(PRE);
