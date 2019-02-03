@@ -228,9 +228,9 @@ int itsol_pc_arms2(csptr Amat, int *ipar, double *droptol, int *lfil, double tol
         /* if (SHIFTTOL > 0.0) shiftsD(schur,SHIFTTOL);    */
         //     printf("  ipar1 = %d \n", ipar[1]);
         if (ipar[1] == 1)
-            PQperm(schur, bsize, uwork, iwork, &nB, tolind);
+            itsol_PQperm(schur, bsize, uwork, iwork, &nB, tolind);
         else
-            indsetC(schur, bsize, iwork, &nB, tolind);
+            itsol_indsetC(schur, bsize, iwork, &nB, tolind);
         /*---------------------------------------------------------------------
           | nB is the total number of nodes in the independent set.
           | nC : nA - nB = the size of the reduced system.
@@ -354,7 +354,7 @@ int itsol_pc_arms2(csptr Amat, int *ipar, double *droptol, int *lfil, double tol
         iwork = (int *)Malloc(nC * sizeof(int), "arms2:3");
         uwork = (int *)Malloc(nC * sizeof(int), "arms2:3.5");
         tolind = 0.0;
-        PQperm(schur, bsize, uwork, iwork, &nB, tolind);
+        itsol_PQperm(schur, bsize, uwork, iwork, &nB, tolind);
         rpermC(schur, uwork);
         cpermC(schur, iwork);
     }

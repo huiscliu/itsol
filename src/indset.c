@@ -6,7 +6,7 @@
 /*----------------------------------------------------------------------
   |   adds element nod to independent set
   |---------------------------------------------------------------------*/
-int add2is(int *last, int nod, int *iord, int *riord)
+int itsol_add2is(int *last, int nod, int *iord, int *riord)
 {
     (*last)++;
     iord[nod] = *last;
@@ -17,7 +17,7 @@ int add2is(int *last, int nod, int *iord, int *riord)
 /*----------------------------------------------------------------------
   |   adds element nod to independent set
   |---------------------------------------------------------------------*/
-int add2com(int *nback, int nod, int *iord, int *riord)
+int itsol_add2com(int *nback, int nod, int *iord, int *riord)
 {
     iord[nod] = *nback;
     riord[*nback] = nod;
@@ -28,7 +28,7 @@ int add2com(int *nback, int nod, int *iord, int *riord)
 /*---------------------------------------------------------------------
   |     defines weights based on diagonal dominance ratios
   |--------------------------------------------------------------------*/
-int weightsC(csptr mat, double *w)
+int itsol_weightsC(csptr mat, double *w)
 {
     int irow, k, n = mat->n, *kj, kz;
     double tdia, wmax = 0.0, tnorm, *kr;
@@ -76,7 +76,7 @@ int weightsC(csptr mat, double *w)
   |     nnod   = number of elements in the B-block 
   |     
   |---------------------------------------------------------------------*/
-int PQperm(csptr mat, int bsize, int *Pord, int *Qord, int *nnod, double tol)
+int itsol_PQperm(csptr mat, int bsize, int *Pord, int *Qord, int *nnod, double tol)
 {
     /*--------------------   local variables   */
     int *icor, *jcor, *row;
@@ -98,7 +98,7 @@ int PQperm(csptr mat, int bsize, int *Pord, int *Qord, int *nnod, double tol)
     count = 0;
     /*-------------------- wDiag selects candidate entries in a sorted oder */
     i = 1;
-    preSel(mat, icor, jcor, i, tol, &count);
+    itsol_preSel(mat, icor, jcor, i, tol, &count);
     /*-------------------- add entries one by one to diagnl */
     /* needs recoding so as to scan rows only once instead of 2 */
     for (i = 0; i < count; i++) {
@@ -200,7 +200,7 @@ int PQperm(csptr mat, int bsize, int *Pord, int *Qord, int *nnod, double tol)
   |     the (BSIZE-1) nearest nodes of the current to form a block of
   |     size BSIZE. The current algorithm does not use values of the matrix.
   |---------------------------------------------------------------------*/
-int indsetC(csptr mat, int bsize, int *iord, int *nnod, double tol)
+int itsol_indsetC(csptr mat, int bsize, int *iord, int *nnod, double tol)
 {
     /*   local variables   */
     int nod, jcount, lastlev, begin, last0, last, nback, mid,
@@ -217,7 +217,7 @@ int indsetC(csptr mat, int bsize, int *iord, int *nnod, double tol)
     setupCS(matT, mat->n, 1);
     SparTran(mat, matT, 1, 0);
     SparTran(matT, mat, 1, 1);
-    weightsC(mat, w);
+    itsol_weightsC(mat, w);
     /*---------------------------------------------------------------------- 
       | scan all nodes first to eliminate those not satisfying DD criterion 
       +----------------------------------------------------------------------*/
@@ -227,7 +227,7 @@ int indsetC(csptr mat, int bsize, int *iord, int *nnod, double tol)
         iord[j] = -1;
     for (j = 0; j < n; j++) {
         if (w[j] < tol) {
-            add2com(&nback, j, iord, riord);
+            itsol_add2com(&nback, j, iord, riord);
             nod++;
         }
     }
@@ -238,7 +238,7 @@ int indsetC(csptr mat, int bsize, int *iord, int *nnod, double tol)
                 goto label50;
         }
         /*-------------------- initialize level-set - contains nod (only)*/
-        add2is(&last, nod, iord, riord);
+        itsol_add2is(&last, nod, iord, riord);
         begin = last;
         begin0 = begin;
         lastlev = begin;
@@ -261,7 +261,7 @@ int indsetC(csptr mat, int bsize, int *iord, int *nnod, double tol)
                     for (j = 0; j < gmat->nzcount[jnod]; j++) {
                         jcol = rowj[j];
                         if (iord[jcol] == -1) {
-                            add2is(&last, jcol, iord, riord);
+                            itsol_add2is(&last, jcol, iord, riord);
                             jcount++;
                         }
                     }
@@ -284,7 +284,7 @@ int indsetC(csptr mat, int bsize, int *iord, int *nnod, double tol)
                 for (j = 0; j < gmat->nzcount[jnod]; j++) {
                     jcol = rowj[j];
                     if (iord[jcol] == -1)
-                        add2com(&nback, jcol, iord, riord);
+                        itsol_add2com(&nback, jcol, iord, riord);
                 }
             }
             gmat = matT;
@@ -343,7 +343,7 @@ label50:
   |       jcor  = list of column indices of entries selected 
   |       count = number of entries selected (size of B block) 
   |--------------------------------------------------------------------*/
-int preSel(csptr mat, int *icor, int *jcor, int job, double tol, int *count)
+int itsol_preSel(csptr mat, int *icor, int *jcor, int job, double tol, int *count)
 {
     int i, k, kmax, n = mat->n, col, jmax, countL;
     int *nz, *jcol;
