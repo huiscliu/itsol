@@ -50,7 +50,7 @@ int main(void)
 
     /*------------------ read and set parameters and other inputs */
     memset(&io, 0, sizeof(io));
-    if (read_inputs("inputs", &io) != 0) {
+    if (itsol_read_inputs("inputs", &io) != 0) {
         fprintf(flog, "ERROR reading inputs from file...\n");
         exit(1);
     }
@@ -69,7 +69,7 @@ int main(void)
     }
 
     /*-------------------- set parameters for arms */
-    set_arms_pars(&io, diagscal, ipar, dropcoef, lfil_arr);
+    itsol_set_arms_pars(&io, diagscal, ipar, dropcoef, lfil_arr);
 
     /*-------------------- open file ARMS.out for all performance
       results of this run (all matrices and params) 
@@ -86,7 +86,7 @@ int main(void)
 
     /*-------------------- LOOP through matrices -*/
     for (mat = 1; mat <= numat; mat++) {
-        if (get_matrix_info(fmat, &io) != 0) {
+        if (itsol_get_matrix_info(fmat, &io) != 0) {
             fprintf(flog, "Invalid format in matfile ...\n");
             exit(5);
         }
@@ -97,7 +97,7 @@ int main(void)
         csmat = (csptr) itsol_malloc(sizeof(SparMat), "main:csmat");
 
         if (io.Fmt > HB) {
-            ierr = read_coo(&AA, &JA, &IA, &io, &rhs, &sol, 0);
+            ierr = itsol_read_coo(&AA, &JA, &IA, &io, &rhs, &sol, 0);
             if (ierr == 0)
                 fprintf(flog, "matrix read successfully\n");
             else {
@@ -118,7 +118,7 @@ int main(void)
         /*-------------------- Read matrix - case: HB formats */
         if (io.Fmt == HB) {
             /* NOTE: (AA,JA,IA) is in CSR format */
-            ierr = readhb_c(&n, &AA, &JA, &IA, &io, &rhs, &sol, &rsa);
+            ierr = itsol_readhb_c(&n, &AA, &JA, &IA, &io, &rhs, &sol, &rsa);
             if (ierr != 0) {
                 fprintf(flog, "readhb_c error = %d\n", ierr);
                 exit(7);
@@ -141,7 +141,7 @@ int main(void)
         /*----------------------------------------------------------*/
         n = csmat->n;
         x = (double *)itsol_malloc(n * sizeof(double), "main:x");
-        output_header(&io);
+        itsol_output_header(&io);
 
         /*-------------------- set initial lfil and tol */
         lfil = io.lfil0;
@@ -192,7 +192,7 @@ int main(void)
 
             /*-------------------- initial guess */
             /*    for(i=0; i < io.ndim; i++) x[i] = 0.0 */
-            randvec(x, n);
+            itsol_randvec(x, n);
 
             /*-------------------- create a file for printing
               'its -- time -- res' info from fgmres */
@@ -242,7 +242,7 @@ int main(void)
 
             /*-------------------- go to next param case */
  NEXT_PARA:
-            output_result(lfil, &io, iparam);
+            itsol_output_result(lfil, &io, iparam);
             lfil += io.lfilInc;
             tol *= io.tolMul;
             itsol_cleanARMS(ArmsSt);

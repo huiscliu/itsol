@@ -4,7 +4,7 @@
 #define ERR_AUXIL  10
 #define MAX_NUM_LEV 10          /* maximum number of levels for arms    */
 
-int read_inputs(char *in_file, io_t * pio)
+int itsol_read_inputs(char *in_file, io_t * pio)
 {
     FILE *finputs;
     char line[MAX_LINE], *p1, *p2;
@@ -110,7 +110,7 @@ int read_inputs(char *in_file, io_t * pio)
     return 0;
 }
 
-int get_matrix_info(FILE * fmat, io_t * pio)
+int itsol_get_matrix_info(FILE * fmat, io_t * pio)
 {
     char path[MAX_LINE], MatNam[MaxNamLen], Fmt[4];
     int count;
@@ -138,7 +138,7 @@ int get_matrix_info(FILE * fmat, io_t * pio)
     return (0);
 }
 
-void output_blocks(int nBlock, int *nB, FILE * f)
+void itsol_output_blocks(int nBlock, int *nB, FILE * f)
 {
     int i;
     fprintf(f, "\nBlocks:\n");
@@ -151,7 +151,7 @@ void output_blocks(int nBlock, int *nB, FILE * f)
     fflush(f);
 }
 
-void output_perm(int n, int *perm, FILE * f)
+void itsol_output_perm(int n, int *perm, FILE * f)
 {
     int i;
     fprintf(f, "\nPermutation array:\n");
@@ -171,7 +171,7 @@ void output_perm(int n, int *perm, FILE * f)
   ! job = 0  - want C indexing 
   ! job = 1  - want FORTRAN indexing 
   !------------------------------------------------------------*/
-int read_coo(double **VAL, int **COL, int **ROW, io_t * pio, double **rhs, double **sol, int job)
+int itsol_read_coo(double **VAL, int **COL, int **ROW, io_t * pio, double **rhs, double **sol, int job)
 {
     FILE *matf = NULL;
     double *aa;
@@ -245,7 +245,7 @@ int read_coo(double **VAL, int **COL, int **ROW, io_t * pio, double **rhs, doubl
     return (0);
 }
 
-int readhb_c(int *NN, double **AA, int **JA, int **IA, io_t * pio, double **rhs, double **sol, int *rsa)
+int itsol_readhb_c(int *NN, double **AA, int **JA, int **IA, io_t * pio, double **rhs, double **sol, int *rsa)
 {
     int job, ncol, nrow, nrhs, ierr;
     char guesol[3], title[73], key[9], type[4];
@@ -329,7 +329,7 @@ int readhb_c(int *NN, double **AA, int **JA, int **IA, io_t * pio, double **rhs,
   fmt == 0, output in CSC
   fmt == 1, output in CSR
  *-----------------------------------------------------------*/
-int readhb_2(int *NN, double **AA, int **JA, int **IA, io_t * pio, double **rhs, double **sol, int *rsa,
+int itsol_readhb_2(int *NN, double **AA, int **JA, int **IA, io_t * pio, double **rhs, double **sol, int *rsa,
              int fmt)
 {
     int job, ncol, nrow, nrhs, ierr;
@@ -415,7 +415,7 @@ int readhb_2(int *NN, double **AA, int **JA, int **IA, io_t * pio, double **rhs,
     return 0;
 }
 
-void output_header(io_t * pio)
+void itsol_output_header(io_t * pio)
 {
     FILE *f = pio->fout;
     fprintf(f, "\n \n");
@@ -432,7 +432,7 @@ void output_header(io_t * pio)
     fflush(f);
 }
 
-void output_header_vb(io_t * pio)
+void itsol_output_header_vb(io_t * pio)
 {
     FILE *f = pio->fout;
     fprintf(f, "\n \n");
@@ -460,7 +460,7 @@ void output_header_vb(io_t * pio)
     fflush(f);
 }
 
-void output_result(int lfil, io_t * pio, int iparam)
+void itsol_output_result(int lfil, io_t * pio, int iparam)
 {
     FILE *f = pio->fout;
     int i;
@@ -479,7 +479,7 @@ void output_result(int lfil, io_t * pio, int iparam)
 /* input io_t, Dscale                            */
 /* output ipar tolcoef, lfil                       */
 /*-------------------- trigger an error if not set */
-void set_arms_pars(io_t * io, int Dscale, int *ipar, double *dropcoef, int *lfil)
+void itsol_set_arms_pars(io_t * io, int Dscale, int *ipar, double *dropcoef, int *lfil)
 {
     int j;
 
@@ -526,7 +526,7 @@ void set_arms_pars(io_t * io, int Dscale, int *ipar, double *dropcoef, int *lfil
     dropcoef[6] = 0.004;        /* dropcoef for last level U */
 }
 
-void randvec(double *v, int n)
+void itsol_randvec(double *v, int n)
 {
     /* fills v with random values */
     double x;

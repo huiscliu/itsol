@@ -47,7 +47,7 @@ int main(void)
     /*------------------ read and set parameters and other inputs  */
     memset(&io, 0, sizeof(io));
 
-    if (read_inputs("inputs", &io) != 0) {
+    if (itsol_read_inputs("inputs", &io) != 0) {
         fprintf(flog, "Invalid inputs file...\n");
         exit(1);
     }
@@ -84,7 +84,7 @@ int main(void)
 
     /*-------------------- LOOP THROUGH MATRICES --------------------*/
     for (mat = 1; mat <= numat; mat++) {
-        if (get_matrix_info(fmat, &io) != 0) {
+        if (itsol_get_matrix_info(fmat, &io) != 0) {
             fprintf(flog, "Invalid format in matfile_hb...\n");
             exit(5);
         }
@@ -96,7 +96,7 @@ int main(void)
 
         /*-------------------- case: COO formats */
         if (io.Fmt > HB) {
-            ierr = read_coo(&AA, &JA, &IA, &io, &rhs, &sol, 0);
+            ierr = itsol_read_coo(&AA, &JA, &IA, &io, &rhs, &sol, 0);
             if (ierr == 0)
                 fprintf(flog, "matrix read successfully\n");
             else {
@@ -115,7 +115,7 @@ int main(void)
         }
         else if (io.Fmt == HB) {
             /*-------------------- NOTE: (AA,JA,IA) is in CSR format */
-            ierr = readhb_c(&n, &AA, &JA, &IA, &io, &rhs, &sol, &rsa);
+            ierr = itsol_readhb_c(&n, &AA, &JA, &IA, &io, &rhs, &sol, &rsa);
 
             if (ierr != 0) {
                 fprintf(flog, "readhb_c error = %d\n", ierr);
@@ -213,7 +213,7 @@ int main(void)
         io.ceff = itsol_nnz_cs(csmat) / 1. / itsol_memVBMat(vbmat) * 100;
 
         /*---------------------------*/
-        output_header_vb(&io);
+        itsol_output_header_vb(&io);
         lfil = io.lfil0;
         tol = io.tol0;
         w = (BData *) itsol_malloc(vbmat->n * sizeof(BData), "main");
@@ -271,7 +271,7 @@ int main(void)
 
             /*-------------------- initial guess */
             /* for( i = 0; i < io.ndim; i++ ) x[i] = 0.0; */
-            randvec(x, n);
+            itsol_randvec(x, n);
 
             /*-------------------- create a file for printing
               'its -- time -- res' info from fgmres */
@@ -325,7 +325,7 @@ int main(void)
 
             /*-------------------- next params */
 NEXT_PARA:
-            output_result(lfil, &io, iparam);
+            itsol_output_result(lfil, &io, iparam);
             lfil += io.lfilInc;
             tol *= io.tolMul;
             itsol_cleanVBILU(lu);
