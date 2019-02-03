@@ -64,7 +64,7 @@ int qsplitC(double *a, int *ind, int n, int ncut);
 int roscalC(csptr mata, double *diag, int nrm);
 void itsol_swapj(int v[], int i, int j);
 void itsol_swapm(double v[], int i, int j);
-double sys_timer(void);
+double itsol_get_time(void);
 int dumpArmsMat(arms PreSt, FILE *ft);
 int outputLU(iluptr lu, char *filename);
 int checkperm(int *p, int n);

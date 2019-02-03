@@ -1172,7 +1172,7 @@ int itsol_init_blocks(csptr csmat, int *pnBlock, int **pnB, int **pperm, double 
     int nextBlockID, nextBlockPos, belongTo, grp;
     double eps_2 = eps * eps, t1, t2;
 
-    t1 = sys_timer();           /* begin Hash method timer */
+    t1 = itsol_get_time();           /* begin Hash method timer */
     group = (KeyType *) itsol_malloc(n * sizeof(KeyType), "init_blocks");
     compress = (CompressType *) itsol_malloc(n * sizeof(CompressType), "init_blocks");
     perm = (int *)itsol_malloc(n * sizeof(int), "init_blocks");
@@ -1238,10 +1238,10 @@ int itsol_init_blocks(csptr csmat, int *pnBlock, int **pnB, int **pperm, double 
             }
         }
     }
-    t2 = sys_timer();           /* end Hash method timer */
+    t2 = itsol_get_time();           /* end Hash method timer */
     *t_hash = t2 - t1;
 
-    t1 = sys_timer();           /* begin angle method timer */
+    t1 = itsol_get_time();           /* begin angle method timer */
     nB = (int *)itsol_malloc(n * sizeof(int), "init_blocks");
     jbuf = (int *)itsol_malloc(n * sizeof(int), "init_blocks");
 
@@ -1344,7 +1344,7 @@ int itsol_init_blocks(csptr csmat, int *pnBlock, int **pnB, int **pperm, double 
             nB[belongTo]++;
         }
     }
-    t2 = sys_timer();           /* end angle method timer */
+    t2 = itsol_get_time();           /* end angle method timer */
     *t_angle = t2 - t1;
     *pperm = perm;
 

@@ -216,13 +216,13 @@ int main(void)
             lu = (vbiluptr) itsol_malloc(sizeof(VBILUSpar), "main");
             fprintf(flog, "begin vbiluk\n");
 
-            tm1 = sys_timer();
+            tm1 = itsol_get_time();
 
             /*-------------------- call VBILUK preconditioner set-up  */
             ierr = itsol_pc_vbilukC(lfil, vbmat, lu, flog);
 
             /*----------------------------------------------------- */
-            tm2 = sys_timer();
+            tm2 = itsol_get_time();
 
             if (ierr == -2) {
                 fprintf(io.fout, "Singular diagonal block...\n");
@@ -274,9 +274,9 @@ int main(void)
 
             /*-------------------- call itsol_solver_fgmres */
             io.its = io.maxits;
-            tm1 = sys_timer();
+            tm1 = itsol_get_time();
             itsol_solver_fgmres(MAT, PRE, prhs, x, io.tol, io.im, &io.its, fits);
-            tm2 = sys_timer();
+            tm2 = itsol_get_time();
             io.tm_i = tm2 - tm1;
             if (io.its < io.maxits)
                 fprintf(flog, "param %03d OK: converged in %d steps...\n\n", iparam, io.its);

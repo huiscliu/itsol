@@ -1563,7 +1563,7 @@ int CSClumC(csptr amat, iluptr mat, int rsa)
  *
  */
 
-double sys_timer(void)
+double itsol_get_time(void)
 {
     struct timeval tv;
     double t;

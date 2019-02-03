@@ -163,13 +163,13 @@ int main(void)
             fprintf(flog, "iparam = %d\n", iparam);
             lu = (iluptr) itsol_malloc(sizeof(ILUSpar), "main");
             fprintf(flog, "begin ilut\n");
-            tm1 = sys_timer();
+            tm1 = itsol_get_time();
 
             /*-------------------- call ILUT preconditioner set-up  */
             ierr = itsol_pc_ilut(csmat, lu, lfil, tol, flog);
 
             /*----------------------------------------------------- */
-            tm2 = sys_timer();
+            tm2 = itsol_get_time();
 
             if (ierr != 0) {
                 fprintf(io.fout, " *** ILUT error - code %d \n", ierr);
@@ -226,9 +226,9 @@ int main(void)
 
             /*-------------------- call itsol_solver_fgmres */
             io.its = io.maxits;
-            tm1 = sys_timer();
+            tm1 = itsol_get_time();
             itsol_solver_fgmres(MAT, PRE, rhs, x, io.tol, io.im, &io.its, fits);
-            tm2 = sys_timer();
+            tm2 = itsol_get_time();
             io.tm_i = tm2 - tm1;
 
             if (io.its < io.maxits)

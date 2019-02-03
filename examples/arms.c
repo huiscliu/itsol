@@ -158,13 +158,13 @@ int main(void)
             ArmsSt = (arms) itsol_malloc(sizeof(armsMat), "main:ArmsSt");
             itsol_setup_arms(ArmsSt);
             fprintf(flog, "begin arms\n");
-            tm1 = sys_timer();
+            tm1 = itsol_get_time();
 
             /*-------------------- call ARMS preconditioner set-up  */
             ierr = itsol_pc_arms2(csmat, ipar, droptol, lfil_arr, tolind, ArmsSt, flog);
 
             /*----------------------------------------------------- */
-            tm2 = sys_timer();
+            tm2 = itsol_get_time();
 
             if (ierr != 0) {
                 fprintf(io.fout, " ** ARMS2 error - code %d...\n", ierr);
@@ -215,9 +215,9 @@ int main(void)
 
             /*-------------------- call itsol_solver_fgmres */
             io.its = io.maxits;
-            tm1 = sys_timer();
+            tm1 = itsol_get_time();
             itsol_solver_fgmres(MAT, PRE, rhs, x, io.tol, io.im, &io.its, fits);
-            tm2 = sys_timer();
+            tm2 = itsol_get_time();
             io.tm_i = tm2 - tm1;
             if (io.its < io.maxits)
                 fprintf(flog, "param %03d OK: converged in %d steps...\n", iparam, io.its);

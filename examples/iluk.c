@@ -138,13 +138,13 @@ int main(void)
             fprintf(flog, "iparam = %d\n", iparam);
             lu = (iluptr) itsol_malloc(sizeof(ILUSpar), "main");
             fprintf(flog, "begin iluk(%d)\n", lfil);
-            tm1 = sys_timer();
+            tm1 = itsol_get_time();
 
             /*-------------------- call ILUK preconditioner set-up  */
             ierr = itsol_pc_ilukC(lfil, csmat, lu, flog);
 
             /*----------------------------------------------------- */
-            tm2 = sys_timer();
+            tm2 = itsol_get_time();
 
             if (ierr == -2) {
                 fprintf(io.fout, "zero diagonal element found...\n");
@@ -204,9 +204,9 @@ int main(void)
 
             /*-------------------- call itsol_solver_fgmres */
             io.its = io.maxits;
-            tm1 = sys_timer();
+            tm1 = itsol_get_time();
             itsol_solver_fgmres(MAT, PRE, rhs, x, io.tol, io.im, &io.its, fits);
-            tm2 = sys_timer();
+            tm2 = itsol_get_time();
             io.tm_i = tm2 - tm1;
 
             if (io.its < io.maxits)
