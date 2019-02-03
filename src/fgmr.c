@@ -44,127 +44,128 @@
   |     matvec and
   |     preconditionning operation 
   +---------------------------------------------------------------------*/
-int fgmr(SMatptr Amat, SPreptr lu, double *rhs, double *sol, 
-        double tol, int im, int *itmax, FILE *fits)
-{ 
-    int n=Amat->n, maxits = *itmax; 
-    int i, i1, ii, j, k, k1, its, im1, pti, pti1, ptih=0, retval, one = 1;
+int fgmr(SMatptr Amat, SPreptr lu, double *rhs, double *sol, double tol, int im, int *itmax, FILE * fits)
+{
+    int n = Amat->n, maxits = *itmax;
+    int i, i1, ii, j, k, k1, its, im1, pti, pti1, ptih = 0, retval, one = 1;
     double *hh, *c, *s, *rs, t;
-    double negt, beta, eps1=0, gam, *vv, *z; 
-    im1 = im+1;
-    vv = (double *)Malloc(im1*n*sizeof(double), "fgmres:vv");
-    z  = (double *)Malloc(im*n*sizeof(double), "fgmres:z");
-    im1 = im+1;
-    hh = (double *)Malloc((im1*(im+3))*sizeof(double), "fgmres:hh");
-    c  = hh+im1*im ; s  = c+im1;  rs = s+im1;
+    double negt, beta, eps1 = 0, gam, *vv, *z;
+    im1 = im + 1;
+    vv = (double *)Malloc(im1 * n * sizeof(double), "fgmres:vv");
+    z = (double *)Malloc(im * n * sizeof(double), "fgmres:z");
+    im1 = im + 1;
+    hh = (double *)Malloc((im1 * (im + 3)) * sizeof(double), "fgmres:hh");
+    c = hh + im1 * im;
+    s = c + im1;
+    rs = s + im1;
     /*-------------------- outer loop starts here */
     retval = 0;
     its = 0;
     /*-------------------- Outer loop */
     while (its < maxits) {
         /*-------------------- compute initial residual vector */
-        Amat->matvec(Amat, sol, vv); 
-        for (j=0; j<n; j++)
-            vv[j] = rhs[j] - vv[j];    /*  vv[0]= initial residual */
+        Amat->matvec(Amat, sol, vv);
+        for (j = 0; j < n; j++)
+            vv[j] = rhs[j] - vv[j];     /*  vv[0]= initial residual */
         beta = DNRM2(n, vv, one);
         /*-------------------- print info if fits != null */
-        if (fits != NULL && its == 0) 
-            fprintf(fits, "%8d   %10.2e\n",its, beta) ;     
-        if (beta == 0.0) 
+        if (fits != NULL && its == 0)
+            fprintf(fits, "%8d   %10.2e\n", its, beta);
+        if (beta == 0.0)
             break;
         t = 1.0 / beta;
         /*--------------------   normalize:  vv    =  vv   / beta */
         DSCAL(n, t, vv, one);
-        if (its == 0) 
-            eps1 = tol*beta;
+        if (its == 0)
+            eps1 = tol * beta;
         /*--------------------initialize 1-st term  of rhs of hessenberg mtx */
         rs[0] = beta;
         i = 0;
         /*-------------------- Krylov loop*/
         i = -1;
-        pti=pti1=0;
-        while((i < im-1) && (beta > eps1) && (its++ < maxits))  {
+        pti = pti1 = 0;
+        while ((i < im - 1) && (beta > eps1) && (its++ < maxits)) {
             i++;
-            i1   = i+1; 
-            pti  = i*n;
-            pti1 = i1*n;
+            i1 = i + 1;
+            pti = i * n;
+            pti1 = i1 * n;
             /*------------------------------------------------------------
               |  (Right) Preconditioning Operation   z_{j} = M^{-1} v_{j}
               +-----------------------------------------------------------*/
-            if (lu == NULL) 
-                memcpy(z+pti, vv+pti, n*sizeof(double));
+            if (lu == NULL)
+                memcpy(z + pti, vv + pti, n * sizeof(double));
             else
-                lu->precon(vv+pti, z+pti, lu) ;
+                lu->precon(vv + pti, z + pti, lu);
             /*-------------------- matvec operation w = A z_{j} = A M^{-1} v_{j} */
-            Amat->matvec(Amat, &z[pti], &vv[pti1]); 
+            Amat->matvec(Amat, &z[pti], &vv[pti1]);
             /*-------------------- modified gram - schmidt...
               |     h_{i,j} = (w,v_{i});  
               |     w  = w - h_{i,j} v_{i}
               +------------------------------------------------------------*/
-            ptih=i*im1;
-            for (j=0; j<=i; j++) {
-                t = DDOT(n, &vv[j*n], one, &vv[pti1], one);
-                hh[ptih+j] = t;
+            ptih = i * im1;
+            for (j = 0; j <= i; j++) {
+                t = DDOT(n, &vv[j * n], one, &vv[pti1], one);
+                hh[ptih + j] = t;
                 negt = -t;
-                DAXPY(n, negt, &vv[j*n], one, &vv[pti1], one);
+                DAXPY(n, negt, &vv[j * n], one, &vv[pti1], one);
             }
             /*-------------------- h_{j+1,j} = ||w||_{2}    */
             t = DNRM2(n, &vv[pti1], one);
-            hh[ptih+i1] = t;
-            if (t == 0.0) 
-                return(1);
-            t = 1.0/t;
+            hh[ptih + i1] = t;
+            if (t == 0.0)
+                return (1);
+            t = 1.0 / t;
             /*-------------------- v_{j+1} = w / h_{j+1,j}  */
             DSCAL(n, t, &vv[pti1], one);
             /*-------- done with modified gram schimdt/arnoldi step
               | now  update factorization of hh.
               | perform previous transformations  on i-th column of h
               +-------------------------------------------------------*/
-            for (k=1; k<=i; k++) {
-                k1 = k-1;
-                t = hh[ptih+k1];
-                hh[ptih+k1] = c[k1]*t + s[k1]*hh[ptih+k];
-                hh[ptih+k] = -s[k1]*t + c[k1]*hh[ptih+k];
+            for (k = 1; k <= i; k++) {
+                k1 = k - 1;
+                t = hh[ptih + k1];
+                hh[ptih + k1] = c[k1] * t + s[k1] * hh[ptih + k];
+                hh[ptih + k] = -s[k1] * t + c[k1] * hh[ptih + k];
             }
-            gam = sqrt(pow(hh[ptih+i],2) + pow(hh[ptih+i1],2) );
+            gam = sqrt(pow(hh[ptih + i], 2) + pow(hh[ptih + i1], 2));
             /*-------------------- check if gamma is zero */
-            if (gam == 0.0) gam = epsmac;
+            if (gam == 0.0)
+                gam = epsmac;
             /*-------------------- get  next plane rotation    */
-            c[i] = hh[ptih+i]/gam;
-            s[i] = hh[ptih+i1]/gam;
-            rs[i1] = -s[i]*rs[i];
-            rs[i] =  c[i]*rs[i];
+            c[i] = hh[ptih + i] / gam;
+            s[i] = hh[ptih + i1] / gam;
+            rs[i1] = -s[i] * rs[i];
+            rs[i] = c[i] * rs[i];
             /*-------------------- get residual norm + test convergence*/
-            hh[ptih+i] = c[i]*hh[ptih+i] + s[i]*hh[ptih+i1];
+            hh[ptih + i] = c[i] * hh[ptih + i] + s[i] * hh[ptih + i1];
             beta = fabs(rs[i1]);
-            if( fits != NULL ) 
-                fprintf(fits,"%8d   %10.2e\n", its, beta) ;          
+            if (fits != NULL)
+                fprintf(fits, "%8d   %10.2e\n", its, beta);
             /*-------------------- end [inner] while loop [Arnoldi] */
         }
         /*-------------------- now compute solution. 1st, solve upper 
           triangular system*/
-        rs[i] = rs[i]/hh[ptih+i];
-        for (ii=i-1; ii>=0; ii--) {
-            t=rs[ii];
-            for (j=ii+1; j<=i; j++)
-                t -= hh[j*im1+ii]*rs[j];
-            rs[ii] = t/hh[ii*im1+ii];
+        rs[i] = rs[i] / hh[ptih + i];
+        for (ii = i - 1; ii >= 0; ii--) {
+            t = rs[ii];
+            for (j = ii + 1; j <= i; j++)
+                t -= hh[j * im1 + ii] * rs[j];
+            rs[ii] = t / hh[ii * im1 + ii];
         }
         /*---------- linear combination of z_j's to get sol. */
-        for (j=0; j<= i; j++) 
-            DAXPY(n, rs[j], &z[j*n], one, sol, one);
+        for (j = 0; j <= i; j++)
+            DAXPY(n, rs[j], &z[j * n], one, sol, one);
         /*--------------------  restart outer loop if needed */
-        if (beta < eps1) 
+        if (beta < eps1)
             break;
-        else 
-            if (its >= maxits) 
-                retval = 1; 
+        else if (its >= maxits)
+            retval = 1;
         /*---------- end main [outer] while loop */
-    } 
+    }
     /*-------------------- prepare to return */
-    *itmax = its; 
+    *itmax = its;
     free(vv);
     free(z);
     free(hh);
-    return (retval); 
+    return (retval);
 }

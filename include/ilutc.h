@@ -3,6 +3,7 @@
 #define __ITSOL_ILUTC_H__
 
 #include "sets.h"
+#include "MatOps.h"
 
 #ifdef __cplusplus
 extern "C" {

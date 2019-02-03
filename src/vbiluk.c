@@ -3,8 +3,6 @@
 
 #define SVD 1
 
-int vbilukC( int lofM, vbsptr vbmat, vbiluptr lu, FILE *fp )
-{
 /*----------------------------------------------------------------------------
  * Block ILUK preconditioner
  * Block incomplete LU factorization with level of fill dropping
@@ -39,6 +37,8 @@ int vbilukC( int lofM, vbsptr vbmat, vbiluptr lu, FILE *fp )
  * ======
  * All the diagonal blocks of the input block matrix must not be singular
  *--------------------------------------------------------------------------*/
+int vbilukC(int lofM, vbsptr vbmat, vbiluptr lu, FILE * fp)
+{
     int ierr;
     int n = vbmat->n, *bsz = vbmat->bsz;
     int *jw, i, j, k, col, jpos, jrow, dim, sz;
@@ -46,113 +46,115 @@ int vbilukC( int lofM, vbsptr vbmat, vbiluptr lu, FILE *fp )
     double alpha1 = 1.0, beta1 = 0.0, alpha2 = -1.0, beta2 = 1.0;
     vbsptr L, U;
 
-    setupVBILU( lu, n, bsz );
+    setupVBILU(lu, n, bsz);
     L = lu->L;
     U = lu->U;
 
     /* symbolic factorization to calculate level of fill index arrays */
-    if( ( ierr = vblofC( lofM, vbmat, lu, fp ) ) != 0 ) {
-      fprintf( fp, "Error: lofC\n" );
-      return -1;
+    if ((ierr = vblofC(lofM, vbmat, lu, fp)) != 0) {
+        fprintf(fp, "Error: lofC\n");
+        return -1;
     }
 
     jw = lu->work;
     /* set indicator array jw to -1 */
-    for( j = 0; j < n; j++ ) jw[j] = -1;
+    for (j = 0; j < n; j++)
+        jw[j] = -1;
 
     /* beginning of main loop */
-    for( i = 0; i < n; i++ ) {
-        dim = B_DIM(bsz,i);  /* number of rows of blocks in i-th row */
+    for (i = 0; i < n; i++) {
+        dim = B_DIM(bsz, i);    /* number of rows of blocks in i-th row */
         /* set up the i-th row accroding to the nonzero information from
            symbolic factorization */
-        mallocVBRow( lu, i );
+        mallocVBRow(lu, i);
 
         /* setup array jw[], and initial i-th row */
-        for( j = 0; j < L->nzcount[i]; j++ ) {  /* initialize L part   */
+        for (j = 0; j < L->nzcount[i]; j++) {   /* initialize L part   */
             col = L->ja[i][j];
-            sz = B_DIM(bsz,col);
+            sz = B_DIM(bsz, col);
             jw[col] = j;
-            zrmC( dim, sz, L->ba[i][j] );
+            zrmC(dim, sz, L->ba[i][j]);
         }
         jw[i] = i;
-        zrmC( dim, dim, lu->D[i] );            /* initialize diagonal */
-        for( j = 0; j < U->nzcount[i]; j++ ) {  /* initialize U part   */
+        zrmC(dim, dim, lu->D[i]);       /* initialize diagonal */
+        for (j = 0; j < U->nzcount[i]; j++) {   /* initialize U part   */
             col = U->ja[i][j];
-            sz = B_DIM(bsz,col);
+            sz = B_DIM(bsz, col);
             jw[col] = j;
-            zrmC( dim, sz, U->ba[i][j] );
+            zrmC(dim, sz, U->ba[i][j]);
         }
 
         /* copy row from vbmat into lu */
-        for( j = 0; j < vbmat->nzcount[i]; j++ ) {
+        for (j = 0; j < vbmat->nzcount[i]; j++) {
             col = vbmat->ja[i][j];
-            sz = B_DIM(bsz,col);  /* number of columns of current block */
+            sz = B_DIM(bsz, col);       /* number of columns of current block */
             jpos = jw[col];
-            if( col < i ) {
-                copyBData( dim, sz, L->ba[i][jpos], vbmat->ba[i][j], 0 );
-            } else if( col == i ) {
-                copyBData( dim, sz, lu->D[i], vbmat->ba[i][j], 0 );
-            } else {
-                copyBData( dim, sz, U->ba[i][jpos], vbmat->ba[i][j], 0 );
+            if (col < i) {
+                copyBData(dim, sz, L->ba[i][jpos], vbmat->ba[i][j], 0);
+            }
+            else if (col == i) {
+                copyBData(dim, sz, lu->D[i], vbmat->ba[i][j], 0);
+            }
+            else {
+                copyBData(dim, sz, U->ba[i][jpos], vbmat->ba[i][j], 0);
             }
         }
 
         /* eliminate previous rows */
-        for( j = 0; j < L->nzcount[i]; j++ ) {
+        for (j = 0; j < L->nzcount[i]; j++) {
             jrow = L->ja[i][j];
-            mm = dim;              /* number of rows of current block */
-            nn = B_DIM(bsz,jrow);  /* number of cols of current block */
+            mm = dim;           /* number of rows of current block */
+            nn = B_DIM(bsz, jrow);      /* number of cols of current block */
             /* get the multiplier for row to be eliminated (jrow) */
-            dgemm( "n", "n", &mm, &nn, &nn, &alpha1, L->ba[i][j], &mm,
-                    lu->D[jrow], &nn, &beta1, lu->bf, &mm );
-            copyBData( mm, nn, L->ba[i][j], lu->bf, 0 );
+            dgemm("n", "n", &mm, &nn, &nn, &alpha1, L->ba[i][j], &mm, lu->D[jrow], &nn, &beta1, lu->bf, &mm);
+            copyBData(mm, nn, L->ba[i][j], lu->bf, 0);
 
             /* combine current row and row jrow */
-            for( k = 0; k < U->nzcount[jrow]; k++ ) {
+            for (k = 0; k < U->nzcount[jrow]; k++) {
                 col = U->ja[jrow][k];
                 jpos = jw[col];
-                if( jpos == -1 ) continue;
-                if( col < i ) {
-                    kk = B_DIM(bsz,col);
-                    dgemm( "n", "n", &mm, &kk, &nn, &alpha2, L->ba[i][j],
-                           &mm, U->ba[jrow][k], &nn, &beta2,
-                           L->ba[i][jpos], &mm );
-                } else if( col == i ) {
-                    dgemm( "n", "n", &mm, &mm, &nn, &alpha2, L->ba[i][j],
-                           &mm, U->ba[jrow][k], &nn, &beta2,
-                           lu->D[i], &mm );
-                } else {
-                    kk = B_DIM(bsz,col);
-                    dgemm( "n", "n", &mm, &kk, &nn, &alpha2, L->ba[i][j],
-                           &mm, U->ba[jrow][k], &nn, &beta2,
-                           U->ba[i][jpos], &mm );
+                if (jpos == -1)
+                    continue;
+                if (col < i) {
+                    kk = B_DIM(bsz, col);
+                    dgemm("n", "n", &mm, &kk, &nn, &alpha2, L->ba[i][j],
+                            &mm, U->ba[jrow][k], &nn, &beta2, L->ba[i][jpos], &mm);
+                }
+                else if (col == i) {
+                    dgemm("n", "n", &mm, &mm, &nn, &alpha2, L->ba[i][j],
+                            &mm, U->ba[jrow][k], &nn, &beta2, lu->D[i], &mm);
+                }
+                else {
+                    kk = B_DIM(bsz, col);
+                    dgemm("n", "n", &mm, &kk, &nn, &alpha2, L->ba[i][j],
+                            &mm, U->ba[jrow][k], &nn, &beta2, U->ba[i][jpos], &mm);
                 }
             }
         }
 
-/*-------------------- reset double-pointer to -1 ( U-part) */
-        for( j = 0; j < L->nzcount[i]; j++ )        {
-	  col = L->ja[i][j];
-	  jw[col] = -1;
+        /*-------------------- reset double-pointer to -1 ( U-part) */
+        for (j = 0; j < L->nzcount[i]; j++) {
+            col = L->ja[i][j];
+            jw[col] = -1;
         }
         jw[i] = -1;
-        for( j = 0; j < U->nzcount[i]; j++ ) {
-	  col = U->ja[i][j];
-	  jw[col] = -1;
+        for (j = 0; j < U->nzcount[i]; j++) {
+            col = U->ja[i][j];
+            jw[col] = -1;
         }
 
-/*-------------------- calculate truncated inverse of diagonal element of U */
-	if (SVD)
-	  ierr = invSVD(dim,lu->D[i]);
-	else
-	  ierr = invGauss(dim,lu->D[i]);
-        if( ierr != 0 ) {
-            for( j = i+1; j < n; j++ ) {
+        /*-------------------- calculate truncated inverse of diagonal element of U */
+        if (SVD)
+            ierr = invSVD(dim, lu->D[i]);
+        else
+            ierr = invGauss(dim, lu->D[i]);
+        if (ierr != 0) {
+            for (j = i + 1; j < n; j++) {
                 lu->D[j] = NULL;
                 L->ba[j] = NULL;
                 U->ba[j] = NULL;
             }
-            fprintf( fp, "fatal error: Singular diagonal block...\n" );
+            fprintf(fp, "fatal error: Singular diagonal block...\n");
             return -2;
         }
     }
@@ -160,8 +162,6 @@ int vbilukC( int lofM, vbsptr vbmat, vbiluptr lu, FILE *fp )
     return 0;
 }
 
-int vblofC( int lofM, vbsptr vbmat, vbiluptr lu, FILE *fp )
-{
 /*--------------------------------------------------------------------
  * symbolic ilu factorization to calculate structure of ilu matrix
  * for specified level of fill
@@ -184,121 +184,128 @@ int vblofC( int lofM, vbsptr vbmat, vbiluptr lu, FILE *fp )
  *   ->L    = L part -- stored in BSpaFmt format, patterns only in lofC
  *   ->U    = U part -- stored in BSpaFmt format, patterns only in lofC
  *------------------------------------------------------------------*/
+int vblofC(int lofM, vbsptr vbmat, vbiluptr lu, FILE * fp)
+{
     int n = vbmat->n;
     int *levls = NULL, *jbuf = NULL, *iw = lu->work;
-    int **ulvl;  /*  stores lev-fils for U part of ILU factorization*/
+    int **ulvl;                 /*  stores lev-fils for U part of ILU factorization */
 
     vbsptr L = lu->L, U = lu->U;
-/*--------------------------------------------------------------------
- * n        = number of rows or columns in matrix
- * inc      = integer, count of nonzero(fillin) element of each row
- *            after symbolic factorization
- * ju       = entry of U part of each row
- * lvl      = buffer to store levels of each row
- * jbuf     = buffer to store column index of each row
- * iw       = work array
- *------------------------------------------------------------------*/
+    /*--------------------------------------------------------------------
+     * n        = number of rows or columns in matrix
+     * inc      = integer, count of nonzero(fillin) element of each row
+     *            after symbolic factorization
+     * ju       = entry of U part of each row
+     * lvl      = buffer to store levels of each row
+     * jbuf     = buffer to store column index of each row
+     * iw       = work array
+     *------------------------------------------------------------------*/
     int i, j, k, col, ip, it, jpiv;
     int incl, incu, jmin, kmin;
 
     (void)fp;
-    levls  = (int *)Malloc( n*sizeof(int), "lofC" );
-    jbuf = (int *)Malloc( n*sizeof(int), "lofC" );
-    ulvl = (int **)Malloc( n*sizeof(int *), "lofC" );
+    levls = (int *)Malloc(n * sizeof(int), "lofC");
+    jbuf = (int *)Malloc(n * sizeof(int), "lofC");
+    ulvl = (int **)Malloc(n * sizeof(int *), "lofC");
 
     /* initilize iw */
-    for( j = 0; j < n; j++ ) iw[j] = -1;
-    for( i = 0; i < n; i++ ) {
+    for (j = 0; j < n; j++)
+        iw[j] = -1;
+    for (i = 0; i < n; i++) {
         incl = 0;
         incu = i;
-/*-------------------- assign lof = 0 for matrix elements */
-        for( j = 0; j < vbmat->nzcount[i]; j++ ) {
+        /*-------------------- assign lof = 0 for matrix elements */
+        for (j = 0; j < vbmat->nzcount[i]; j++) {
             col = vbmat->ja[i][j];
-            if( col < i ) {
-/*-------------------- L-part  */
-	        jbuf[incl] = col;
-	        levls[incl] = 0;
-	        iw[col] = incl++;
+            if (col < i) {
+                /*-------------------- L-part  */
+                jbuf[incl] = col;
+                levls[incl] = 0;
+                iw[col] = incl++;
             }
             else if (col > i) {
-/*-------------------- U-part  */
-	        jbuf[incu] = col;
-	        levls[incu] = 0;
-	        iw[col] = incu++;
+                /*-------------------- U-part  */
+                jbuf[incu] = col;
+                levls[incu] = 0;
+                iw[col] = incu++;
             }
         }
-/*-------------------- symbolic k,i,j Gaussian elimination  */
+        /*-------------------- symbolic k,i,j Gaussian elimination  */
         jpiv = -1;
         while (++jpiv < incl) {
-            k = jbuf[jpiv] ;
-/*-------------------- select leftmost pivot */
+            k = jbuf[jpiv];
+            /*-------------------- select leftmost pivot */
             kmin = k;
             jmin = jpiv;
-            for( j = jpiv + 1; j< incl; j++) {
-	        if( jbuf[j] < kmin ) {
-	            kmin = jbuf[j];
-	            jmin = j;
-	        }
+            for (j = jpiv + 1; j < incl; j++) {
+                if (jbuf[j] < kmin) {
+                    kmin = jbuf[j];
+                    jmin = j;
+                }
             }
-/*-------------------- swap  */
-            if( jmin != jpiv ) {
-	        jbuf[jpiv] = kmin;
-	        jbuf[jmin] = k;
-	        iw[kmin] = jpiv;
-	        iw[k] = jmin;
-	        j = levls[jpiv] ;
-	        levls[jpiv] = levls[jmin];
-	        levls[jmin] = j;
-	        k = kmin;
+            /*-------------------- swap  */
+            if (jmin != jpiv) {
+                jbuf[jpiv] = kmin;
+                jbuf[jmin] = k;
+                iw[kmin] = jpiv;
+                iw[k] = jmin;
+                j = levls[jpiv];
+                levls[jpiv] = levls[jmin];
+                levls[jmin] = j;
+                k = kmin;
             }
-/*-------------------- symbolic linear combinaiton of rows  */
-            for( j = 0; j < U->nzcount[k]; j++ ) {
-	        col = U->ja[k][j];
-	        it = ulvl[k][j]+levls[jpiv]+1 ;
-	        if( it > lofM ) continue;
-	        ip = iw[col];
-	        if( ip == -1 ) {
-	            if( col < i) {
-	                jbuf[incl] = col;
-	                levls[incl] = it;
-	                iw[col] = incl++;
+            /*-------------------- symbolic linear combinaiton of rows  */
+            for (j = 0; j < U->nzcount[k]; j++) {
+                col = U->ja[k][j];
+                it = ulvl[k][j] + levls[jpiv] + 1;
+                if (it > lofM)
+                    continue;
+                ip = iw[col];
+                if (ip == -1) {
+                    if (col < i) {
+                        jbuf[incl] = col;
+                        levls[incl] = it;
+                        iw[col] = incl++;
                     }
-	            else if( col > i ) {
-	                jbuf[incu] = col;
-	                levls[incu] = it;
-	                iw[col] = incu++;
-	            }
+                    else if (col > i) {
+                        jbuf[incu] = col;
+                        levls[incu] = it;
+                        iw[col] = incu++;
+                    }
                 }
                 else
-	            levls[ip] = min(levls[ip], it);
+                    levls[ip] = min(levls[ip], it);
             }
-        }   /* end - while loop */
-/*-------------------- reset iw */
-        for( j = 0; j < incl; j++ ) iw[jbuf[j]] = -1;
-        for( j = i; j < incu; j++ ) iw[jbuf[j]] = -1;
-/*-------------------- copy L-part */
+        }                       /* end - while loop */
+        /*-------------------- reset iw */
+        for (j = 0; j < incl; j++)
+            iw[jbuf[j]] = -1;
+        for (j = i; j < incu; j++)
+            iw[jbuf[j]] = -1;
+        /*-------------------- copy L-part */
         L->nzcount[i] = incl;
-        if(incl > 0 ) {
-            L->ja[i] = (int *)Malloc( incl*sizeof(int), "lofC" );
-            memcpy( L->ja[i], jbuf, sizeof(int)*incl);
+        if (incl > 0) {
+            L->ja[i] = (int *)Malloc(incl * sizeof(int), "lofC");
+            memcpy(L->ja[i], jbuf, sizeof(int) * incl);
         }
-/*-------------------- copy U - part        */
-        k = incu-i;
+        /*-------------------- copy U - part        */
+        k = incu - i;
         U->nzcount[i] = k;
-        if( k > 0 ) {
-            U->ja[i] = (int *)Malloc( sizeof(int)*k, "lofC" );
-            memcpy(U->ja[i], jbuf+i, sizeof(int)*k );
-/*-------------------- update matrix of levels */
-            ulvl[i] = (int *)Malloc( k*sizeof(int), "lofC" );
-            memcpy( ulvl[i], levls+i, k*sizeof(int) );
+        if (k > 0) {
+            U->ja[i] = (int *)Malloc(sizeof(int) * k, "lofC");
+            memcpy(U->ja[i], jbuf + i, sizeof(int) * k);
+            /*-------------------- update matrix of levels */
+            ulvl[i] = (int *)Malloc(k * sizeof(int), "lofC");
+            memcpy(ulvl[i], levls + i, k * sizeof(int));
         }
     }
 
-/*-------------------- free temp space and leave --*/
+    /*-------------------- free temp space and leave --*/
     free(levls);
     free(jbuf);
-    for(i = 0; i < n-1; i++ ) {
-        if (U->nzcount[i]) free(ulvl[i]) ;
+    for (i = 0; i < n - 1; i++) {
+        if (U->nzcount[i])
+            free(ulvl[i]);
     }
     free(ulvl);
 

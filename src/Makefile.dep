@@ -10,7 +10,7 @@ iluk.o: iluk.c ../include/config.h ../include/ext-protos.h ../include/iluk.h ../
 
 ilut.o: ilut.c ../include/config.h ../include/ext-protos.h ../include/ilut.h ../include/sets.h ../include/type-defs.h
 
-ilutc.o: ilutc.c ../include/config.h ../include/ext-protos.h ../include/ilutc.h ../include/sets.h ../include/type-defs.h
+ilutc.o: ilutc.c ../include/config.h ../include/ext-protos.h ../include/ilutc.h ../include/MatOps.h ../include/sets.h ../include/svdInvC.h ../include/type-defs.h
 
 ilutpC.o: ilutpC.c ../include/config.h ../include/ext-protos.h ../include/ilutpC.h ../include/MatOps.h ../include/sets.h ../include/svdInvC.h ../include/type-defs.h
 

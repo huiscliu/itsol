@@ -1,7 +1,7 @@
 
 #include "arms2.h"
 
-#define  PERMTOL  0.99   /*  0 --> no permutation 0.01 to 0.1 good  */
+#define  PERMTOL  0.99          /*  0 --> no permutation 0.01 to 0.1 good  */
 
 /*---------------------------------------------------------------------
   | MULTI-LEVEL BLOCK ILUT PRECONDITIONER.
@@ -140,13 +140,13 @@ actually] -- indeed it makes sense to take
 | ipar[0]   = number of levels found (may differ from input value) 
     |
     +---------------------------------------------------------------------*/
-int arms2(csptr Amat, int *ipar, double *droptol, int *lfil, double tolind, arms PreMat, FILE *ft) 
+int arms2(csptr Amat, int *ipar, double *droptol, int *lfil, double tolind, arms PreMat, FILE * ft)
 {
     /*-------------------- function  prototyping  done in LIB/itsol.h    */
     /*-------------------- move above to itsol.h */
     p4ptr levp, levc, levn, levmat = PreMat->levmat;
-    csptr schur, B, F, E, C=NULL; 
-    ilutptr ilsch = PreMat->ilus; 
+    csptr schur, B, F, E, C = NULL;
+    ilutptr ilsch = PreMat->ilus;
     /*-------------------- local variables  (initialized)   */
     double *dd1, *dd2;
     int nlev = ipar[0], bsize = ipar[2], iout = ipar[3], ierr = 0;
@@ -154,37 +154,39 @@ int arms2(csptr Amat, int *ipar, double *droptol, int *lfil, double tolind, arms
     /*--------------------  local variables  (not initialized)   */
     int nA, nB, nC, j, n, ilev, symperm;
     /*--------------------    work arrays:    */
-    int *iwork, *uwork; 
-    /*   timer arrays:  */ 
-    /*   double *symtime, *unstime, *factime, *tottime;*/
+    int *iwork, *uwork;
+    /*   timer arrays:  */
+    /*   double *symtime, *unstime, *factime, *tottime; */
     /*---------------------------BEGIN ARMS-------------------------------*/
-    /*   schur matrix starts being original A */ 
+    /*   schur matrix starts being original A */
 
     /*-------------------- begin                                         */
-    schur  = (csptr) Malloc(sizeof(SparMat), "arms2:1" );
+    schur = (csptr) Malloc(sizeof(SparMat), "arms2:1");
     /*---------------------------------------------------------------------
       | The matrix (a,ja,ia) plays role of Schur compl. from the 0th level.
       +--------------------------------------------------------------------*/
     nC = nA = n = Amat->n;
-    if (bsize >= n) bsize = n-1;
-    levmat->n = n; levmat->nB = 0; 
-    setupCS(schur, n,1);
-    cscpy(Amat,schur); 
+    if (bsize >= n)
+        bsize = n - 1;
+    levmat->n = n;
+    levmat->nB = 0;
+    setupCS(schur, n, 1);
+    cscpy(Amat, schur);
     levc = levmat;
-    /*--------------------------------------- */ 
-    levc->prev = levc->next = levp = NULL; 
-    levc->n = 0; 
-    memcpy(methL, &ipar[10], 4*sizeof(int));
-    memcpy(methS, &ipar[14], 4*sizeof(int));
+    /*--------------------------------------- */
+    levc->prev = levc->next = levp = NULL;
+    levc->n = 0;
+    memcpy(methL, &ipar[10], 4 * sizeof(int));
+    memcpy(methS, &ipar[14], 4 * sizeof(int));
     /*---------------------------------------------------------------------
       | The preconditioner construction is divided into two parts:
       |   1st part: construct and store multi-level L and U factors;
       |   2nd part: construct the ILUT factorization for the coarsest level
       +--------------------------------------------------------------------*/
-    if ( (iout > 0)  && (nlev > 0) ) {
-        fprintf(ft,"  \n");
-        fprintf(ft,"Level   Total Unknowns    B-block   Coarse set\n");
-        fprintf(ft,"=====   ==============    =======   ==========\n");
+    if ((iout > 0) && (nlev > 0)) {
+        fprintf(ft, "  \n");
+        fprintf(ft, "Level   Total Unknowns    B-block   Coarse set\n");
+        fprintf(ft, "=====   ==============    =======   ==========\n");
     }
     /*---------------------------------------------------------------------
       | main loop to construct multi-level LU preconditioner. Loop is on the
@@ -193,39 +195,42 @@ int arms2(csptr Amat, int *ipar, double *droptol, int *lfil, double tolind, arms
     for (ilev = 0; ilev < nlev; ilev++) {
         /*-------------------- new nA is old nC -- from previous level */
         nA = nC;
-        if ( nA <= bsize )  goto label1000;  
-        /*-------------------- allocate work space                        */ 
-        iwork = (int *) Malloc(nA*sizeof(int), "arms2:2.5" );
-        symperm = 0;    /* 0nly needed in cleanP4 */
-        if (ipar[1] == 1) 
-            uwork = (int *) Malloc(nA*sizeof(int), "arms2:2.5" );
-        else{
-            symperm = 1;    
-            uwork = iwork; 
+        if (nA <= bsize)
+            goto label1000;
+        /*-------------------- allocate work space                        */
+        iwork = (int *)Malloc(nA * sizeof(int), "arms2:2.5");
+        symperm = 0;            /* 0nly needed in cleanP4 */
+        if (ipar[1] == 1)
+            uwork = (int *)Malloc(nA * sizeof(int), "arms2:2.5");
+        else {
+            symperm = 1;
+            uwork = iwork;
         }
         /*-------------------- SCALING*/
         dd1 = NULL;
         dd2 = NULL;
         if (methL[2]) {
-            dd1 = (double *) Malloc(nA*sizeof(double), "arms2:3" );
-            j=roscalC(schur, dd1,1);
-            if (j) printf("ERROR in roscalC -  row %d  is a zero row\n",j);
+            dd1 = (double *)Malloc(nA * sizeof(double), "arms2:3");
+            j = roscalC(schur, dd1, 1);
+            if (j)
+                printf("ERROR in roscalC -  row %d  is a zero row\n", j);
         }
 
         if (methL[3]) {
-            dd2 = (double *) Malloc(nA*sizeof(double), "arms2:4" );
-            j=coscalC(schur, dd2,1); 
-            if (j) printf("ERROR in coscalC - column %d is a zero column\n",j);
+            dd2 = (double *)Malloc(nA * sizeof(double), "arms2:4");
+            j = coscalC(schur, dd2, 1);
+            if (j)
+                printf("ERROR in coscalC - column %d is a zero column\n", j);
         }
         /*--------------------independent-sets-permutation-------------------
           |  do reordering -- The matrix and its transpose are used.
           +--------------------------------------------------------------------*/
         /* if (SHIFTTOL > 0.0) shiftsD(schur,SHIFTTOL);    */
         //     printf("  ipar1 = %d \n", ipar[1]);
-        if (ipar[1] == 1) 
-            PQperm(schur, bsize, uwork, iwork, &nB, tolind) ; 
+        if (ipar[1] == 1)
+            PQperm(schur, bsize, uwork, iwork, &nB, tolind);
         else
-            indsetC (schur, bsize, iwork, &nB, tolind) ; 
+            indsetC(schur, bsize, iwork, &nB, tolind);
         /*---------------------------------------------------------------------
           | nB is the total number of nodes in the independent set.
           | nC : nA - nB = the size of the reduced system.
@@ -233,15 +238,16 @@ int arms2(csptr Amat, int *ipar, double *droptol, int *lfil, double tolind, arms
         nC = nA - nB;
         /*   if the size of B or C is zero , exit the main loop  */
         /*   printf ("  nB %d nC %d \n",nB, nC); */
-        if ( nB == 0 || nC == 0 )  goto label1000; 
+        if (nB == 0 || nC == 0)
+            goto label1000;
         /*---------------------------------------------------------------------
           | The matrix for the current level is in (schur).
           | The permutations arrays are in iwork and uwork (row).
           | The routines rpermC, cpermC permute the matrix in place.
          *-----------------------------------------------------------------------*/
         /*   DEBUG : SHOULD THIS GO BEFORE GOTO LABEL1000 ?? */
-        rpermC(schur,uwork); 
-        cpermC(schur,iwork);
+        rpermC(schur, uwork);
+        cpermC(schur, iwork);
         /*   prtC(schur, ilev) ;   print matrix - debugging */
         /*-----------------------------------------------------------------------
           | If this is the first level, the permuted matrix is stored in 
@@ -249,28 +255,28 @@ int arms2(csptr Amat, int *ipar, double *droptol, int *lfil, double tolind, arms
           +--------------------------------------------------------------------*/
         if (ilev > 0) {
             /*-   delete C matrix of any level except last one (no longer needed) */
-            cleanCS(C); 
+            cleanCS(C);
             /*-------------------- create the next level */
-            levn = (p4ptr) Malloc(sizeof(Per4Mat), "arms2:6" );
+            levn = (p4ptr) Malloc(sizeof(Per4Mat), "arms2:6");
             /* levc->prev = levp; */
             levc->next = levn;
             levp = levc;
             levc = levn;
-            levc->prev = levp; 
+            levc->prev = levp;
         }
         /*-------------------- p4ptr struct for current schur complement */
-        B = (csptr) Malloc(sizeof(SparMat), "arms2:7" );
-        E = (csptr) Malloc(sizeof(SparMat), "arms2:8" );
-        F = (csptr) Malloc(sizeof(SparMat), "arms2:9" );
-        C = (csptr) Malloc(sizeof(SparMat), "arms2:10" );
+        B = (csptr) Malloc(sizeof(SparMat), "arms2:7");
+        E = (csptr) Malloc(sizeof(SparMat), "arms2:8");
+        F = (csptr) Malloc(sizeof(SparMat), "arms2:9");
+        C = (csptr) Malloc(sizeof(SparMat), "arms2:10");
         csSplit4(schur, nB, nC, B, F, E, C);
         setupP4(levc, nB, nC, F, E);
-        /*--------------------     copy a few pointers       ---- */      
-        levc->perm  = iwork;
-        levc->rperm = uwork; 
+        /*--------------------     copy a few pointers       ---- */
+        levc->perm = iwork;
+        levc->rperm = uwork;
         levc->symperm = symperm;
-        levc->D1=dd1;
-        levc->D2=dd2; 
+        levc->D1 = dd1;
+        levc->D2 = dd2;
         /*---------------------------------------------------------------------
           | a copy of the matrix (schur) has been permuted. Now perform the 
           | block factorization: 
@@ -281,9 +287,9 @@ int arms2(csptr Amat, int *ipar, double *droptol, int *lfil, double tolind, arms
           |   
           | The factors E U^-1 and L^-1 F are discarded after the factorization.
           |
-          +--------------------------------------------------------------------*/ 
+          +--------------------------------------------------------------------*/
         if (iout > 0)
-            fprintf(ft,"%3d %13d %13d %10d\n", ilev+1,nA,nB,nC);
+            fprintf(ft, "%3d %13d %13d %10d\n", ilev + 1, nA, nB, nC);
         /*---------------------------------------------------------------------
           | PILUT constructs one level of the block ILU fact.  The permuted matrix
           | is in (levc).  The L and U factors will be stored in the p4mat struct.
@@ -291,87 +297,90 @@ int arms2(csptr Amat, int *ipar, double *droptol, int *lfil, double tolind, arms
           | one for next level...
           +--------------------------------------------------------------------*/
         cleanCS(schur);
-        schur = (csptr) Malloc(sizeof(SparMat), "arms2:11" ); 
-        setupCS(schur, nC,1);
+        schur = (csptr) Malloc(sizeof(SparMat), "arms2:11");
+        setupCS(schur, nC, 1);
         /*----------------------------------------------------------------------
           | calling PILU to construct this level block factorization
           | ! core dump in extreme case of empty matrices.
           +----------------------------------------------------------------------*/
-        ierr = pilu(levc, B, C, droptol, lfil, schur) ;
+        ierr = pilu(levc, B, C, droptol, lfil, schur);
         /* prtC(levc->L, ilev) ; */
-        if (ierr) { 
-            fprintf(ft," ERROR IN  PILU  -- IERR = %d\n", ierr);
-            return(1);
+        if (ierr) {
+            fprintf(ft, " ERROR IN  PILU  -- IERR = %d\n", ierr);
+            return (1);
         }
-        cleanCS(B); 
+        cleanCS(B);
     }
     /*---------------------------------------------------------------------
       |   done with the reduction. Record the number of levels in ipar[0] 
       |**********************************************************************
       +--------------------------------------------------------------------*/
-label1000:
+ label1000:
     /* printf (" nnz_Schur %d \n",cs_nnz (schur)); */
     levc->next = NULL;
     ipar[0] = ilev;
-    PreMat->nlev = ilev;  
-    PreMat->n = n; 
+    PreMat->nlev = ilev;
+    PreMat->n = n;
     nC = schur->n;
-    setupILUT(ilsch,nC); 
+    setupILUT(ilsch, nC);
     /*--------------------------------------------------------------------*/
-    /* define C-matrix (member of ilsch) to be last C matrix */ 
-    if (ilev > 0) ilsch->C=C; 
+    /* define C-matrix (member of ilsch) to be last C matrix */
+    if (ilev > 0)
+        ilsch->C = C;
     /*-------------------- for ilut fact of schur matrix */
     /*  SCALING  */
 
     ilsch->D1 = NULL;
     if (methS[2]) {
-        ilsch->D1 = (double *) Malloc(nC*sizeof(double), "arms2:iluschD1" );
-        j=roscalC(schur, ilsch->D1, 1); 
-        if (j) printf("ERROR in roscalC - row %d is a zero row\n",j);
+        ilsch->D1 = (double *)Malloc(nC * sizeof(double), "arms2:iluschD1");
+        j = roscalC(schur, ilsch->D1, 1);
+        if (j)
+            printf("ERROR in roscalC - row %d is a zero row\n", j);
     }
 
-    ilsch->D2  = NULL;
+    ilsch->D2 = NULL;
     if (methS[3]) {
-        ilsch->D2 = (double *) Malloc(nC*sizeof(double), "arms2:iluschD1" );
-        j =coscalC(schur, ilsch->D2, 1);  
-        if (j) printf("ERROR in coscalC - column %d is a zero column\n",j);
+        ilsch->D2 = (double *)Malloc(nC * sizeof(double), "arms2:iluschD1");
+        j = coscalC(schur, ilsch->D2, 1);
+        if (j)
+            printf("ERROR in coscalC - column %d is a zero column\n", j);
     }
     /*---------------------------------------------------------------------
       |     get ILUT factorization for the last reduced system.
       +--------------------------------------------------------------------*/
     uwork = NULL;
     iwork = NULL;
-    if (methS[0]) { 
-        iwork = (int *) Malloc(nC*sizeof(int), "arms2:3" );
-        uwork = (int *) Malloc(nC*sizeof(int), "arms2:3.5" );
-        tolind = 0.0; 
-        PQperm(schur, bsize, uwork, iwork, &nB, tolind) ; 
-        rpermC(schur,uwork); 
-        cpermC(schur,iwork);
+    if (methS[0]) {
+        iwork = (int *)Malloc(nC * sizeof(int), "arms2:3");
+        uwork = (int *)Malloc(nC * sizeof(int), "arms2:3.5");
+        tolind = 0.0;
+        PQperm(schur, bsize, uwork, iwork, &nB, tolind);
+        rpermC(schur, uwork);
+        cpermC(schur, iwork);
     }
-    ilsch->rperm = uwork; 
-    ilsch->perm  = iwork;
+    ilsch->rperm = uwork;
+    ilsch->perm = iwork;
 
-    ilsch->perm2 = NULL; 
+    ilsch->perm2 = NULL;
 
     if (methS[1] == 0)
         ierr = ilutD(schur, droptol, lfil, ilsch);
     else {
-        ilsch->perm2 = (int *) Malloc(nC*sizeof(int), "arms2:ilutpC" );
-        for (j=0; j<nC; j++)
+        ilsch->perm2 = (int *)Malloc(nC * sizeof(int), "arms2:ilutpC");
+        for (j = 0; j < nC; j++)
             ilsch->perm2[j] = j;
         ierr = ilutpC(schur, droptol, lfil, PERMTOL, nC, ilsch);
     }
 
     /*---------- OPTIMIZATION: NEED TO COMPOUND THE TWO
       RIGHT PERMUTATIONS -- CHANGES HERE AND IN 
-      USCHUR SOLVE ==  compound permutations */     
+      USCHUR SOLVE ==  compound permutations */
     if (ierr) {
-        fprintf(ft," ERROR IN  ILUT -- IERR = %d\n", ierr); 
-        return(1); 
+        fprintf(ft, " ERROR IN  ILUT -- IERR = %d\n", ierr);
+        return (1);
     }
 
     /*-------------------- Last Schur complement no longer needed */
     cleanCS(schur);
-    return 0; 
+    return 0;
 }
