@@ -1,8 +1,6 @@
 
 #include "iluk.h"
 
-int ilukC( int lofM, csptr csmat, iluptr lu, FILE *fp )
-{
 /*----------------------------------------------------------------------------
  * ILUK preconditioner
  * incomplete LU factorization with level of fill dropping
@@ -34,6 +32,8 @@ int ilukC( int lofM, csptr csmat, iluptr lu, FILE *fp )
  * ======
  * All the diagonals of the input matrix must not be zero
  *--------------------------------------------------------------------------*/
+int ilukC( int lofM, csptr csmat, iluptr lu, FILE *fp )
+{
     int ierr;
     int n = csmat->n;
     int *jw, i, j, k, col, jpos, jrow;
@@ -47,8 +47,8 @@ int ilukC( int lofM, csptr csmat, iluptr lu, FILE *fp )
 
     /* symbolic factorization to calculate level of fill index arrays */
     if( ( ierr = lofC( lofM, csmat, lu, fp ) ) != 0 ) {
-      fprintf( fp, "Error: lofC\n" );
-      return -1;
+        fprintf( fp, "Error: lofC\n" );
+        return -1;
     }
 
     jw = lu->work;
@@ -134,8 +134,6 @@ int ilukC( int lofM, csptr csmat, iluptr lu, FILE *fp )
     return 0;
 }
 
-int lofC( int lofM, csptr csmat, iluptr lu, FILE *fp )
-{
 /*--------------------------------------------------------------------
  * symbolic ilu factorization to calculate structure of ilu matrix
  * for specified level of fill
@@ -158,22 +156,25 @@ int lofC( int lofM, csptr csmat, iluptr lu, FILE *fp )
  *   ->L    = L part -- stored in SpaFmt format, patterns only in lofC
  *   ->U    = U part -- stored in SpaFmt format, patterns only in lofC
  *------------------------------------------------------------------*/
+int lofC( int lofM, csptr csmat, iluptr lu, FILE *fp )
+{
     int n = csmat->n;
     int *levls = NULL, *jbuf = NULL, *iw = lu->work;
     int **ulvl;  /*  stores lev-fils for U part of ILU factorization*/
     csptr L = lu->L, U = lu->U;
-/*--------------------------------------------------------------------
- * n        = number of rows or columns in matrix
- * inc      = integer, count of nonzero(fillin) element of each row
- *            after symbolic factorization
- * ju       = entry of U part of each row
- * lvl      = buffer to store levels of each row
- * jbuf     = buffer to store column index of each row
- * iw       = work array
- *------------------------------------------------------------------*/
+
+    /*--------------------------------------------------------------------
+     * n        = number of rows or columns in matrix
+     * inc      = integer, count of nonzero(fillin) element of each row
+     *            after symbolic factorization
+     * ju       = entry of U part of each row
+     * lvl      = buffer to store levels of each row
+     * jbuf     = buffer to store column index of each row
+     * iw       = work array
+     *------------------------------------------------------------------*/
     int i, j, k, col, ip, it, jpiv; 
     int incl, incu, jmin, kmin; 
-  
+
     (void)fp;
 
     levls  = (int *)Malloc( n*sizeof(int), "lofC" );
@@ -185,90 +186,90 @@ int lofC( int lofM, csptr csmat, iluptr lu, FILE *fp )
     for( i = 0; i < n; i++ ) {
         incl = 0;
         incu = i; 
-/*-------------------- assign lof = 0 for matrix elements */
+        /*-------------------- assign lof = 0 for matrix elements */
         for( j = 0; j < csmat->nzcount[i]; j++ ) {
             col = csmat->ja[i][j];
             if( col < i ) {
-/*-------------------- L-part  */
-	        jbuf[incl] = col;
-	        levls[incl] = 0;
-	        iw[col] = incl++;
+                /*-------------------- L-part  */
+                jbuf[incl] = col;
+                levls[incl] = 0;
+                iw[col] = incl++;
             } 
             else if (col > i) { 
-/*-------------------- U-part  */
-	        jbuf[incu] = col;
-	        levls[incu] = 0;
-	        iw[col] = incu++;
+                /*-------------------- U-part  */
+                jbuf[incu] = col;
+                levls[incu] = 0;
+                iw[col] = incu++;
             } 
         }
-/*-------------------- symbolic k,i,j Gaussian elimination  */ 
+        /*-------------------- symbolic k,i,j Gaussian elimination  */ 
         jpiv = -1; 
         while (++jpiv < incl) {
             k = jbuf[jpiv] ; 
-/*-------------------- select leftmost pivot */
+            /*-------------------- select leftmost pivot */
             kmin = k;
             jmin = jpiv; 
             for( j = jpiv + 1; j< incl; j++) {
-	        if( jbuf[j] < kmin ) {
-	            kmin = jbuf[j];
-	            jmin = j;
-	        }
+                if( jbuf[j] < kmin ) {
+                    kmin = jbuf[j];
+                    jmin = j;
+                }
             }
-/*-------------------- swap  */  
+            /*-------------------- swap  */  
             if( jmin != jpiv ) {
-	        jbuf[jpiv] = kmin; 
-	        jbuf[jmin] = k; 
-	        iw[kmin] = jpiv;
-	        iw[k] = jmin; 
-	        j = levls[jpiv] ;
-	        levls[jpiv] = levls[jmin];
-	        levls[jmin] = j;
-	        k = kmin; 
+                jbuf[jpiv] = kmin; 
+                jbuf[jmin] = k; 
+                iw[kmin] = jpiv;
+                iw[k] = jmin; 
+                j = levls[jpiv] ;
+                levls[jpiv] = levls[jmin];
+                levls[jmin] = j;
+                k = kmin; 
             }
-/*-------------------- symbolic linear combinaiton of rows  */
+            /*-------------------- symbolic linear combinaiton of rows  */
             for( j = 0; j < U->nzcount[k]; j++ ) {
-	        col = U->ja[k][j];
-	        it = ulvl[k][j]+levls[jpiv]+1 ; 
-	        if( it > lofM ) continue; 
-	        ip = iw[col];
-	        if( ip == -1 ) {
-	            if( col < i) {
-	                jbuf[incl] = col;
-	                levls[incl] = it;
-	                iw[col] = incl++;
+                col = U->ja[k][j];
+                it = ulvl[k][j]+levls[jpiv]+1 ; 
+                if( it > lofM ) continue; 
+                ip = iw[col];
+                if( ip == -1 ) {
+                    if( col < i) {
+                        jbuf[incl] = col;
+                        levls[incl] = it;
+                        iw[col] = incl++;
                     } 
-	            else if( col > i ) {
-	                jbuf[incu] = col;
-	                levls[incu] = it;
-	                iw[col] = incu++;
-	            } 
+                    else if( col > i ) {
+                        jbuf[incu] = col;
+                        levls[incu] = it;
+                        iw[col] = incu++;
+                    } 
                 }
                 else
-	            levls[ip] = min(levls[ip], it); 
+                    levls[ip] = min(levls[ip], it); 
             }
         }   /* end - while loop */
-/*-------------------- reset iw */
+        /*-------------------- reset iw */
         for( j = 0; j < incl; j++ ) iw[jbuf[j]] = -1;
         for( j = i; j < incu; j++ ) iw[jbuf[j]] = -1;
-/*-------------------- copy L-part */ 
+        /*-------------------- copy L-part */ 
         L->nzcount[i] = incl;
         if(incl > 0 ) {
             L->ja[i] = (int *)Malloc( incl*sizeof(int), "lofC" );
             memcpy( L->ja[i], jbuf, sizeof(int)*incl);
         }
-/*-------------------- copy U - part        */ 
+        /*-------------------- copy U - part        */ 
         k = incu-i; 
         U->nzcount[i] = k; 
         if( k > 0 ) {
             U->ja[i] = (int *)Malloc( sizeof(int)*k, "lofC" );
             memcpy(U->ja[i], jbuf+i, sizeof(int)*k );
-/*-------------------- update matrix of levels */
+            /*-------------------- update matrix of levels */
             ulvl[i] = (int *)Malloc( k*sizeof(int), "lofC" ); 
             memcpy( ulvl[i], levls+i, k*sizeof(int) );
         }
     }
-  
-/*-------------------- free temp space and leave --*/
+
+    /*-------------------- free temp space and leave --*/
     free(levls);
     free(jbuf);
     for(i = 0; i < n-1; i++ ) {
@@ -278,4 +279,3 @@ int lofC( int lofM, csptr csmat, iluptr lu, FILE *fp )
 
     return 0;
 }        
-
