@@ -184,7 +184,7 @@ int main(void)
             /*-------------------- set up the structs before calling itsol_solver_fgmres */
             MAT->n = n;
             MAT->CS = csmat;    /* in column format */
-            MAT->matvec = matvecCSC;    /* column matvec */
+            MAT->matvec = itsol_matvecCSC;    /* column matvec */
             PRE->ILU = lu;
             PRE->precon = preconLDU;
             /*-------------------- call itsol_solver_fgmres */
@@ -205,7 +205,7 @@ int main(void)
                 terr += (x[i] - sol[i]) * (x[i] - sol[i]);
             io.enorm = sqrt(terr);
             /*-------------------- calculate res norm */
-            matvecCSC(MAT, x, sol);
+            itsol_matvecCSC(MAT, x, sol);
             terr = 0.0;
             for (i = 0; i < io.ndim; i++)
                 terr += (rhs[i] - sol[i]) * (rhs[i] - sol[i]);

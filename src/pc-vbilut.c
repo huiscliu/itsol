@@ -99,7 +99,7 @@ int itsol_pc_vbilutC(vbsptr vbmat, vbiluptr lu, int lfil, double tol, BData * w,
         tnorm = 0;
         for (j = 0; j < nzcount; j++) {
             sz = B_DIM(bsz, ja[j]);
-            t = vbnorm2(dim * sz, ba[j]);
+            t = itsol_vbnorm2(dim * sz, ba[j]);
             tnorm = max(t, tnorm);
         }
         if (tnorm == 0.0) {
@@ -118,7 +118,7 @@ int itsol_pc_vbilutC(vbsptr vbmat, vbiluptr lu, int lfil, double tol, BData * w,
         for (j = 0; j < nzcount; j++) {
             col = ja[j];
             sz = B_DIM(bsz, col);
-            t = vbnorm2(dim * sz, ba[j]);
+            t = itsol_vbnorm2(dim * sz, ba[j]);
             if (t < tolnorm && col != i)
                 continue;
             if (col < i) {
@@ -174,7 +174,7 @@ int itsol_pc_vbilutC(vbsptr vbmat, vbiluptr lu, int lfil, double tol, BData * w,
             /* zero out element in row by resetting jw(n+jrow) to -1 */
             iw[jrow] = -1;
 
-            if (vbnorm2(dim * szjrow, buf_fact) * xnrm[jrow] <= tolnorm)
+            if (itsol_vbnorm2(dim * szjrow, buf_fact) * xnrm[jrow] <= tolnorm)
                 continue;
 
             /* combine current row and row jrow */
@@ -189,13 +189,13 @@ int itsol_pc_vbilutC(vbsptr vbmat, vbiluptr lu, int lfil, double tol, BData * w,
                 jpos = iw[col];
 
                 /* if fill-in element is small then disregard: */
-                if (vbnorm2(dim * sz, buf_ns) < tolnorm && jpos == -1)
+                if (itsol_vbnorm2(dim * sz, buf_ns) < tolnorm && jpos == -1)
                     continue;
 
                 if (col >= i) {
                     /* dealing with upper part */
                     //          if( jpos == -1 ) {
-                    if (jpos == -1 && vbnorm2(dim * sz, buf_ns) > tolnorm) {
+                    if (jpos == -1 && itsol_vbnorm2(dim * sz, buf_ns) > tolnorm) {
                         /* this is a fill-in element */
                         upos = i + lenu;
                         jbuf[upos] = col;
@@ -236,7 +236,7 @@ int itsol_pc_vbilutC(vbsptr vbmat, vbiluptr lu, int lfil, double tol, BData * w,
             len = min(lenl, lfil);
             for (j = 0; j < lenl; j++) {
                 sz = B_DIM(bsz, jbuf[j]);
-                wn[j] = vbnorm2(dim * sz, w[j]);
+                wn[j] = itsol_vbnorm2(dim * sz, w[j]);
                 iw[j] = j;
             }
             qsplit(wn, iw, &lenl, &len);
@@ -262,7 +262,7 @@ int itsol_pc_vbilutC(vbsptr vbmat, vbiluptr lu, int lfil, double tol, BData * w,
             for (j = 1; j < lenu; j++) {
                 jpos = i + j;
                 sz = B_DIM(bsz, jbuf[jpos]);
-                wn[j - 1] = vbnorm2(dim * sz, w[jpos]);
+                wn[j - 1] = itsol_vbnorm2(dim * sz, w[jpos]);
                 iw[j - 1] = jpos;
             }
             para = lenu - 1;
@@ -274,7 +274,7 @@ int itsol_pc_vbilutC(vbsptr vbmat, vbiluptr lu, int lfil, double tol, BData * w,
             }
             ja = U->ja[i];
             ba = U->ba[i];
-            t = vbnorm2(dim * dim, w[i]);
+            t = itsol_vbnorm2(dim * dim, w[i]);
             for (j = 0; j < nzcount; j++) {
                 jpos = iw[j];
                 ja[j] = jbuf[jpos];

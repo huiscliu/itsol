@@ -240,7 +240,7 @@ int diagvec(vbsptr vbmat, BData x, BData y)
   | on return
   | y     = the product A * x
   |--------------------------------------------------------------------*/
-void matvec(csptr mata, double *x, double *y)
+void itsol_matvec(csptr mata, double *x, double *y)
 {
     int i, k, *ki;
     double *kr;
@@ -255,7 +255,7 @@ void matvec(csptr mata, double *x, double *y)
     }
 }
 
-void vbmatvec(vbsptr vbmat, double *x, double *y)
+void itsol_vbmatvec(vbsptr vbmat, double *x, double *y)
 {
     int i, j, nzcount, col, inc = 1, dim, sz, nBs, nBsj;
     int n = vbmat->n, *ja, *bsz = vbmat->bsz;
@@ -293,7 +293,7 @@ void vbmatvec(vbsptr vbmat, double *x, double *y)
   | on return
   | x     = the solution of L x = b 
   |--------------------------------------------------------------------*/
-void Lsol(csptr mata, double *b, double *x)
+void itsol_Lsol(csptr mata, double *b, double *x)
 {
     int i, k;
     double *kr;
@@ -324,7 +324,7 @@ void Lsol(csptr mata, double *b, double *x)
   | x     = the solution of U * x = b 
   |
   |---------------------------------------------------------------------*/
-void Usol(csptr mata, double *b, double *x)
+void itsol_Usol(csptr mata, double *b, double *x)
 {
     int i, k, *ki;
     double *kr;
@@ -360,11 +360,11 @@ int descend(p4ptr levmat, double *x, double *wk)
     for (j = 0; j < len; j++)
         work[iperm[j]] = x[j];
 
-    Lsol(levmat->L, work, wk);  /* sol:   L x = x                 */
-    Usol(levmat->U, wk, work);  /* sol:   U work(2) = work         */
+    itsol_Lsol(levmat->L, work, wk);  /* sol:   L x = x                 */
+    itsol_Usol(levmat->U, wk, work);  /* sol:   U work(2) = work         */
 
     /*-------------------- compute x[lenb:.] = x [lenb:.] - E * work(1) */
-    matvecz(levmat->E, work, &work[lenB], &wk[lenB]);
+    itsol_matvecz(levmat->E, work, &work[lenB], &wk[lenB]);
     return 0;
 }
 
@@ -384,13 +384,13 @@ int ascend(p4ptr levmat, double *x, double *wk)
     int j, len = levmat->n, lenB = levmat->nB, *qperm = levmat->perm;
     double *work = levmat->wk;
 
-    matvec(levmat->F, &x[lenB], work);  /*  work = F * x_2   */
-    Lsol(levmat->L, work, work);        /*  work = L \ work    */
+    itsol_matvec(levmat->F, &x[lenB], work);  /*  work = F * x_2   */
+    itsol_Lsol(levmat->L, work, work);        /*  work = L \ work    */
 
     for (j = 0; j < lenB; j++)  /*  wk1 = wk1 - work  */
         work[j] = x[j] - work[j];
 
-    Usol(levmat->U, work, work);        /*  wk1 = U \ wk1 */
+    itsol_Usol(levmat->U, work, work);        /*  wk1 = U \ wk1 */
     memcpy(&work[lenB], &x[lenB], (len - lenB) * sizeof(double));
 
     /*---------------------------------------
@@ -414,7 +414,7 @@ int ascend(p4ptr levmat, double *x, double *wk)
   | z-location must be different from that of x 
   | i.e., y and x are used but not modified.
   |--------------------------------------------------------------------*/
-void matvecz(csptr mata, double *x, double *y, double *z)
+void itsol_matvecz(csptr mata, double *x, double *y, double *z)
 {
     int i, k, *ki;
     double *kr, t;
@@ -447,7 +447,7 @@ p4ptr itsol_Lvsol2(double *x, int nlev, p4ptr levmat, ilutptr ilusch)
 
     /*-------------------- take care of  special cases :  nlev==0 --> lusol  */
     if (nlev == 0) {
-        SchLsol(ilusch, x);
+        itsol_SchLsol(ilusch, x);
         return (last);
     }
 
@@ -467,7 +467,7 @@ p4ptr itsol_Lvsol2(double *x, int nlev, p4ptr levmat, ilutptr ilusch)
         levmat = levmat->next;
     }
 
-    SchLsol(ilusch, &x[first]);
+    itsol_SchLsol(ilusch, &x[first]);
 
     return last;
 }
@@ -485,7 +485,7 @@ int Uvsol2(double *x, int nlev, int n, p4ptr levmat, ilutptr ilusch)
 {
     int nloc, lenB, first;
     if (nlev == 0) {
-        SchUsol(ilusch, x);
+        itsol_SchUsol(ilusch, x);
         return (0);
     }
 
@@ -495,7 +495,7 @@ int Uvsol2(double *x, int nlev, int n, p4ptr levmat, ilutptr ilusch)
     first = n - nloc;
     /*-------------------- last level                                 */
     first += lenB;
-    SchUsol(ilusch, &x[first]);
+    itsol_SchUsol(ilusch, &x[first]);
     /*-------------------- other levels                               */
     while (levmat) {
         nloc = levmat->n;
@@ -530,8 +530,8 @@ int armsol2(double *x, arms Prec)
 
     if (nlev == 0) {
         n = ilusch->n;
-        SchLsol(ilusch, x);
-        SchUsol(ilusch, x);
+        itsol_SchLsol(ilusch, x);
+        itsol_SchUsol(ilusch, x);
         return 0;
     }
 
@@ -551,7 +551,7 @@ int armsol2(double *x, arms Prec)
   | on return
   | y       = solution of LU x = y. [overwritten] 
   |---------------------------------------------------------------------*/
-void SchLsol(ilutptr ilusch, double *y)
+void itsol_SchLsol(ilutptr ilusch, double *y)
 {
     int n = ilusch->n, j, *perm = ilusch->rperm;
     double *work = ilusch->wk;
@@ -564,10 +564,10 @@ void SchLsol(ilutptr ilusch, double *y)
         for (j = 0; j < n; j++)
             work[perm[j]] = y[j];
         /*--------------------  L solve proper */
-        Lsol(ilusch->L, work, y);
+        itsol_Lsol(ilusch->L, work, y);
     }
     else
-        Lsol(ilusch->L, y, y);
+        itsol_Lsol(ilusch->L, y, y);
 }
 
 /*---------------------------------------------------------------------
@@ -580,21 +580,23 @@ void SchLsol(ilutptr ilusch, double *y)
   | on return 
   | y       = solution of U x = y. [overwritten on y] 
   |----------------------------------------------------------------------*/
-void SchUsol(ilutptr ilusch, double *y)
+void itsol_SchUsol(ilutptr ilusch, double *y)
 {
     int n = ilusch->n, j, *perm = ilusch->perm, *cperm;
     double *work = ilusch->wk;
     /* -------------------- begin by U-solving */
     /*-------------------- CASE: column pivoting  used (as in ILUTP) */
     if (ilusch->perm2 != NULL) {
-        Usol(ilusch->U, y, y);
+        itsol_Usol(ilusch->U, y, y);
         cperm = ilusch->perm2;
         for (j = 0; j < n; j++)
             work[cperm[j]] = y[j];
     }
-    else
+    else {
         /*-------------------- CASE: no column pivoting  used                   */
-        Usol(ilusch->U, y, work);
+        itsol_Usol(ilusch->U, y, work);
+    }
+
     /*-------------------- generic permutation                              */
     if (perm != NULL) {
         for (j = 0; j < n; j++)
@@ -604,8 +606,7 @@ void SchUsol(ilutptr ilusch, double *y)
         memcpy(y, work, n * sizeof(double));
 
     /*-------------------- case when diagonal scaling is done on columns    */
-    if (ilusch->D2 != NULL)
-        dscale(n, ilusch->D2, y, y);
+    if (ilusch->D2 != NULL) dscale(n, ilusch->D2, y, y);
 }
 
 /*--------------------------------------------------------
@@ -613,7 +614,7 @@ void SchUsol(ilutptr ilusch, double *y)
  *    where a has already been factored by Gauss.
  *    LUy = x
  *------------------------------------------------------*/
-void luinv(int n, double *a, double *x, double *y)
+void itsol_luinv(int n, double *a, double *x, double *y)
 {
     int i, j, bsA, bsB;
     double sum;
@@ -775,7 +776,7 @@ int vblusolC(double *y, double *x, vbiluptr lu)
         }
         data = D[i];
         if (OPT == 1)
-            luinv(dim, data, x + nBs, lu->bf);
+            itsol_luinv(dim, data, x + nBs, lu->bf);
         else
             DGEMV("n", dim, dim, alpha2, data, dim, x + nBs, inc, beta2, lu->bf, inc);
 
@@ -965,7 +966,7 @@ int CSparTran(csptr amat, csptr bmat, CompressType * compress)
     return 0;
 }
 
-double vbnorm2(int sz, double *a)
+double itsol_vbnorm2(int sz, double *a)
 {
     int tmp = 1;
 
@@ -1042,7 +1043,7 @@ int VBcondestC(vbiluptr lu, FILE * fp)
   | on return
   | y     = the product A * x
   |--------------------------------------------------------------------*/
-void matvecC(csptr mat, double *x, double *y)
+void itsol_matvecC(csptr mat, double *x, double *y)
 {
     int n = mat->n, i, k, *ki;
     double *kr;
@@ -1059,19 +1060,19 @@ void matvecC(csptr mat, double *x, double *y)
     }
 }
 
-void matvecCSR(SMatptr mat, double *x, double *y)
+void itsol_matvecCSR(SMatptr mat, double *x, double *y)
 {
-    matvec(mat->CS, x, y);
+    itsol_matvec(mat->CS, x, y);
 }
 
-void matvecCSC(SMatptr mat, double *x, double *y)
+void itsol_matvecCSC(SMatptr mat, double *x, double *y)
 {
-    matvecC(mat->CS, x, y);
+    itsol_matvecC(mat->CS, x, y);
 }
 
-void matvecVBR(SMatptr mat, double *x, double *y)
+void itsol_matvecVBR(SMatptr mat, double *x, double *y)
 {
-    vbmatvec(mat->VBCSR, x, y);
+    itsol_vbmatvec(mat->VBCSR, x, y);
 }
 
 int preconILU(double *x, double *y, SPreptr mat)

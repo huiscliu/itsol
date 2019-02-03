@@ -241,7 +241,7 @@ int main(void)
             /*-------------------- set up the structs before calling itsol_solver_fgmres */
             MAT->n = n;
             MAT->CS = csmat;
-            MAT->matvec = matvecCSR;
+            MAT->matvec = itsol_matvecCSR;
             PRE->VBILU = lu;
             PRE->precon = preconVBR;
             /*-------------------- call itsol_solver_fgmres */
@@ -264,7 +264,7 @@ int main(void)
                 terr += (sol[i] - x[perm[i]]) * (sol[i] - x[perm[i]]);
             io.enorm = sqrt(terr);
             /*---------------------- calculate residual norm */
-            vbmatvec(vbmat, x, sol);
+            itsol_vbmatvec(vbmat, x, sol);
             terr = 0.0;
             for (i = 0; i < io.ndim; i++)
                 terr += (prhs[i] - sol[i]) * (prhs[i] - sol[i]);
