@@ -2,7 +2,6 @@
 #define __ITSOL_MatOps_H__
 
 #include "utils.h"
-#include "svd-inv.h"
 
 #ifdef __cplusplus
 extern "C" {

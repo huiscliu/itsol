@@ -16,7 +16,6 @@
 #include "mat-utils.h"
 #include "pilu.h"
 #include "utils.h"
-#include "svd-inv.h"
 #include "type-defs.h"
 #include "vbiluk.h"
 #include "vbilut.h"
