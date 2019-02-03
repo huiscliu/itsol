@@ -10,4 +10,4 @@ ITerative SOLvers package created by Yousef Saad
 
 
 # Purpose
-The purpose is to refactorize the original ITSOL.
+The purpose is to refactorize the ITSOL.
