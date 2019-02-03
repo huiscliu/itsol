@@ -1,6 +1,6 @@
 
-#ifndef __ITSOL_FGMR_H__
-#define __ITSOL_FGMR_H__
+#ifndef __ITSOL_FGMRES_H__
+#define __ITSOL_FGMRES_H__
 
 #include "utils.h"
 
