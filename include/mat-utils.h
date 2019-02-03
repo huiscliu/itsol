@@ -62,7 +62,7 @@ int preconILU(double *x, double *y, SPreptr mat);
 int preconVBR(double *x, double *y, SPreptr mat);
 int preconLDU(double *x, double *y, SPreptr mat);
 int preconARMS(double *x, double *y, SPreptr mat);
-p4ptr Lvsol2(double *x, int nlev, p4ptr levmat, ilutptr ilusch) ;
+p4ptr itsol_Lvsol2(double *x, int nlev, p4ptr levmat, ilutptr ilusch) ;
 int Uvsol2(double *x, int nlev, int n, p4ptr levmat, ilutptr ilusch); 
 void SchLsol(ilutptr ilusch, double *y) ;
 void SchUsol(ilutptr ilusch, double *y) ;

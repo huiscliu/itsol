@@ -440,7 +440,7 @@ void matvecz(csptr mata, double *x, double *y, double *z)
    |  
    |  Note : in-place operation -- b and x can occupy the same space..
    | --------------------------------------------------------------------*/
-p4ptr Lvsol2(double *x, int nlev, p4ptr levmat, ilutptr ilusch)
+p4ptr itsol_Lvsol2(double *x, int nlev, p4ptr levmat, ilutptr ilusch)
 {
     int nloc = levmat->n, first, lenB;
     p4ptr last = levmat;
@@ -535,7 +535,7 @@ int armsol2(double *x, arms Prec)
         return 0;
     }
 
-    last = Lvsol2(x, nlev, levmat, ilusch);
+    last = itsol_Lvsol2(x, nlev, levmat, ilusch);
     Uvsol2(x, nlev, n, last, ilusch);
 
     return 0;
