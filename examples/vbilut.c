@@ -191,7 +191,7 @@ int main(void)
             fprintf(flog, "begin vbilut\n");
             tm1 = sys_timer();
             /*-------------------- call VBILUT preconditioner set-up  */
-            ierr = vbilutC(vbmat, lu, lfil, tol, w, flog);
+            ierr = itsol_pc_vbilutC(vbmat, lu, lfil, tol, w, flog);
             /*----------------------------------------------------- */
             tm2 = sys_timer();
             if (ierr == -2) {

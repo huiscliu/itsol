@@ -140,7 +140,7 @@ int main(void)
             fprintf(flog, "begin ilut\n");
             tm1 = sys_timer();
             /*-------------------- call ILUT preconditioner set-up  */
-            ierr = ilut(csmat, lu, lfil, tol, flog);
+            ierr = itsol_pc_ilut(csmat, lu, lfil, tol, flog);
             /*----------------------------------------------------- */
             tm2 = sys_timer();
             if (ierr != 0) {

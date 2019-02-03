@@ -76,8 +76,7 @@ extern "C" {
 |----------------------------------------------------------------------- 
 |     All processing is done using C indexing.
 |--------------------------------------------------------------------*/
-int pilu(p4ptr amat, csptr B, csptr C, double *droptol, 
-	 int *lfil, csptr schur);
+int itsol_pc_pilu(p4ptr amat, csptr B, csptr C, double *droptol, int *lfil, csptr schur);
 
 #ifdef __cplusplus
 }

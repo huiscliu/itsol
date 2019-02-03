@@ -303,7 +303,7 @@ int itsol_pc_arms2(csptr Amat, int *ipar, double *droptol, int *lfil, double tol
           | calling PILU to construct this level block factorization
           | ! core dump in extreme case of empty matrices.
           +----------------------------------------------------------------------*/
-        ierr = pilu(levc, B, C, droptol, lfil, schur);
+        ierr = itsol_pc_pilu(levc, B, C, droptol, lfil, schur);
         /* prtC(levc->L, ilev) ; */
         if (ierr) {
             fprintf(ft, " ERROR IN  PILU  -- IERR = %d\n", ierr);
@@ -364,12 +364,12 @@ int itsol_pc_arms2(csptr Amat, int *ipar, double *droptol, int *lfil, double tol
     ilsch->perm2 = NULL;
 
     if (methS[1] == 0)
-        ierr = ilutD(schur, droptol, lfil, ilsch);
+        ierr = itsol_pc_ilutD(schur, droptol, lfil, ilsch);
     else {
         ilsch->perm2 = (int *)Malloc(nC * sizeof(int), "arms2:ilutpC");
         for (j = 0; j < nC; j++)
             ilsch->perm2[j] = j;
-        ierr = ilutpC(schur, droptol, lfil, PERMTOL, nC, ilsch);
+        ierr = itsol_pc_ilutpC(schur, droptol, lfil, PERMTOL, nC, ilsch);
     }
 
     /*---------- OPTIMIZATION: NEED TO COMPOUND THE TWO

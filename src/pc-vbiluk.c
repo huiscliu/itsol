@@ -37,7 +37,7 @@
  * ======
  * All the diagonal blocks of the input block matrix must not be singular
  *--------------------------------------------------------------------------*/
-int vbilukC(int lofM, vbsptr vbmat, vbiluptr lu, FILE * fp)
+int itsol_pc_vbilukC(int lofM, vbsptr vbmat, vbiluptr lu, FILE * fp)
 {
     int ierr;
     int n = vbmat->n, *bsz = vbmat->bsz;
@@ -51,7 +51,7 @@ int vbilukC(int lofM, vbsptr vbmat, vbiluptr lu, FILE * fp)
     U = lu->U;
 
     /* symbolic factorization to calculate level of fill index arrays */
-    if ((ierr = vblofC(lofM, vbmat, lu, fp)) != 0) {
+    if ((ierr = itsol_pc_vblofC(lofM, vbmat, lu, fp)) != 0) {
         fprintf(fp, "Error: lofC\n");
         return -1;
     }
@@ -184,7 +184,7 @@ int vbilukC(int lofM, vbsptr vbmat, vbiluptr lu, FILE * fp)
  *   ->L    = L part -- stored in BSpaFmt format, patterns only in lofC
  *   ->U    = U part -- stored in BSpaFmt format, patterns only in lofC
  *------------------------------------------------------------------*/
-int vblofC(int lofM, vbsptr vbmat, vbiluptr lu, FILE * fp)
+int itsol_pc_vblofC(int lofM, vbsptr vbmat, vbiluptr lu, FILE * fp)
 {
     int n = vbmat->n;
     int *levls = NULL, *jbuf = NULL, *iw = lu->work;

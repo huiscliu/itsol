@@ -138,7 +138,7 @@ int main(void)
             lu = (iluptr) Malloc(sizeof(ILUSpar), "main");
             tm1 = sys_timer();
             /*-------------------- call ILUC preconditioner set-up  */
-            ierr = ilutc(lumat, lu, lfil, tol, dropmthd, flog);
+            ierr = itsol_pc_ilutc(lumat, lu, lfil, tol, dropmthd, flog);
             tm2 = sys_timer();
             if (ierr != 0) {
                 fprintf(io.fout, " *** ILUC error - code %d \n", ierr);

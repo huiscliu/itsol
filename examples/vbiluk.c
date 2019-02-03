@@ -183,7 +183,7 @@ int main(void)
             fprintf(flog, "begin vbiluk\n");
             tm1 = sys_timer();
             /*-------------------- call VBILUK preconditioner set-up  */
-            ierr = vbilukC(lfil, vbmat, lu, flog);
+            ierr = itsol_pc_vbilukC(lfil, vbmat, lu, flog);
             /*----------------------------------------------------- */
             tm2 = sys_timer();
             if (ierr == -2) {

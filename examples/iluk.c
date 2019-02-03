@@ -118,7 +118,7 @@ int main(void)
             fprintf(flog, "begin iluk(%d)\n", lfil);
             tm1 = sys_timer();
             /*-------------------- call ILUK preconditioner set-up  */
-            ierr = ilukC(lfil, csmat, lu, flog);
+            ierr = itsol_pc_ilukC(lfil, csmat, lu, flog);
             /*----------------------------------------------------- */
             tm2 = sys_timer();
             if (ierr == -2) {

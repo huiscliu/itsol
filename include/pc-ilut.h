@@ -58,9 +58,9 @@ extern "C" {
  * will give the usual threshold strategy (however, fill-in is then
  * impredictible).
  *--------------------------------------------------------------------------*/
-int ilut(csptr csmat, iluptr lu, int lfil, double tol, FILE *fp);
+int itsol_pc_ilut(csptr csmat, iluptr lu, int lfil, double tol, FILE *fp);
 
-int lutsolC(double *y, double *x, iluptr lu);
+int itsol_pc_lutsolC(double *y, double *x, iluptr lu);
 
 #ifdef __cplusplus
 }

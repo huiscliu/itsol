@@ -43,7 +43,7 @@ extern "C" {
  * ======
  * All the diagonal blocks of the input block matrix must not be singular
  *--------------------------------------------------------------------------*/
-int vbilukC(int lofM, vbsptr vbmat, vbiluptr lu, FILE *fp);
+int itsol_pc_vbilukC(int lofM, vbsptr vbmat, vbiluptr lu, FILE *fp);
 
 /*--------------------------------------------------------------------
  * symbolic ilu factorization to calculate structure of ilu matrix
@@ -67,7 +67,7 @@ int vbilukC(int lofM, vbsptr vbmat, vbiluptr lu, FILE *fp);
  *   ->L    = L part -- stored in BSpaFmt format, patterns only in lofC
  *   ->U    = U part -- stored in BSpaFmt format, patterns only in lofC
  *------------------------------------------------------------------*/
-int vblofC(int lofM, vbsptr vbmat, vbiluptr lu, FILE *fp);
+int itsol_pc_vblofC(int lofM, vbsptr vbmat, vbiluptr lu, FILE *fp);
 
 #ifdef __cplusplus
 }

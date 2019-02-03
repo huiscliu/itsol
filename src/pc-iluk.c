@@ -32,7 +32,7 @@
  * ======
  * All the diagonals of the input matrix must not be zero
  *--------------------------------------------------------------------------*/
-int ilukC(int lofM, csptr csmat, iluptr lu, FILE * fp)
+int itsol_pc_ilukC(int lofM, csptr csmat, iluptr lu, FILE * fp)
 {
     int ierr;
     int n = csmat->n;
@@ -46,7 +46,7 @@ int ilukC(int lofM, csptr csmat, iluptr lu, FILE * fp)
     D = lu->D;
 
     /* symbolic factorization to calculate level of fill index arrays */
-    if ((ierr = lofC(lofM, csmat, lu, fp)) != 0) {
+    if ((ierr = itsol_pc_lofC(lofM, csmat, lu, fp)) != 0) {
         fprintf(fp, "Error: lofC\n");
         return -1;
     }
@@ -156,7 +156,7 @@ int ilukC(int lofM, csptr csmat, iluptr lu, FILE * fp)
  *   ->L    = L part -- stored in SpaFmt format, patterns only in lofC
  *   ->U    = U part -- stored in SpaFmt format, patterns only in lofC
  *------------------------------------------------------------------*/
-int lofC(int lofM, csptr csmat, iluptr lu, FILE * fp)
+int itsol_pc_lofC(int lofM, csptr csmat, iluptr lu, FILE * fp)
 {
     int n = csmat->n;
     int *levls = NULL, *jbuf = NULL, *iw = lu->work;

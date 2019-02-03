@@ -3,6 +3,29 @@
 
 #define TOL 1.e-17
 
+int CondestC(iluptr lu, FILE * fp)
+{
+    int n = lu->n, i;
+    double norm = 0.0;
+    double *y = (double *)Malloc(n * sizeof(double), "condestC");
+    double *x = (double *)Malloc(n * sizeof(double), "condestC");
+
+    for (i = 0; i < n; i++)
+        y[i] = 1.0;
+
+    lumsolC(y, x, lu);
+    for (i = 0; i < n; i++) {
+        norm = max(norm, fabs(x[i]));
+    }
+    fprintf(fp, "ILU inf-norm lower bound : %16.2f\n", norm);
+    free(x);
+    free(y);
+    if (norm > 1e30) {
+        return -1;
+    }
+    return 0;
+}
+
 /* *-------------------- inversion by svd
    This calls lapack routines for inverting a dense matrix.
    dgetrf and dgetri

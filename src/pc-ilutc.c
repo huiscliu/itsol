@@ -16,6 +16,139 @@ static csptr L;
 static csptr U;
 
 /*---------------------------------------------------------------------
+ * update diagonals D_{i+1,...,n}
+ *---------------------------------------------------------------------*/
+static int update_diagonals(iluptr lu, int i)
+{
+    double *diag = lu->D, scale = diag[i];
+    /* By using the expansion arrays, only the shorter one of L(k) and U(k)
+     * need to be scaned, so the time complexity = O(min(Lnnz,Unnz)) */
+    int j, id;
+
+    if (Lnnz < Unnz) {
+        for (j = 0; j < Lnnz; j++) {
+            id = Lid[j];
+            if (Ufirst[id] != 0)
+                diag[id] -= wL[id] * wU[id] * scale;
+        }
+    }
+    else {
+        for (j = 0; j < Unnz; j++) {
+            id = Uid[j];
+            if (Lfirst[id] != 0)
+                diag[id] -= wL[id] * wU[id] * scale;
+        }
+    }
+    return 0;
+}
+
+/*-------------------------------------------------------------------
+ * compares two integers
+ * a callback function used by qsort
+ ---------------------------------------------------------------------*/
+static int comp(const void *fst, const void *snd)
+{
+    int *i = (int *)fst, *j = (int *)snd;
+    if (*i > *j)
+        return 1;
+    if (*i < *j)
+        return -1;
+    return 0;
+}
+
+/*---------------------------------------------------------------------
+ * Standard Dual drop-off strategy 
+ * =============================== 
+ * 1) Theresholding in L and U as set by tol. Any element whose size
+ *    is less than some tolerance (relative to the norm of current
+ *    row in u or current column of L) is dropped.
+ * 2) Keeping only the largest lfil elements in the i-th column of L
+ *    and the largest lfil elements in the i-th row of U.
+ * lfil    = number of elements to keep in L and U 
+ * tolL    = tolerance parameter used to the L factor
+ * tolU    = tolerance parameter used to the U factor
+ * toldiag = used for blended dropping.  
+ *                                       
+ *  L(i,j) is dropped if | L(i,j) | < toldiag*BLEND + tolL*(1-BLEND) 
+ *  U(i,j) is dropped if | U(i,j) | < toldiag*BLEND + tolU*(1-BLEND) 
+ * 
+ *---------------------------------------------------------------------*/
+static int std_drop(int lfil, int i, double tolL, double tolU, double toldiag)
+{
+    int j, len, col, row, ipos;
+    int *ia = NULL, *ja = NULL;
+    double *ma = NULL, t;
+    t = D[i];
+    /*-------------------- drop U elements                                 */
+    len = 0;
+    tolU = BLEND * toldiag + (1.0 - BLEND) * tolU;
+    tolL = BLEND * toldiag + (1.0 - BLEND) * tolL;
+    /*---------------------------------------------------------------------*/
+    for (j = 0; j < Unnz; j++) {
+        col = Uid[j];
+        if (fabs(wU[col]) > tolU)
+            Uid[len++] = col;
+        else
+            Ufirst[col] = 0;
+    }
+    /*-------------------- find the largest lfil elements in row k */
+    Unnz = len;
+    len = min(Unnz, lfil);
+    for (j = 0; j < Unnz; j++)
+        w[j] = fabs(wU[Uid[j]]);
+    qsplit(w, Uid, &Unnz, &len);
+    qsort(Uid, len, sizeof(int), comp);
+    /*-------------------- update U */
+    U->nzcount[i] = len;
+    if (len > 0) {
+        ja = U->ja[i] = (int *)Malloc(len * sizeof(int), "std_drop 1");
+        ma = U->ma[i] = (double *)Malloc(len * sizeof(double), "std_drop 2");
+    }
+    for (j = 0; j < len; j++) {
+        ipos = Uid[j];
+        ja[j] = ipos;
+        ma[j] = wU[ipos];
+    }
+    for (j = len; j < Unnz; j++) {
+        Ufirst[Uid[j]] = 0;     /* important: otherwise, delay_update_diagonals may
+                                 * not work correctly in case U->nzcount[i] < Unnz */
+    }
+    Unnz = len;
+    /*-------------------- drop L elements                                    */
+    len = 0;
+    for (j = 0; j < Lnnz; j++) {
+        row = Lid[j];
+        if (fabs(wL[row]) > tolL)
+            Lid[len++] = row;
+        else
+            Lfirst[row] = 0;
+    }
+    /*-------------------- find the largest lfil elements in column k         */
+    Lnnz = len;
+    len = min(Lnnz, lfil);
+    for (j = 0; j < Lnnz; j++)
+        w[j] = fabs(wL[Lid[j]]);
+    qsplit(w, Lid, &Lnnz, &len);
+    qsort(Lid, len, sizeof(int), comp);
+    /*-------------------- update L                                           */
+    L->nzcount[i] = len;
+    if (len > 0) {
+        ia = L->ja[i] = (int *)Malloc(len * sizeof(int), "std_drop 3");
+        ma = L->ma[i] = (double *)Malloc(len * sizeof(double), "std_drop 4");
+    }
+    for (j = 0; j < len; j++) {
+        ipos = Lid[j];
+        ia[j] = ipos;
+        ma[j] = wL[ipos] * t;
+    }
+    for (j = len; j < Lnnz; j++) {
+        Lfirst[Lid[j]] = 0;     /* important: otherwise, delay_update_diagonals may
+                                 * not work correctly in case L->nzcount[i] < Lnnz */
+    }
+    Lnnz = len;
+    return 0;
+}
+/*---------------------------------------------------------------------
  * Column-based ILUT (ILUTC) preconditioner
  * incomplete LU factorization with dropping strategy specified by input
  * paramter drop.
@@ -115,7 +248,7 @@ static csptr U;
  * Ulist(n)   Ulist(j) points to a linked list of rows that will update the
  *            j-th column in L part
  *----------------------------------------------------------------------*/
-int ilutc(iluptr mt, iluptr lu, int lfil, double tol, int drop, FILE * fp)
+int itsol_pc_ilutc(iluptr mt, iluptr lu, int lfil, double tol, int drop, FILE * fp)
 {
     int n = mt->n, i, j, k;
     int lfst, ufst, row, col, newrow, newcol, iptr;
@@ -462,162 +595,5 @@ int ilutc(iluptr mt, iluptr lu, int lfil, double tol, int drop, FILE * fp)
         free(eL);
         free(eU);
     }
-    return 0;
-}
-
-/*---------------------------------------------------------------------
- * update diagonals D_{i+1,...,n}
- *---------------------------------------------------------------------*/
-int update_diagonals(iluptr lu, int i)
-{
-    double *diag = lu->D, scale = diag[i];
-    /* By using the expansion arrays, only the shorter one of L(k) and U(k)
-     * need to be scaned, so the time complexity = O(min(Lnnz,Unnz)) */
-    int j, id;
-
-    if (Lnnz < Unnz) {
-        for (j = 0; j < Lnnz; j++) {
-            id = Lid[j];
-            if (Ufirst[id] != 0)
-                diag[id] -= wL[id] * wU[id] * scale;
-        }
-    }
-    else {
-        for (j = 0; j < Unnz; j++) {
-            id = Uid[j];
-            if (Lfirst[id] != 0)
-                diag[id] -= wL[id] * wU[id] * scale;
-        }
-    }
-    return 0;
-}
-
-int CondestC(iluptr lu, FILE * fp)
-{
-    int n = lu->n, i;
-    double norm = 0.0;
-    double *y = (double *)Malloc(n * sizeof(double), "condestC");
-    double *x = (double *)Malloc(n * sizeof(double), "condestC");
-
-    for (i = 0; i < n; i++)
-        y[i] = 1.0;
-
-    lumsolC(y, x, lu);
-    for (i = 0; i < n; i++) {
-        norm = max(norm, fabs(x[i]));
-    }
-    fprintf(fp, "ILU inf-norm lower bound : %16.2f\n", norm);
-    free(x);
-    free(y);
-    if (norm > 1e30) {
-        return -1;
-    }
-    return 0;
-}
-
-/*-------------------------------------------------------------------
- * compares two integers
- * a callback function used by qsort
- ---------------------------------------------------------------------*/
-int comp(const void *fst, const void *snd)
-{
-    int *i = (int *)fst, *j = (int *)snd;
-    if (*i > *j)
-        return 1;
-    if (*i < *j)
-        return -1;
-    return 0;
-}
-
-/*---------------------------------------------------------------------
- * Standard Dual drop-off strategy 
- * =============================== 
- * 1) Theresholding in L and U as set by tol. Any element whose size
- *    is less than some tolerance (relative to the norm of current
- *    row in u or current column of L) is dropped.
- * 2) Keeping only the largest lfil elements in the i-th column of L
- *    and the largest lfil elements in the i-th row of U.
- * lfil    = number of elements to keep in L and U 
- * tolL    = tolerance parameter used to the L factor
- * tolU    = tolerance parameter used to the U factor
- * toldiag = used for blended dropping.  
- *                                       
- *  L(i,j) is dropped if | L(i,j) | < toldiag*BLEND + tolL*(1-BLEND) 
- *  U(i,j) is dropped if | U(i,j) | < toldiag*BLEND + tolU*(1-BLEND) 
- * 
- *---------------------------------------------------------------------*/
-int std_drop(int lfil, int i, double tolL, double tolU, double toldiag)
-{
-    int j, len, col, row, ipos;
-    int *ia = NULL, *ja = NULL;
-    double *ma = NULL, t;
-    t = D[i];
-    /*-------------------- drop U elements                                 */
-    len = 0;
-    tolU = BLEND * toldiag + (1.0 - BLEND) * tolU;
-    tolL = BLEND * toldiag + (1.0 - BLEND) * tolL;
-    /*---------------------------------------------------------------------*/
-    for (j = 0; j < Unnz; j++) {
-        col = Uid[j];
-        if (fabs(wU[col]) > tolU)
-            Uid[len++] = col;
-        else
-            Ufirst[col] = 0;
-    }
-    /*-------------------- find the largest lfil elements in row k */
-    Unnz = len;
-    len = min(Unnz, lfil);
-    for (j = 0; j < Unnz; j++)
-        w[j] = fabs(wU[Uid[j]]);
-    qsplit(w, Uid, &Unnz, &len);
-    qsort(Uid, len, sizeof(int), comp);
-    /*-------------------- update U */
-    U->nzcount[i] = len;
-    if (len > 0) {
-        ja = U->ja[i] = (int *)Malloc(len * sizeof(int), "std_drop 1");
-        ma = U->ma[i] = (double *)Malloc(len * sizeof(double), "std_drop 2");
-    }
-    for (j = 0; j < len; j++) {
-        ipos = Uid[j];
-        ja[j] = ipos;
-        ma[j] = wU[ipos];
-    }
-    for (j = len; j < Unnz; j++) {
-        Ufirst[Uid[j]] = 0;     /* important: otherwise, delay_update_diagonals may
-                                 * not work correctly in case U->nzcount[i] < Unnz */
-    }
-    Unnz = len;
-    /*-------------------- drop L elements                                    */
-    len = 0;
-    for (j = 0; j < Lnnz; j++) {
-        row = Lid[j];
-        if (fabs(wL[row]) > tolL)
-            Lid[len++] = row;
-        else
-            Lfirst[row] = 0;
-    }
-    /*-------------------- find the largest lfil elements in column k         */
-    Lnnz = len;
-    len = min(Lnnz, lfil);
-    for (j = 0; j < Lnnz; j++)
-        w[j] = fabs(wL[Lid[j]]);
-    qsplit(w, Lid, &Lnnz, &len);
-    qsort(Lid, len, sizeof(int), comp);
-    /*-------------------- update L                                           */
-    L->nzcount[i] = len;
-    if (len > 0) {
-        ia = L->ja[i] = (int *)Malloc(len * sizeof(int), "std_drop 3");
-        ma = L->ma[i] = (double *)Malloc(len * sizeof(double), "std_drop 4");
-    }
-    for (j = 0; j < len; j++) {
-        ipos = Lid[j];
-        ia[j] = ipos;
-        ma[j] = wL[ipos] * t;
-    }
-    for (j = len; j < Lnnz; j++) {
-        Lfirst[Lid[j]] = 0;     /* important: otherwise, delay_update_diagonals may
-                                 * not work correctly in case L->nzcount[i] < Lnnz */
-    }
-    Lnnz = len;
     return 0;
 }

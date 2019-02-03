@@ -33,7 +33,7 @@ int invSVD(int nn, double *A);
 
 void matvecC(csptr mat, double *x, double *y);
 void matvecCSC(SMatptr mat, double *x, double *y);
-int CondestC(iluptr lu, FILE *fp);
+int CondestC(iluptr lu, FILE * fp);
 int diag_scal(vbsptr vbmat);
 int diagvec(vbsptr vbmat, BData x, BData y);
 void matvec(csptr mata, double *x, double *y); 

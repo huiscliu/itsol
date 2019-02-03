@@ -59,7 +59,7 @@
 |----------------------------------------------------------------------- 
 |     All processing is done using C indexing.
 |--------------------------------------------------------------------*/
-int ilutpC(csptr amat, double *droptol, int *lfil, double permtol, int mband, ilutptr ilusch)
+int itsol_pc_ilutpC(csptr amat, double *droptol, int *lfil, double permtol, int mband, ilutptr ilusch)
 {
     int i, ii, j, jj, jcol, jpos, jrow, k, *jw = NULL, *jwrev = NULL;
     int len, lenu, lenl, rmax, *iprev = NULL, fil5 = lfil[5], fil6 = lfil[6];
@@ -398,7 +398,7 @@ label9991:
   |----------------------------------------------------------------------- 
   |     All processing is done using C indexing.
   |--------------------------------------------------------------------*/
-int ilutD(csptr amat, double *droptol, int *lfil, ilutptr ilusch)
+int itsol_pc_ilutD(csptr amat, double *droptol, int *lfil, ilutptr ilusch)
 {
     int i, ii, j, jj, jcol, jpos, jrow, k, *jw = NULL, *jwrev = NULL;
     int len, lenu, lenl, rmax, fil5 = lfil[5], fil6 = lfil[6];

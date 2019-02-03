@@ -109,15 +109,7 @@ extern "C" {
  * Ulist(n)   Ulist(j) points to a linked list of rows that will update the
  *            j-th column in L part
  *----------------------------------------------------------------------*/
-int ilutc(iluptr mt, iluptr lu, int lfil, double tol, int drop, FILE *fp);
-
-int update_diagonals(iluptr lu, int i);
-
-int CondestC(iluptr lu, FILE *fp);
-
-int comp(const void *fst, const void *snd);
-
-int std_drop(int lfil, int i, double tolL, double tolU, double toldiag) ;
+int itsol_pc_ilutc(iluptr mt, iluptr lu, int lfil, double tol, int drop, FILE *fp);
 
 #ifdef __cplusplus
 }
