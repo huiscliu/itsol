@@ -1,5 +1,5 @@
 
-#include "svdInvC.h"
+#include "svd-inv.h"
 
 #define TOL 1.e-17
 #define max(a,b) (((a)>(b))?(a):(b))

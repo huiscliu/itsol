@@ -2,7 +2,7 @@
 #ifndef __ITSOL_VBILUK_H__
 #define __ITSOL_VBILUK_H__
 
-#include "svdInvC.h"
+#include "svd-inv.h"
 #include "utils.h"
 
 #ifdef __cplusplus
