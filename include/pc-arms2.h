@@ -147,7 +147,7 @@ extern "C" {
 | ipar[0]   = number of levels found (may differ from input value) 
 |
 +---------------------------------------------------------------------*/
-int arms2(csptr Amat, int *ipar, double *droptol, int *lfil, 
+int itsol_pc_arms2(csptr Amat, int *ipar, double *droptol, int *lfil, 
 	  double tolind, arms PreMat, FILE *ft);
 
 #ifdef __cplusplus

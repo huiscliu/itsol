@@ -139,8 +139,7 @@ int main (void)
             fprintf(flog, "begin arms\n");
             tm1 = sys_timer();
             /*-------------------- call ARMS preconditioner set-up  */
-            ierr = 
-                arms2(csmat, ipar, droptol, lfil_arr, tolind, ArmsSt, flog);
+            ierr = itsol_pc_arms2(csmat, ipar, droptol, lfil_arr, tolind, ArmsSt, flog);
             /*----------------------------------------------------- */
             tm2 = sys_timer();
             if(ierr != 0) { 
@@ -179,16 +178,16 @@ int main (void)
                 }
             } else 
                 fits = NULL;     
-            /*-------------------- set up the structs before calling itsol_fgmres */
+            /*-------------------- set up the structs before calling itsol_solver_fgmres */
             MAT->n = n;
             MAT->CS = csmat;
             MAT->matvec = matvecCSR; 
             PRE->ARMS = ArmsSt;
             PRE->precon = preconARMS;
-            /*-------------------- call itsol_fgmres */
+            /*-------------------- call itsol_solver_fgmres */
             io.its = io.maxits;
             tm1 = sys_timer();
-            itsol_fgmres(MAT, PRE, rhs, x, io.tol, io.im, &io.its, fits);
+            itsol_solver_fgmres(MAT, PRE, rhs, x, io.tol, io.im, &io.its, fits);
             tm2 = sys_timer();
             io.tm_i = tm2 - tm1;
             if(io.its < io.maxits) 

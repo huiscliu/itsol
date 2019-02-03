@@ -219,16 +219,16 @@ int main (void)
                 }
             } else 
                 fits = NULL;
-            /*-------------------- set up the structs before calling itsol_fgmres */
+            /*-------------------- set up the structs before calling itsol_solver_fgmres */
             MAT->n = n;
             MAT->CS = csmat;
             MAT->matvec = matvecCSR; 
             PRE->VBILU = lu; 
             PRE->precon = preconVBR;
-            /*-------------------- call itsol_fgmres */
+            /*-------------------- call itsol_solver_fgmres */
             io.its = io.maxits;
             tm1 = sys_timer();
-            itsol_fgmres(MAT, PRE, prhs, x, io.tol, io.im, &io.its, fits);
+            itsol_solver_fgmres(MAT, PRE, prhs, x, io.tol, io.im, &io.its, fits);
             tm2 = sys_timer();
             io.tm_i = tm2 - tm1;
             if( io.its < io.maxits ) 
