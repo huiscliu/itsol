@@ -3,7 +3,7 @@
 
 #include "sets.h"
 #include "MatOps.h"
-#include "piluNEW.h"
+#include "pilu.h"
 #include "ilutpC.h"
 #include "indsetC.h"
 
@@ -78,7 +78,7 @@ extern "C" {
 |            This flexibility is more than is really needed. one can use
 |            a single parameter for all. it is preferable to use one value
 |            for droptol[0:4] and another (smaller) for droptol[5:6]
-|            droptol[0] = threshold for dropping  in L [B]. See piluNEW.c:
+|            droptol[0] = threshold for dropping  in L [B]. See pilu.c:
 |            droptol[1] = threshold for dropping  in U [B].
 |            droptol[2] = threshold for dropping  in L^{-1} F 
 |            droptol[3] = threshold for dropping  in E U^{-1} 
