@@ -7,6 +7,9 @@
 #include "ilutpC.h"
 #include "indsetC.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
 /*---------------------------------------------------------------------
 | MULTI-LEVEL BLOCK ILUT PRECONDITIONER.
 | ealier  version:  June 23, 1999  BJS -- 
@@ -146,5 +149,9 @@
 +---------------------------------------------------------------------*/
 int arms2(csptr Amat, int *ipar, double *droptol, int *lfil, 
 	  double tolind, arms PreMat, FILE *ft);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

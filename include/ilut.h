@@ -5,6 +5,10 @@
 #include <math.h>
 #include "sets.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /*----------------------------------------------------------------------------
  * ILUT preconditioner
  * incomplete LU factorization with dual truncation mechanism
@@ -58,4 +62,7 @@ int ilut(csptr csmat, iluptr lu, int lfil, double tol, FILE *fp);
 
 int lutsolC(double *y, double *x, iluptr lu);
 
+#ifdef __cplusplus
+}
+#endif
 #endif

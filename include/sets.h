@@ -4,6 +4,10 @@
 #include <stdarg.h>
 #include "type-defs.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /* sets.c */
 int nnz_arms(arms PreSt,  FILE *ft);
 void errexit(char *f_str, ...);
@@ -66,4 +70,7 @@ int outputLU(iluptr lu, char *filename);
 int checkperm(int *p, int n);
 void qsortR1I(double *wa, int *cor1, int left, int right);
 
+#ifdef __cplusplus
+}
+#endif
 #endif 

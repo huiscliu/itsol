@@ -4,6 +4,10 @@
 
 #include "sets.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /*----------------------------------------------------------------------
 |                 *** Preconditioned FGMRES ***                  
 +-----------------------------------------------------------------------
@@ -48,4 +52,7 @@
 int fgmr(SMatptr Amat, SPreptr lu, double *rhs, double *sol, 
          double tol, int im, int *itmax, FILE *fits);
 
+#ifdef __cplusplus
+}
+#endif
 #endif

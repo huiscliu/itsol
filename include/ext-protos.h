@@ -3,6 +3,10 @@
 
 #include <stdio.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #if defined(_SGI) || defined(_LINUX)
 #define dnrm2   dnrm2_
 #define ddot    ddot_
@@ -135,5 +139,9 @@ void   dgemm(char *transa, char *transb, int *l, int *m, int *n, double *alpha, 
 void   dgetrf(int *m, int *n, double *a, int *lda, int *ipvt, int *info); 
 void   dgetri(int *n, double *a, int *lda, int *ipvt, double *work, int *lwork, int *info);
 #endif 
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif 

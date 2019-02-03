@@ -4,6 +4,10 @@
 #include "sets.h"
 #include "svdInvC.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /* MatOps.c */
 void matvecC(csptr mat, double *x, double *y);
 void matvecCSC(SMatptr mat, double *x, double *y);
@@ -43,5 +47,9 @@ void SchUsol(ilutptr ilusch, double *y) ;
 int lumsolC(double *y, double *x, iluptr lu);
 int condestLU(iluptr lu, FILE *fp);
 int invGauss(int nn, double *A); 
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif 

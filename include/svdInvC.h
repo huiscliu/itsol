@@ -4,6 +4,10 @@
 
 #include "type-defs.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /* *-------------------- inversion by svd
    This calls lapack routines for inverting a dense matrix.
    dgetrf and dgetri
@@ -28,4 +32,7 @@ int invGauss(int nn, double *A);
  */
 int invSVD(int nn, double *A);
 
+#ifdef __cplusplus
+}
+#endif
 #endif

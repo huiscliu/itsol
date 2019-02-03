@@ -4,6 +4,10 @@
 
 #include "sets.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /*---------------------------------------------------------------------
  * Column-based ILUT (ILUTC) preconditioner
  * incomplete LU factorization with dropping strategy specified by input
@@ -114,4 +118,7 @@ int comp(const void *fst, const void *snd);
 
 int std_drop(int lfil, int i, double tolL, double tolU, double toldiag) ;
 
+#ifdef __cplusplus
+}
+#endif
 #endif

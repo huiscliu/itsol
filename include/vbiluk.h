@@ -5,6 +5,10 @@
 #include "svdInvC.h"
 #include "sets.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /*----------------------------------------------------------------------------
  * Block ILUK preconditioner
  * Block incomplete LU factorization with level of fill dropping
@@ -65,4 +69,7 @@ int vbilukC(int lofM, vbsptr vbmat, vbiluptr lu, FILE *fp);
  *------------------------------------------------------------------*/
 int vblofC(int lofM, vbsptr vbmat, vbiluptr lu, FILE *fp);
 
+#ifdef __cplusplus
+}
+#endif
 #endif

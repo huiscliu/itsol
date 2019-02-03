@@ -6,6 +6,10 @@
 #include "sets.h"
 #include "MatOps.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /*----------------------------------------------------------------------------
  * Block ILUT (BILUT) preconditioner
  * Block incomplete LU factorization with dual truncation mechanism
@@ -63,4 +67,7 @@
 int vbilutC(vbsptr vbmat, vbiluptr lu, int lfil, double tol,
              BData *w, FILE *fp);
 
+#ifdef __cplusplus
+}
+#endif
 #endif

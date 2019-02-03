@@ -4,6 +4,10 @@
 
 #include "sets.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /*---------------------------------------------------------------------- 
 | PARTIAL ILUT -
 | Converted to C so that dynamic memory allocation may be implememted
@@ -75,4 +79,7 @@
 int pilu(p4ptr amat, csptr B, csptr C, double *droptol, 
 	 int *lfil, csptr schur);
 
+#ifdef __cplusplus
+}
+#endif
 #endif

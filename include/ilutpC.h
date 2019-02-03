@@ -5,6 +5,10 @@
 #include "sets.h"
 #include "MatOps.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /*---------------------------------------------------------------------- 
 | ILUTP -- ILUT with column pivoting -- adapted from ILUTP [Sparskit] 
 | Converted to C so that dynamic memory allocation may be implememted.
@@ -114,4 +118,7 @@ int ilutpC(csptr amat, double *droptol, int *lfil, double permtol,
 |--------------------------------------------------------------------*/
 int ilutD(csptr amat, double *droptol, int *lfil, ilutptr ilusch);
 
+#ifdef __cplusplus
+}
+#endif
 #endif

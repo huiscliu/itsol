@@ -5,6 +5,9 @@
 #include "type-defs.h"
 #include "sets.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
 int read_inputs(char *in_file, io_t *pio);
 
 int get_matrix_info(FILE *fmat, io_t *pio);
@@ -37,4 +40,7 @@ void set_arms_pars(io_t* io, int Dscale, int *ipar, double *dropcoef, int *lfil)
 
 void randvec (double *v, int n);
 
+#ifdef __cplusplus
+}
+#endif
 #endif

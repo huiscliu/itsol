@@ -4,6 +4,10 @@
 
 #include "sets.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 int add2is(int *last, int nod, int *iord, int *riord);
 int add2com(int *nback, int nod, int *iord, int *riord);
 
@@ -62,4 +66,7 @@ int weightsC(csptr mat, double *w);
 |--------------------------------------------------------------------*/
 int preSel(csptr mat, int *icor, int *jcor, int job, double tol, int *count);
 
+#ifdef __cplusplus
+}
+#endif
 #endif

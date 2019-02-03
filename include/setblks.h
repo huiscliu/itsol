@@ -5,6 +5,10 @@
 #include "sets.h"
 #include "MatOps.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 int KeyComp(const void *vfst, const void *vsnd);
 
 /*----------------------------------------------------------------------------
@@ -43,6 +47,9 @@ int KeyComp(const void *vfst, const void *vsnd);
  *        group[j] = i and size[i] = size[i]+size[j]
  *--------------------------------------------------------------------------*/
 int init_blocks(csptr csmat, int *pnBlock, int **pnB, int **pperm,
-                 double eps, double *t_hash, double *t_angle);
+        double eps, double *t_hash, double *t_angle);
 
+#ifdef __cplusplus
+}
+#endif
 #endif
