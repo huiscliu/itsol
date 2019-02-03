@@ -7,7 +7,7 @@ typedef struct __KeyType {
 
 } KeyType;
 
-int KeyComp(const void *vfst, const void *vsnd)
+static int KeyComp(const void *vfst, const void *vsnd)
 {
     KeyType *fst = (KeyType *) vfst, *snd = (KeyType *) vsnd;
     if (fst->key == snd->key) {

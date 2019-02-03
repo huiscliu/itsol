@@ -9,8 +9,6 @@
 extern "C" {
 #endif
 
-int KeyComp(const void *vfst, const void *vsnd);
-
 /*----------------------------------------------------------------------------
  * Setup Blocks (rows and columns might be permuted to get better results)
  *----------------------------------------------------------------------------
