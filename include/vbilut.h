@@ -3,7 +3,7 @@
 #define __ITSOL_VBILUT_H__
 
 #include "type-defs.h"
-#include "sets.h"
+#include "utils.h"
 #include "MatOps.h"
 
 #ifdef __cplusplus

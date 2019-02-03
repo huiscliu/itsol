@@ -3,7 +3,7 @@
 #define __ITSOL_VBILUK_H__
 
 #include "svdInvC.h"
-#include "sets.h"
+#include "utils.h"
 
 #ifdef __cplusplus
 extern "C" {

@@ -2,7 +2,7 @@
 #ifndef __ITSOL_INDSETC_H__
 #define __ITSOL_INDSETC_H__
 
-#include "sets.h"
+#include "utils.h"
 
 #ifdef __cplusplus
 extern "C" {

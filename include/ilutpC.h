@@ -2,7 +2,7 @@
 #ifndef __ITSOL_ILUTPC_H__
 #define __ITSOL_ILUTPC_H__
 
-#include "sets.h"
+#include "utils.h"
 #include "MatOps.h"
 
 #ifdef __cplusplus

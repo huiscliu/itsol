@@ -1,7 +1,7 @@
 #ifndef __ITSOL_ARMS2_H__
 #define __ITSOL_ARMS2_H__
 
-#include "sets.h"
+#include "utils.h"
 #include "MatOps.h"
 #include "pilu.h"
 #include "ilutpC.h"

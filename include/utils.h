@@ -1,5 +1,5 @@
-#ifndef __ITSOL_SETS_H__
-#define __ITSOL_SETS_H__
+#ifndef __ITSOL_UTILS_H__
+#define __ITSOL_UTILS_H__
 
 #include <stdarg.h>
 #include "type-defs.h"

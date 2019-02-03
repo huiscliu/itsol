@@ -3,7 +3,7 @@
 #define __ITSOL_ILUK_H__
 
 #include "type-defs.h"
-#include "sets.h"
+#include "utils.h"
 
 #ifdef __cplusplus
 extern "C" {

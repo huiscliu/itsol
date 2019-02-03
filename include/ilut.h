@@ -3,7 +3,7 @@
 #define __ITSOL_ILUT_H__
 
 #include <math.h>
-#include "sets.h"
+#include "utils.h"
 
 #ifdef __cplusplus
 extern "C" {

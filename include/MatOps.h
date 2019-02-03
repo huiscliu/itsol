@@ -1,7 +1,7 @@
 #ifndef __ITSOL_MatOps_H__
 #define __ITSOL_MatOps_H__
 
-#include "sets.h"
+#include "utils.h"
 #include "svdInvC.h"
 
 #ifdef __cplusplus
