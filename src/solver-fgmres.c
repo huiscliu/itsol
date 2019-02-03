@@ -44,7 +44,7 @@
   |     matvec and
   |     preconditionning operation 
   +---------------------------------------------------------------------*/
-int fgmr(SMatptr Amat, SPreptr lu, double *rhs, double *sol, double tol, int im, int *itmax, FILE * fits)
+int itsol_fgmres(SMatptr Amat, SPreptr lu, double *rhs, double *sol, double tol, int im, int *itmax, FILE * fits)
 {
     int n = Amat->n, maxits = *itmax;
     int i, i1, ii, j, k, k1, its, im1, pti, pti1, ptih = 0, retval, one = 1;

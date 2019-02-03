@@ -179,16 +179,16 @@ int main (void)
                 }
             } else 
                 fits = NULL;     
-            /*-------------------- set up the structs before calling fgmr */
+            /*-------------------- set up the structs before calling itsol_fgmres */
             MAT->n = n;
             MAT->CS = csmat;
             MAT->matvec = matvecCSR; 
             PRE->ARMS = ArmsSt;
             PRE->precon = preconARMS;
-            /*-------------------- call fgmr */
+            /*-------------------- call itsol_fgmres */
             io.its = io.maxits;
             tm1 = sys_timer();
-            fgmr(MAT, PRE, rhs, x, io.tol, io.im, &io.its, fits);
+            itsol_fgmres(MAT, PRE, rhs, x, io.tol, io.im, &io.its, fits);
             tm2 = sys_timer();
             io.tm_i = tm2 - tm1;
             if(io.its < io.maxits) 

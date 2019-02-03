@@ -49,7 +49,7 @@ extern "C" {
 |     matvec and
 |     preconditionning operation 
 +---------------------------------------------------------------------*/
-int fgmr(SMatptr Amat, SPreptr lu, double *rhs, double *sol, 
+int itsol_fgmres(SMatptr Amat, SPreptr lu, double *rhs, double *sol, 
          double tol, int im, int *itmax, FILE *fits);
 
 #ifdef __cplusplus
