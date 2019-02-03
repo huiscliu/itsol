@@ -1,5 +1,5 @@
 
-#include "fgmr.h"
+#include "fgmres.h"
 
 #define  epsmac  1.0e-16
 

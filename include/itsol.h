@@ -6,7 +6,7 @@
 #include "auxill.h"
 #include "config.h"
 #include "ext-protos.h"
-#include "fgmr.h"
+#include "fgmres.h"
 #include "iluk.h"
 #include "ilutc.h"
 #include "ilut.h"
