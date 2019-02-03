@@ -1,5 +1,5 @@
 
-#include "ilutpc.h"
+#include "pc-ilutpc.h"
 
 /*---------------------------------------------------------------------- 
 | ILUTP -- ILUT with column pivoting -- adapted from ILUTP [Sparskit] 

@@ -1,5 +1,5 @@
 
-#include "arms2.h"
+#include "pc-arms2.h"
 
 #define  PERMTOL  0.99          /*  0 --> no permutation 0.01 to 0.1 good  */
 

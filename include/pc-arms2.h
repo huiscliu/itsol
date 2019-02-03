@@ -3,8 +3,8 @@
 
 #include "utils.h"
 #include "mat-utils.h"
-#include "pilu.h"
-#include "ilutpc.h"
+#include "pc-pilu.h"
+#include "pc-ilutpc.h"
 #include "indset.h"
 
 #ifdef __cplusplus

@@ -1,5 +1,5 @@
 
-#include "vbilut.h"
+#include "pc-vbilut.h"
 
 void gauss(int *, double *, int *);
 void bxinv(int *, int *, double *, double *, double *);

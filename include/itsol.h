@@ -2,22 +2,16 @@
 #ifndef __ITSOL_INCLUDED_PROTOS_H__
 #define __ITSOL_INCLUDED_PROTOS_H__
 
-#include "arms2.h"
 #include "auxill.h"
-#include "config.h"
-#include "ext-protos.h"
 #include "fgmres.h"
-#include "iluk.h"
-#include "ilutc.h"
-#include "ilut.h"
-#include "ilutpc.h"
-#include "indset.h"
-#include "itsol.h"
-#include "mat-utils.h"
-#include "pilu.h"
-#include "utils.h"
-#include "type-defs.h"
-#include "vbiluk.h"
-#include "vbilut.h"
+
+#include "pc-arms2.h"
+#include "pc-iluk.h"
+#include "pc-ilutc.h"
+#include "pc-ilut.h"
+#include "pc-ilutpc.h"
+#include "pc-pilu.h"
+#include "pc-vbiluk.h"
+#include "pc-vbilut.h"
 
 #endif 

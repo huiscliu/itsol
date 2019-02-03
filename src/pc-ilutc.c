@@ -1,5 +1,5 @@
 
-#include "ilutc.h"
+#include "pc-ilutc.h"
 
 #ifndef MAXFLOAT
 #define MAXFLOAT (1e30)
