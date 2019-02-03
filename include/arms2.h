@@ -2,10 +2,10 @@
 #define __ITSOL_ARMS2_H__
 
 #include "sets.h"
-#include "PQ.h"
 #include "MatOps.h"
 #include "piluNEW.h"
 #include "ilutpC.h"
+#include "indsetC.h"
 
 /*---------------------------------------------------------------------
 | MULTI-LEVEL BLOCK ILUT PRECONDITIONER.

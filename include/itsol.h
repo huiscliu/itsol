@@ -15,7 +15,6 @@
 #include "itsol.h"
 #include "MatOps.h"
 #include "piluNEW.h"
-#include "PQ.h"
 #include "setblks.h"
 #include "sets.h"
 #include "svdInvC.h"
