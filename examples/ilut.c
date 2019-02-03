@@ -160,7 +160,7 @@ int main(void)
             io.fillfact = nnz_ilu(lu) / (double)(io.nnz + 1);
             fprintf(flog, "ilut ends, fill factor (mem used) = %f\n", io.fillfact);
             /*------------- get rough idea of cond number - exit if too big */
-            if (condestLU(lu, flog) != 0) {
+            if (itsol_condestLU(lu, flog) != 0) {
                 fprintf(flog, "Not attempting iterative solution.\n");
                 fprintf(io.fout, "Not attempting iterative solution.\n");
                 io.its = -1;
@@ -189,7 +189,7 @@ int main(void)
             MAT->CS = csmat;
             MAT->matvec = itsol_matvecCSR;
             PRE->ILU = lu;
-            PRE->precon = preconILU;
+            PRE->precon = itsol_preconILU;
             /*-------------------- call itsol_solver_fgmres */
             io.its = io.maxits;
             tm1 = sys_timer();

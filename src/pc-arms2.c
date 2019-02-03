@@ -246,8 +246,8 @@ int itsol_pc_arms2(csptr Amat, int *ipar, double *droptol, int *lfil, double tol
           | The routines rpermC, cpermC permute the matrix in place.
          *-----------------------------------------------------------------------*/
         /*   DEBUG : SHOULD THIS GO BEFORE GOTO LABEL1000 ?? */
-        rpermC(schur, uwork);
-        cpermC(schur, iwork);
+        itsol_rpermC(schur, uwork);
+        itsol_cpermC(schur, iwork);
         /*   prtC(schur, ilev) ;   print matrix - debugging */
         /*-----------------------------------------------------------------------
           | If this is the first level, the permuted matrix is stored in 
@@ -355,8 +355,8 @@ int itsol_pc_arms2(csptr Amat, int *ipar, double *droptol, int *lfil, double tol
         uwork = (int *)Malloc(nC * sizeof(int), "arms2:3.5");
         tolind = 0.0;
         itsol_PQperm(schur, bsize, uwork, iwork, &nB, tolind);
-        rpermC(schur, uwork);
-        cpermC(schur, iwork);
+        itsol_rpermC(schur, uwork);
+        itsol_cpermC(schur, iwork);
     }
     ilsch->rperm = uwork;
     ilsch->perm = iwork;

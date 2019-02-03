@@ -3,7 +3,7 @@
 
 #define TOL 1.e-17
 
-int CondestC(iluptr lu, FILE * fp)
+int itsol_CondestC(iluptr lu, FILE * fp)
 {
     int n = lu->n, i;
     double norm = 0.0;
@@ -13,7 +13,7 @@ int CondestC(iluptr lu, FILE * fp)
     for (i = 0; i < n; i++)
         y[i] = 1.0;
 
-    lumsolC(y, x, lu);
+    itsol_lumsolC(y, x, lu);
     for (i = 0; i < n; i++) {
         norm = max(norm, fabs(x[i]));
     }
@@ -36,7 +36,7 @@ int CondestC(iluptr lu, FILE * fp)
 
  ON RETURN A contains the inverse  of the input matrix.
  */
-int invGauss(int nn, double *A)
+int itsol_invGauss(int nn, double *A)
 {
     int lWk, info;
 
@@ -82,7 +82,7 @@ int invGauss(int nn, double *A)
  ** above define statement
  **--------------------
  */
-int invSVD(int nn, double *A)
+int itsol_invSVD(int nn, double *A)
 {
     int lWk, i, info;
 
@@ -153,7 +153,7 @@ int invSVD(int nn, double *A)
  * ==========
  * vbmat    = inv(D)*vbmat
  *--------------------------------------------------------------------------*/
-int diag_scal(vbsptr vbmat)
+int itsol_diag_scal(vbsptr vbmat)
 {
     int i, j, k, dim, sz, size, ierr = 0, col;
     double one = 1.0, zero = 0.0;
@@ -177,7 +177,7 @@ int diag_scal(vbsptr vbmat)
             D[i] = (BData) Malloc(size, "diag_scal");
             memcpy(D[i], vbmat->ba[i][j], size);
 
-            ierr = invSVD(dim, D[i]);
+            ierr = itsol_invSVD(dim, D[i]);
             if (ierr != 0) {
                 for (k = 0; k < i; k++)
                     free(D[k]);
@@ -217,7 +217,7 @@ int diag_scal(vbsptr vbmat)
   | on return
   | y     = the product inv(D) * x
   |--------------------------------------------------------------------*/
-int diagvec(vbsptr vbmat, BData x, BData y)
+int itsol_diagvec(vbsptr vbmat, BData x, BData y)
 {
     int i, n = vbmat->n, *bsz = vbmat->bsz, dim, sz = 1;
     double zero = 0.0, one = 1.0;
@@ -351,7 +351,7 @@ void itsol_Usol(csptr mata, double *b, double *x)
   |     |            |  |     |    |    |
   | x used and not touched -- or can be the same as wk.
   |--------------------------------------------------------------------*/
-int descend(p4ptr levmat, double *x, double *wk)
+int itsol_descend(p4ptr levmat, double *x, double *wk)
 {
     /*  local variables   */
     int j, len = levmat->n, lenB = levmat->nB, *iperm = levmat->rperm;
@@ -379,7 +379,7 @@ int descend(p4ptr levmat, double *x, double *wk)
   |
   |    with x2 = S^{-1} wk2 [assumed to have been computed ] 
   |--------------------------------------------------------------------*/
-int ascend(p4ptr levmat, double *x, double *wk)
+int itsol_ascend(p4ptr levmat, double *x, double *wk)
 {
     int j, len = levmat->n, lenB = levmat->nB, *qperm = levmat->perm;
     double *work = levmat->wk;
@@ -460,8 +460,8 @@ p4ptr itsol_Lvsol2(double *x, int nlev, p4ptr levmat, ilutptr ilusch)
         if (levmat->D1 != NULL)
             dscale(nloc, levmat->D1, &x[first], &x[first]);
         /*--------------------  RESTRICTION/ DESCENT OPERATION  */
-        if (lenB)
-            descend(levmat, &x[first], &x[first]);
+        if (lenB) itsol_descend(levmat, &x[first], &x[first]);
+
         first += lenB;
         last = levmat;
         levmat = levmat->next;
@@ -481,7 +481,7 @@ p4ptr itsol_Lvsol2(double *x, int nlev, p4ptr levmat, ilutptr ilusch)
    |  
    |  Note : in-place operation -- b and x  can occupy the same space..
    | --------------------------------------------------------------------*/
-int Uvsol2(double *x, int nlev, int n, p4ptr levmat, ilutptr ilusch)
+int itsol_Uvsol2(double *x, int nlev, int n, p4ptr levmat, ilutptr ilusch)
 {
     int nloc, lenB, first;
     if (nlev == 0) {
@@ -500,11 +500,11 @@ int Uvsol2(double *x, int nlev, int n, p4ptr levmat, ilutptr ilusch)
     while (levmat) {
         nloc = levmat->n;
         first -= levmat->nB;
-        if (levmat->n)
-            ascend(levmat, &x[first], &x[first]);
+        if (levmat->n) itsol_ascend(levmat, &x[first], &x[first]);
+
         /*-------------------- right scaling */
-        if (levmat->D2 != NULL)
-            dscale(nloc, levmat->D2, &x[first], &x[first]);
+        if (levmat->D2 != NULL) dscale(nloc, levmat->D2, &x[first], &x[first]);
+
         levmat = levmat->prev;
     }
     return 0;
@@ -520,7 +520,7 @@ int Uvsol2(double *x, int nlev, int n, p4ptr levmat, ilutptr ilusch)
    |  
    |  Note : in-place operation -- b and x can occupy the same space..
    | --------------------------------------------------------------------*/
-int armsol2(double *x, arms Prec)
+int itsol_armsol2(double *x, arms Prec)
 {
     p4ptr levmat = Prec->levmat;
     ilutptr ilusch = Prec->ilus;
@@ -536,7 +536,7 @@ int armsol2(double *x, arms Prec)
     }
 
     last = itsol_Lvsol2(x, nlev, levmat, ilusch);
-    Uvsol2(x, nlev, n, last, ilusch);
+    itsol_Uvsol2(x, nlev, n, last, ilusch);
 
     return 0;
 }
@@ -651,7 +651,7 @@ void itsol_luinv(int n, double *a, double *x, double *y)
  *    x  = solution on return 
  *    lu = LU matrix as produced by iluk. 
  *--------------------------------------------------------------------*/
-int lusolC(double *y, double *x, iluptr lu)
+int itsol_lusolC(double *y, double *x, iluptr lu)
 {
     int n = lu->n, i, j, nzcount, *ja;
     double *D;
@@ -689,7 +689,7 @@ int lusolC(double *y, double *x, iluptr lu)
  *    x  = solution on return
  *    lu = LU matrix as produced by iluc.
  *--------------------------------------------------------------------*/
-int lumsolC(double *y, double *x, iluptr lu)
+int itsol_lumsolC(double *y, double *x, iluptr lu)
 {
     int n = lu->n, i, j, nzcount, nnzL, *ia, *ja;
     double *D = lu->D, *ma;
@@ -730,7 +730,7 @@ int lumsolC(double *y, double *x, iluptr lu)
  *
  *    note: lu->bf is used to store vector
  *--------------------------------------------------------------------*/
-int vblusolC(double *y, double *x, vbiluptr lu)
+int itsol_vblusolC(double *y, double *x, vbiluptr lu)
 {
     int n = lu->n, *bsz = lu->bsz, i, j, bi, icol, dim, sz;
     int nzcount, nBs, nID, *ja, inc = 1, OPT;
@@ -809,7 +809,7 @@ int vblusolC(double *y, double *x, vbiluptr lu)
   |             0   --> successful return.
   |             1   --> memory allocation error.
   |---------------------------------------------------------------------*/
-int rpermC(csptr mat, int *perm)
+int itsol_rpermC(csptr mat, int *perm)
 {
     int **addj, *nnz, i, size = mat->n;
     double **addm;
@@ -854,7 +854,7 @@ int rpermC(csptr mat, int *perm)
   |             0   --> successful return.
   |             1   --> memory allocation error.
   |---------------------------------------------------------------------*/
-int cpermC(csptr mat, int *perm)
+int itsol_cpermC(csptr mat, int *perm)
 {
     int i, j, *newj, size = mat->n, *aja;
 
@@ -892,12 +892,12 @@ int cpermC(csptr mat, int *perm)
   |             0   --> successful return.
   |             1   --> memory allocation error.
   |---------------------------------------------------------------------*/
-int dpermC(csptr mat, int *perm)
+int itsol_dpermC(csptr mat, int *perm)
 {
-    if (rpermC(mat, perm))
-        return 1;
-    if (cpermC(mat, perm))
-        return 1;
+    if (itsol_rpermC(mat, perm)) return 1;
+
+    if (itsol_cpermC(mat, perm)) return 1;
+
     return 0;
 }
 
@@ -919,7 +919,7 @@ int dpermC(csptr mat, int *perm)
   |             0   --> successful return.
   |             1   --> memory allocation error.
   |---------------------------------------------------------------------*/
-int CSparTran(csptr amat, csptr bmat, CompressType * compress)
+int itsol_CSparTran(csptr amat, csptr bmat, CompressType * compress)
 {
     int i, j, *ind, nzcount, pos, size = amat->n, *aja;
     ind = bmat->nzcount;
@@ -974,57 +974,61 @@ double itsol_vbnorm2(int sz, double *a)
 }
 
 /*-----------------------------------------------------------*/
-int condestLU(iluptr lu, FILE * fp)
+int itsol_condestLU(iluptr lu, FILE * fp)
 {
     int n = lu->n, i;
     double norm = 0.0;
     double *y = (double *)Malloc(n * sizeof(double), "condestLU");
     double *x = (double *)Malloc(n * sizeof(double), "condestLU");
 
-    for (i = 0; i < n; i++)
-        y[i] = 1.0;
-    lusolC(y, x, lu);
-    for (i = 0; i < n; i++)
-        norm = max(norm, fabs(x[i]));
+    for (i = 0; i < n; i++) y[i] = 1.0;
+
+    itsol_lusolC(y, x, lu);
+
+    for (i = 0; i < n; i++) norm = max(norm, fabs(x[i]));
+
     fprintf(fp, "ILU inf-norm lower bound : %16.2f\n", norm);
     free(y);
     free(x);
-    if (norm > 1e30)
-        return -1;
+    if (norm > 1e30) return -1;
+
     return 0;
 }
 
 /*-------------------- simple estimate of cond. number of precon */
-int condestArms(arms armspre, double *y, FILE * fp)
+int itsol_condestArms(arms armspre, double *y, FILE * fp)
 {
     int n = armspre->n, i;
     double norm = 0.0;
 
-    for (i = 0; i < n; i++)
-        y[i] = 1.0;
-    armsol2(y, armspre);
+    for (i = 0; i < n; i++) y[i] = 1.0;
+
+    itsol_armsol2(y, armspre);
+
     for (i = 0; i < n; i++) {
         norm = max(norm, fabs(y[i]));
     }
+
     fprintf(fp, "ARMS inf-norm lower bound = : %16.2f\n", norm);
+
     if (norm > 1e30) {
         return -1;
     }
     return 0;
 }
 
-int VBcondestC(vbiluptr lu, FILE * fp)
+int itsol_VBcondestC(vbiluptr lu, FILE * fp)
 {
     int n = lu->n, i, ndim = lu->bsz[n];
     double norm = 0.0;
     double *y = (double *)Malloc(ndim * sizeof(double), "condestLU");
     double *x = (double *)Malloc(ndim * sizeof(double), "condestLU");
 
-    for (i = 0; i < ndim; i++)
-        y[i] = 1.0;
-    vblusolC(y, x, lu);
-    for (i = 0; i < ndim; i++)
-        norm = max(norm, fabs(x[i]));
+    for (i = 0; i < ndim; i++) y[i] = 1.0;
+
+    itsol_vblusolC(y, x, lu);
+
+    for (i = 0; i < ndim; i++) norm = max(norm, fabs(x[i]));
 
     fprintf(fp, "VBILU inf-norm lower bound : %16.2f\n", norm);
     free(y);
@@ -1075,30 +1079,30 @@ void itsol_matvecVBR(SMatptr mat, double *x, double *y)
     itsol_vbmatvec(mat->VBCSR, x, y);
 }
 
-int preconILU(double *x, double *y, SPreptr mat)
+int itsol_preconILU(double *x, double *y, SPreptr mat)
 {
     /*-------------------- precon for csr format using the SPre struct*/
-    return lusolC(x, y, mat->ILU);
+    return itsol_lusolC(x, y, mat->ILU);
 }
 
-int preconVBR(double *x, double *y, SPreptr mat)
+int itsol_preconVBR(double *x, double *y, SPreptr mat)
 {
     /*-------------------- precon for ldu format using the SPre struct*/
-    return vblusolC(x, y, mat->VBILU);
+    return itsol_vblusolC(x, y, mat->VBILU);
 }
 
-int preconLDU(double *x, double *y, SPreptr mat)
+int itsol_preconLDU(double *x, double *y, SPreptr mat)
 {
     /*-------------------- precon for vbr format using the SPre struct*/
-    return lumsolC(x, y, mat->ILU);
+    return itsol_lumsolC(x, y, mat->ILU);
 }
 
-int preconARMS(double *x, double *y, SPreptr mat)
+int itsol_preconARMS(double *x, double *y, SPreptr mat)
 {
     /*-------------------- precon for ldu format using the SPre struct*/
     int n = (mat->ARMS)->n;
     memcpy(y, x, n * sizeof(double));
-    return armsol2(y, mat->ARMS);
+    return itsol_armsol2(y, mat->ARMS);
 }
 
 typedef struct __KeyType {
@@ -1245,7 +1249,7 @@ int itsol_init_blocks(csptr csmat, int *pnBlock, int **pnB, int **pperm, double 
     /*-------------------- calculate compressed A^T                 */
     at = (csptr) Malloc(sizeof(SparMat), "init_blocks");
     setupCS(at, n, 0);
-    if (CSparTran(csmat, at, compress) != 0)
+    if (itsol_CSparTran(csmat, at, compress) != 0)
         return -1;
 
     /*----------------------------------------------------------------------------

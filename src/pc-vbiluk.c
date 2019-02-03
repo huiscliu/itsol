@@ -145,9 +145,9 @@ int itsol_pc_vbilukC(int lofM, vbsptr vbmat, vbiluptr lu, FILE * fp)
 
         /*-------------------- calculate truncated inverse of diagonal element of U */
         if (SVD)
-            ierr = invSVD(dim, lu->D[i]);
+            ierr = itsol_invSVD(dim, lu->D[i]);
         else
-            ierr = invGauss(dim, lu->D[i]);
+            ierr = itsol_invGauss(dim, lu->D[i]);
         if (ierr != 0) {
             for (j = i + 1; j < n; j++) {
                 lu->D[j] = NULL;

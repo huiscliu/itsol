@@ -157,7 +157,7 @@ int main(void)
             io.fillfact = nnz_arms(ArmsSt, flog) / (double)(nnz + 1);
             fprintf(flog, "ARMS ends, fill factor (mem used) = %f\n", io.fillfact);
             /*---------------- get rough idea of cond number - exit if too big */
-            if (condestArms(ArmsSt, x, flog) != 0) {
+            if (itsol_condestArms(ArmsSt, x, flog) != 0) {
                 fprintf(flog, "Not attempting iterative solution.\n");
                 fprintf(io.fout, "Not attempting iterative solution.\n");
                 io.its = -1;
@@ -185,7 +185,7 @@ int main(void)
             MAT->CS = csmat;
             MAT->matvec = itsol_matvecCSR;
             PRE->ARMS = ArmsSt;
-            PRE->precon = preconARMS;
+            PRE->precon = itsol_preconARMS;
             /*-------------------- call itsol_solver_fgmres */
             io.its = io.maxits;
             tm1 = sys_timer();

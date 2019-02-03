@@ -144,7 +144,7 @@ int main(void)
             exit(8);
         }
         /*------------- permutes the rows and columns of the matrix */
-        if (dpermC(csmat, perm) != 0) {
+        if (itsol_dpermC(csmat, perm) != 0) {
             fprintf(flog, "*** dpermC error ***\n");
             exit(9);
         }
@@ -215,7 +215,7 @@ int main(void)
                 goto NEXT_PARA;
             }
             /*------------- get rough idea of cond number - exit if too big */
-            if (VBcondestC(lu, flog) != 0) {
+            if (itsol_VBcondestC(lu, flog) != 0) {
                 fprintf(flog, "Not attempting iterative solution.\n");
                 fprintf(io.fout, "Not attempting iterative solution.\n");
                 io.its = -1;
@@ -243,7 +243,7 @@ int main(void)
             MAT->CS = csmat;
             MAT->matvec = itsol_matvecCSR;
             PRE->VBILU = lu;
-            PRE->precon = preconVBR;
+            PRE->precon = itsol_preconVBR;
             /*-------------------- call itsol_solver_fgmres */
             io.its = io.maxits;
             tm1 = sys_timer();

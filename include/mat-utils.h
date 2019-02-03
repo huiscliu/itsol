@@ -17,7 +17,7 @@ extern "C" {
 
  ON RETURN A contains the inverse  of the input matrix.
  */
-int invGauss(int nn, double *A);
+int itsol_invGauss(int nn, double *A);
 
 /* *-------------------- inversion by svd
    This calls lapack routine dgesvd --
@@ -29,46 +29,46 @@ int invGauss(int nn, double *A);
  ** above define statement
  **--------------------
  */
-int invSVD(int nn, double *A);
+int itsol_invSVD(int nn, double *A);
 
 void itsol_matvecC(csptr mat, double *x, double *y);
 void itsol_matvecCSC(SMatptr mat, double *x, double *y);
-int CondestC(iluptr lu, FILE * fp);
-int diag_scal(vbsptr vbmat);
-int diagvec(vbsptr vbmat, BData x, BData y);
+int itsol_CondestC(iluptr lu, FILE * fp);
+int itsol_diag_scal(vbsptr vbmat);
+int itsol_diagvec(vbsptr vbmat, BData x, BData y);
 void itsol_matvec(csptr mata, double *x, double *y); 
 void itsol_matvecCSR(SMatptr mat, double *x, double *y);
 void itsol_matvecz(csptr mata, double *x, double *y, double *z);
 void itsol_vbmatvec(vbsptr vbmat, double *x, double *y);
 void itsol_luinv(int n, double *a, double *x, double *y); 
-int vblusolC(double *y, double *x, vbiluptr lu); 
-int lusolC(double *y, double *x, iluptr lu); 
-int rpermC(csptr mat, int *perm); 
-int cpermC(csptr mat, int *perm) ; 
-int dpermC(csptr mat, int *perm) ; 
-int CSparTran(csptr amat, csptr bmat, CompressType *compress);
+int itsol_vblusolC(double *y, double *x, vbiluptr lu); 
+int itsol_lusolC(double *y, double *x, iluptr lu); 
+int itsol_rpermC(csptr mat, int *perm); 
+int itsol_cpermC(csptr mat, int *perm) ; 
+int itsol_dpermC(csptr mat, int *perm) ; 
+int itsol_CSparTran(csptr amat, csptr bmat, CompressType *compress);
 double itsol_vbnorm2(int sz, double *a);
 void itsol_Lsol(csptr mata, double *b, double *x);
 void itsol_Usol(csptr mata, double *b, double *x);
-int ascend (p4ptr levmat, double *x, double *wk);
-int descend(p4ptr levmat, double *x, double *wk);
-int armsol2(double *x, arms Prec);
-int condestArms(arms armspre, double *y, FILE *fp);
-int VBcondestC(vbiluptr, FILE *fp); 
-int CondestLUM(iluptr lu, double *y, double *x, FILE *fp);
+int itsol_ascend (p4ptr levmat, double *x, double *wk);
+int itsol_descend(p4ptr levmat, double *x, double *wk);
+int itsol_armsol2(double *x, arms Prec);
+int itsol_condestArms(arms armspre, double *y, FILE *fp);
+int itsol_VBcondestC(vbiluptr, FILE *fp); 
+int itsol_CondestLUM(iluptr lu, double *y, double *x, FILE *fp);
 void itsol_matvecVBR(SMatptr mat, double *x, double *y);
 void itsol_matvecLDU(SMatptr mat, double *x, double *y);
-int preconILU(double *x, double *y, SPreptr mat);
-int preconVBR(double *x, double *y, SPreptr mat);
-int preconLDU(double *x, double *y, SPreptr mat);
-int preconARMS(double *x, double *y, SPreptr mat);
+int itsol_preconILU(double *x, double *y, SPreptr mat);
+int itsol_preconVBR(double *x, double *y, SPreptr mat);
+int itsol_preconLDU(double *x, double *y, SPreptr mat);
+int itsol_preconARMS(double *x, double *y, SPreptr mat);
 p4ptr itsol_Lvsol2(double *x, int nlev, p4ptr levmat, ilutptr ilusch) ;
-int Uvsol2(double *x, int nlev, int n, p4ptr levmat, ilutptr ilusch); 
+int itsol_Uvsol2(double *x, int nlev, int n, p4ptr levmat, ilutptr ilusch); 
 void itsol_SchLsol(ilutptr ilusch, double *y) ;
 void itsol_SchUsol(ilutptr ilusch, double *y) ;
-int lumsolC(double *y, double *x, iluptr lu);
-int condestLU(iluptr lu, FILE *fp);
-int invGauss(int nn, double *A); 
+int itsol_lumsolC(double *y, double *x, iluptr lu);
+int itsol_condestLU(iluptr lu, FILE *fp);
+int itsol_invGauss(int nn, double *A); 
 
 /*----------------------------------------------------------------------------
  * Setup Blocks (rows and columns might be permuted to get better results)

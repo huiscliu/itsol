@@ -319,11 +319,10 @@ int itsol_pc_ilutpC(csptr amat, double *droptol, int *lfil, double permtol, int 
         for (k = ii + 1; k < ii + len; k++)
             ilusch->U->ja[ii][++lenu] = iperm[jw[k]];
     }
-    cpermC(ilusch->U, iprev);
-    cpermC(ilusch->L, iprev);
-    /* DO NOT PERMUTE ORIGINAL MATRIX
-       cpermC(amat, iprev);
-       */
+
+    itsol_cpermC(ilusch->U, iprev);
+    itsol_cpermC(ilusch->L, iprev);
+
     /*---------------------------------------------------------------------
       |     end main loop - now do clean up
       |--------------------------------------------------------------------*/
