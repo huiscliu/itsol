@@ -1,5 +1,5 @@
 
-#include "indsetC.h"
+#include "indset.h"
 
 #define  ALPHA  0.00001
 

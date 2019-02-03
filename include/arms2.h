@@ -4,8 +4,8 @@
 #include "utils.h"
 #include "MatOps.h"
 #include "pilu.h"
-#include "ilutpC.h"
-#include "indsetC.h"
+#include "ilutpc.h"
+#include "indset.h"
 
 #ifdef __cplusplus
 extern "C" {
