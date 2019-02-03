@@ -1,5 +1,5 @@
 
-#include "MatOps.h"
+#include "mat-utils.h"
 
 /*----------------------------------------------------------------------------
  * Diagonal scaling:

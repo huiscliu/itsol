@@ -3,7 +3,7 @@
 #define __ITSOL_ILUTC_H__
 
 #include "utils.h"
-#include "MatOps.h"
+#include "mat-utils.h"
 
 #ifdef __cplusplus
 extern "C" {

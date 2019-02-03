@@ -13,7 +13,7 @@
 #include "ilutpc.h"
 #include "indset.h"
 #include "itsol.h"
-#include "MatOps.h"
+#include "mat-utils.h"
 #include "pilu.h"
 #include "utils.h"
 #include "svdInvC.h"

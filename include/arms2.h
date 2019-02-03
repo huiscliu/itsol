@@ -2,7 +2,7 @@
 #define __ITSOL_ARMS2_H__
 
 #include "utils.h"
-#include "MatOps.h"
+#include "mat-utils.h"
 #include "pilu.h"
 #include "ilutpc.h"
 #include "indset.h"

@@ -4,7 +4,7 @@
 
 #include "type-defs.h"
 #include "utils.h"
-#include "MatOps.h"
+#include "mat-utils.h"
 
 #ifdef __cplusplus
 extern "C" {
