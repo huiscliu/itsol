@@ -137,7 +137,7 @@ int main(void)
         }
         /*------------------------------------------------------------*/
         x = (double *)Malloc(io.ndim * sizeof(double), "main");
-        ierr = init_blocks(csmat, &nBlock, &nB, &perm, io.eps, &io.tm_h, &io.tm_a);
+        ierr = itsol_init_blocks(csmat, &nBlock, &nB, &perm, io.eps, &io.tm_h, &io.tm_a);
         io.tm_b = io.tm_h + io.tm_a;
         if (ierr != 0) {
             fprintf(flog, "*** in init_blocks ierr != 0 ***\n");

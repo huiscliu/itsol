@@ -105,7 +105,7 @@ int invGauss(int nn, double *A);
  *        we merge row_i and row_j by resetting
  *        group[j] = i and size[i] = size[i]+size[j]
  *--------------------------------------------------------------------------*/
-int init_blocks(csptr csmat, int *pnBlock, int **pnB, int **pperm,
+int itsol_init_blocks(csptr csmat, int *pnBlock, int **pnB, int **pperm,
         double eps, double *t_hash, double *t_angle);
 
 #ifdef __cplusplus
