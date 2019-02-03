@@ -2,8 +2,6 @@
 
 auxill.o: auxill.c ../include/auxill.h ../include/config.h ../include/ext-protos.h ../include/type-defs.h ../include/utils.h
 
-fgmres.o: fgmres.c ../include/config.h ../include/ext-protos.h ../include/fgmres.h ../include/type-defs.h ../include/utils.h
-
 indset.o: indset.c ../include/config.h ../include/ext-protos.h ../include/indset.h ../include/type-defs.h ../include/utils.h
 
 mat-utils.o: mat-utils.c ../include/config.h ../include/ext-protos.h ../include/mat-utils.h ../include/type-defs.h ../include/utils.h
@@ -23,5 +21,7 @@ pc-pilu.o: pc-pilu.c ../include/config.h ../include/ext-protos.h ../include/pc-p
 pc-vbiluk.o: pc-vbiluk.c ../include/config.h ../include/ext-protos.h ../include/mat-utils.h ../include/pc-vbiluk.h ../include/type-defs.h ../include/utils.h
 
 pc-vbilut.o: pc-vbilut.c ../include/config.h ../include/ext-protos.h ../include/mat-utils.h ../include/pc-vbilut.h ../include/type-defs.h ../include/utils.h
+
+solver-fgmres.o: solver-fgmres.c ../include/config.h ../include/ext-protos.h ../include/solver-fgmres.h ../include/type-defs.h ../include/utils.h
 
 utils.o: utils.c ../include/config.h ../include/ext-protos.h ../include/type-defs.h ../include/utils.h
