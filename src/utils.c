@@ -169,11 +169,11 @@ int itsol_setupILU(ITS_IluPtr lu, int n)
 {
     lu->n = n;
     lu->D = (double *)itsol_malloc(sizeof(double) * n, "itsol_setupILU");
-    lu->L = (ITS_CsPtr) itsol_malloc(sizeof(SparMat), "itsol_setupILU");
+    lu->L = (ITS_CsPtr) itsol_malloc(sizeof(ITS_SparMat), "itsol_setupILU");
 
     itsol_setupCS(lu->L, n, 1);
 
-    lu->U = (ITS_CsPtr) itsol_malloc(sizeof(SparMat), "itsol_setupILU");
+    lu->U = (ITS_CsPtr) itsol_malloc(sizeof(ITS_SparMat), "itsol_setupILU");
 
     itsol_setupCS(lu->U, n, 1);
     lu->work = (int *)itsol_malloc(sizeof(int) * n, "itsol_setupILU");
@@ -347,10 +347,10 @@ int itsol_setupVBILU(ITS_VbiluPtr lu, int n, int *bsz)
     for (i = 0; i <= n; i++) lu->bsz[i] = bsz[i];
 
     lu->D = (BData *) itsol_malloc(sizeof(BData) * n, "setupVBILU");
-    lu->L = (ITS_VbsPtr) itsol_malloc(sizeof(VBSparMat), "setupVBILU");
+    lu->L = (ITS_VbsPtr) itsol_malloc(sizeof(ITS_VBSparMat), "setupVBILU");
     itsol_setupVBMat(lu->L, n, NULL);
 
-    lu->U = (ITS_VbsPtr) itsol_malloc(sizeof(VBSparMat), "setupVBILU");
+    lu->U = (ITS_VbsPtr) itsol_malloc(sizeof(ITS_VBSparMat), "setupVBILU");
     itsol_setupVBMat(lu->U, n, NULL);
 
     lu->work = (int *)itsol_malloc(sizeof(int) * n, "setupVBILU");
@@ -522,11 +522,11 @@ int itsol_setupP4(ITS_P4Ptr amat, int Bn, int Cn, ITS_CsPtr F, ITS_CsPtr E)
         amat->wk = (amat->prev)->wk;
 
     /*-------------------- L and U */
-    amat->L = (ITS_CsPtr) itsol_malloc(sizeof(SparMat), "setupP4:3");
+    amat->L = (ITS_CsPtr) itsol_malloc(sizeof(ITS_SparMat), "setupP4:3");
     if (itsol_setupCS(amat->L, Bn, 1))
         return 1;
     /*    fprintf(stdout,"  -- BN %d   Cn   %d \n", Bn,Cn);  */
-    amat->U = (ITS_CsPtr) itsol_malloc(sizeof(SparMat), "setupP4:4");
+    amat->U = (ITS_CsPtr) itsol_malloc(sizeof(ITS_SparMat), "setupP4:4");
     if (itsol_setupCS(amat->U, Bn, 1))
         return 1;
 
@@ -610,14 +610,14 @@ int itsol_cleanP4(ITS_P4Ptr amat)
   |             0   --> successful return.
   |             1   --> memory allocation error.
   |--------------------------------------------------------------------*/
-int itsol_setupILUT(ilutptr amat, int len)
+int itsol_setupILUT(ITS_IlutPtr amat, int len)
 {
     amat->n = len;
     amat->wk = (double *)itsol_malloc(2 * len * sizeof(double), "itsol_setupILUT:5");
-    amat->L = (ITS_CsPtr) itsol_malloc(sizeof(SparMat), "itsol_setupILUT:6");
+    amat->L = (ITS_CsPtr) itsol_malloc(sizeof(ITS_SparMat), "itsol_setupILUT:6");
     if (itsol_setupCS(amat->L, len, 1))
         return 1;
-    amat->U = (ITS_CsPtr) itsol_malloc(sizeof(SparMat), "itsol_setupILUT:7");
+    amat->U = (ITS_CsPtr) itsol_malloc(sizeof(ITS_SparMat), "itsol_setupILUT:7");
     if (itsol_setupCS(amat->U, len, 1))
         return 1;
     return 0;
@@ -631,7 +631,7 @@ int itsol_setupILUT(ilutptr amat, int len)
   | ( amat )  =  Pointer to a IluSpar struct.
   |  indic    = indicator for number of levels.  indic=0 -> zero level.
   |--------------------------------------------------------------------*/
-int itsol_cleanILUT(ilutptr amat, int indic)
+int itsol_cleanILUT(ITS_IlutPtr amat, int indic)
 {
     if (amat->wk) {
         free(amat->wk);
@@ -661,7 +661,7 @@ int itsol_cleanILUT(ilutptr amat, int indic)
 
 void itsol_setup_arms(arms Levmat)
 {
-    Levmat->ilus = (ilutptr) itsol_malloc(sizeof(IluSpar), "setup_arms:ilus");
+    Levmat->ilus = (ITS_IlutPtr) itsol_malloc(sizeof(IluSpar), "setup_arms:ilus");
     Levmat->levmat = (ITS_P4Ptr) itsol_malloc(sizeof(Per4Mat), "setup_arms:levmat");
 }
 
@@ -676,7 +676,7 @@ void itsol_setup_arms(arms Levmat)
 int itsol_cleanARMS(arms ArmsPre)
 {
     ITS_P4Ptr amat = ArmsPre->levmat;
-    ilutptr cmat = ArmsPre->ilus;
+    ITS_IlutPtr cmat = ArmsPre->ilus;
     /* case when nlev == 0 */
     int indic = (amat->nB != 0);
 
@@ -1204,7 +1204,7 @@ int itsol_nnz_cs(ITS_CsPtr A)
 int itsol_nnz_arms(arms PreSt, FILE * ft)
 {
     ITS_P4Ptr levmat = PreSt->levmat;
-    ilutptr ilschu = PreSt->ilus;
+    ITS_IlutPtr ilschu = PreSt->ilus;
     int nlev = PreSt->nlev;
     int ilev = 0, nnz_lev, nnz_sch, nnz_tot;
     nnz_lev = 0;
@@ -1224,7 +1224,7 @@ int itsol_nnz_arms(arms PreSt, FILE * ft)
 }
 
 /*----------------------------------------------------------------------
-  | Convert CSC matrix to LUSparMat struct
+  | Convert CSC matrix to LUITS_SparMat struct
   |----------------------------------------------------------------------
   | on entry:
   |==========
@@ -1236,7 +1236,7 @@ int itsol_nnz_arms(arms PreSt, FILE * ft)
   | On return:
   |===========
   |
-  | ( mat )  =  Matrix stored as LUSparMat struct.
+  | ( mat )  =  Matrix stored as LUITS_SparMat struct.
   |
   |       integer value returned:
   |             0   --> successful return.
@@ -1396,7 +1396,7 @@ int itsol_CSClum(int n, double *a, int *ja, int *ia, ITS_IluPtr mat, int rsa)
 }
 
 /*----------------------------------------------------------------------
-  | Convert cs matrix to LUSparMat struct
+  | Convert cs matrix to LUITS_SparMat struct
   |----------------------------------------------------------------------
   | on entry:  
   |==========
@@ -1405,7 +1405,7 @@ int itsol_CSClum(int n, double *a, int *ja, int *ia, ITS_IluPtr mat, int rsa)
   | On return:
   |===========
   |
-  | ( mat )  =  Matrix stored as LUSparMat struct.
+  | ( mat )  =  Matrix stored as LUITS_SparMat struct.
   |
   |       integer value returned:
   |             0   --> successful return.
@@ -2093,7 +2093,7 @@ int itsol_dumpArmsMat(arms PreSt, FILE * ft)
 {
     int lev, nnz, nglob = 0, old = 0;
     ITS_P4Ptr levmat = PreSt->levmat;
-    ilutptr ilus = PreSt->ilus;
+    ITS_IlutPtr ilus = PreSt->ilus;
     int n = levmat->n;
     int nlev = PreSt->nlev;
     FILE *dummy = NULL;

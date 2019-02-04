@@ -83,7 +83,7 @@ int main(void)
         fprintf(flog, "MATRIX: %s...\n", io.MatNam);
 
         /*-------------------- Read matrix */
-        csmat = (ITS_CsPtr) itsol_malloc(sizeof(SparMat), "main");
+        csmat = (ITS_CsPtr) itsol_malloc(sizeof(ITS_SparMat), "main");
 
         /*-------------------- case: COO formats */
         if (io.Fmt > HB) {

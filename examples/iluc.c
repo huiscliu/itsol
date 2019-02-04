@@ -86,7 +86,7 @@ int main(void)
 
         /*-------------------- Read  matrix */
         lumat = (ITS_IluPtr) itsol_malloc(sizeof(LDUmat), "main:lumat");
-        csmat = (ITS_CsPtr) itsol_malloc(sizeof(SparMat), "main:csmat");
+        csmat = (ITS_CsPtr) itsol_malloc(sizeof(ITS_SparMat), "main:csmat");
 
         /*-------------------- case: COO formats (0-indexing) */
         if (io.Fmt > HB) {

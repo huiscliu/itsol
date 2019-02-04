@@ -39,7 +39,7 @@ typedef struct SpaFmt
     int **ja;      /* pointer-to-pointer to store column indices  */
     double **ma;   /* pointer-to-pointer to store nonzero entries */
 
-} SparMat, *ITS_CsPtr;
+} ITS_SparMat, *ITS_CsPtr;
 
 typedef double *BData;
 
@@ -54,7 +54,7 @@ typedef struct VBSpaFmt
     BData **ba;   /* pointer-to-pointer to store nonzero blocks */
     BData *D;     /* to store inversion of diagonals            */
 
-} VBSparMat, *ITS_VbsPtr;
+} ITS_VBSparMat, *ITS_VbsPtr;
 
 typedef struct VBILUfac
 {
@@ -151,7 +151,7 @@ typedef struct PerMat4
   | wk     = a work vector of length n needed for various tasks
   |            [reduces number of calls to malloc]           
   |-----------------------------------------------------------*/
-typedef struct ILUTfac *ilutptr;
+typedef struct ILUTfac *ITS_IlutPtr;
 typedef struct ILUTfac
 {
     int n;                  
@@ -180,7 +180,7 @@ typedef struct arms_st
 {
     int n;                   /* dimension of matrix */
     int nlev;                /* number of levels    */
-    ilutptr ilus;            /* ILU for last level  */
+    ITS_IlutPtr ilus;        /* ILU for last level  */
     ITS_P4Ptr levmat;        /* level structure     */
 
 } armsMat;

@@ -94,7 +94,7 @@ int main(void)
         fprintf(flog, "MATRIX: %s...\n", io.MatNam);
 
         /*-------------------- Read matrix - case: COO formats */
-        csmat = (ITS_CsPtr) itsol_malloc(sizeof(SparMat), "main:csmat");
+        csmat = (ITS_CsPtr) itsol_malloc(sizeof(ITS_SparMat), "main:csmat");
 
         if (io.Fmt > HB) {
             ierr = itsol_read_coo(&AA, &JA, &IA, &io, &rhs, &sol, 0);

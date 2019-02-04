@@ -212,7 +212,7 @@ int itsol_indsetC(ITS_CsPtr mat, int bsize, int *iord, int *nnod, double tol)
     /*-----------------------------------------------------------------------*/
     riord = (int *)itsol_malloc(n * sizeof(int), "indsetC:1");
     w = (double *)itsol_malloc(n * sizeof(double), "indsetC:2");
-    matT = (ITS_CsPtr) itsol_malloc(sizeof(SparMat), "indsetC:3");
+    matT = (ITS_CsPtr) itsol_malloc(sizeof(ITS_SparMat), "indsetC:3");
     /*  	 call weights to compute the weights for  input matrix.. */
     itsol_setupCS(matT, mat->n, 1);
     itsol_SparTran(mat, matT, 1, 0);

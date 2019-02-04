@@ -68,7 +68,7 @@ extern "C" {
 |     All processing is done using C indexing.
 |--------------------------------------------------------------------*/
 int itsol_pc_ilutpC(ITS_CsPtr amat, double *droptol, int *lfil, double permtol,
-		int mband, ilutptr ilusch);
+		int mband, ITS_IlutPtr ilusch);
 
 /*---------------------------------------------------------------------- 
 | ILUT -
@@ -116,7 +116,7 @@ int itsol_pc_ilutpC(ITS_CsPtr amat, double *droptol, int *lfil, double permtol,
 |----------------------------------------------------------------------- 
 |     All processing is done using C indexing.
 |--------------------------------------------------------------------*/
-int itsol_pc_ilutD(ITS_CsPtr amat, double *droptol, int *lfil, ilutptr ilusch);
+int itsol_pc_ilutD(ITS_CsPtr amat, double *droptol, int *lfil, ITS_IlutPtr ilusch);
 
 #ifdef __cplusplus
 }

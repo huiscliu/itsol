@@ -146,7 +146,7 @@ int itsol_pc_arms2(ITS_CsPtr Amat, int *ipar, double *droptol, int *lfil, double
     /*-------------------- move above to itsol.h */
     ITS_P4Ptr levp, levc, levn, levmat = PreMat->levmat;
     ITS_CsPtr schur, B, F, E, C = NULL;
-    ilutptr ilsch = PreMat->ilus;
+    ITS_IlutPtr ilsch = PreMat->ilus;
     /*-------------------- local variables  (initialized)   */
     double *dd1, *dd2;
     int nlev = ipar[0], bsize = ipar[2], iout = ipar[3], ierr = 0;
@@ -161,7 +161,7 @@ int itsol_pc_arms2(ITS_CsPtr Amat, int *ipar, double *droptol, int *lfil, double
     /*   schur matrix starts being original A */
 
     /*-------------------- begin                                         */
-    schur = (ITS_CsPtr) itsol_malloc(sizeof(SparMat), "arms2:1");
+    schur = (ITS_CsPtr) itsol_malloc(sizeof(ITS_SparMat), "arms2:1");
     /*---------------------------------------------------------------------
       | The matrix (a,ja,ia) plays role of Schur compl. from the 0th level.
       +--------------------------------------------------------------------*/
@@ -266,10 +266,10 @@ int itsol_pc_arms2(ITS_CsPtr Amat, int *ipar, double *droptol, int *lfil, double
             levc->prev = levp;
         }
         /*-------------------- ITS_P4Ptr struct for current schur complement */
-        B = (ITS_CsPtr) itsol_malloc(sizeof(SparMat), "arms2:7");
-        E = (ITS_CsPtr) itsol_malloc(sizeof(SparMat), "arms2:8");
-        F = (ITS_CsPtr) itsol_malloc(sizeof(SparMat), "arms2:9");
-        C = (ITS_CsPtr) itsol_malloc(sizeof(SparMat), "arms2:10");
+        B = (ITS_CsPtr) itsol_malloc(sizeof(ITS_SparMat), "arms2:7");
+        E = (ITS_CsPtr) itsol_malloc(sizeof(ITS_SparMat), "arms2:8");
+        F = (ITS_CsPtr) itsol_malloc(sizeof(ITS_SparMat), "arms2:9");
+        C = (ITS_CsPtr) itsol_malloc(sizeof(ITS_SparMat), "arms2:10");
         itsol_csSplit4(schur, nB, nC, B, F, E, C);
         itsol_setupP4(levc, nB, nC, F, E);
 
@@ -299,7 +299,7 @@ int itsol_pc_arms2(ITS_CsPtr Amat, int *ipar, double *droptol, int *lfil, double
           | one for next level...
           +--------------------------------------------------------------------*/
         itsol_cleanCS(schur);
-        schur = (ITS_CsPtr) itsol_malloc(sizeof(SparMat), "arms2:11");
+        schur = (ITS_CsPtr) itsol_malloc(sizeof(ITS_SparMat), "arms2:11");
         itsol_setupCS(schur, nC, 1);
 
         /*----------------------------------------------------------------------

@@ -85,7 +85,7 @@ int main(void)
         fprintf(flog, "MATRIX: %s...\n", io.MatNam);
 
         /* ------------------- Read in matrix and allocate memory */
-        csmat = (ITS_CsPtr) itsol_malloc(sizeof(SparMat), "main");
+        csmat = (ITS_CsPtr) itsol_malloc(sizeof(ITS_SparMat), "main");
 
         /*-------------------- case: COO formats */
         if (io.Fmt > HB) {
@@ -176,7 +176,7 @@ int main(void)
             prhs[perm[i]] = rhs[i];
 
         /*-------------------- convert to block matrix. */
-        vbmat = (ITS_VbsPtr) itsol_malloc(sizeof(VBSparMat), "main");
+        vbmat = (ITS_VbsPtr) itsol_malloc(sizeof(ITS_VBSparMat), "main");
         ierr = itsol_csrvbsrC(1, nBlock, nB, csmat, vbmat);
 
         if (ierr != 0) {
