@@ -32,7 +32,7 @@
   | C-style CSR format - used internally
   | for all matrices in CSR format 
   |---------------------------------------------*/
-typedef struct SpaFmt
+typedef struct ITS_SparMat_
 {
     int n;
     int *nzcount;  /* length of each row */
@@ -43,7 +43,7 @@ typedef struct SpaFmt
 
 typedef double *ITS_BData;
 
-typedef struct ITS_VBSpaFmt
+typedef struct ITS_VBSparMat_
 {
     int n;        /* the block row dimension of the matrix      */
     int *bsz;     /* the row/col of the first element of each   */
@@ -56,7 +56,7 @@ typedef struct ITS_VBSpaFmt
 
 } ITS_VBSparMat, *ITS_VBSPtr;
 
-typedef struct ITS_VBILUFac
+typedef struct ITS_VBILUSpar_
 {
     int n;
     int *bsz;     /* the row/col of the first element of each   */
@@ -73,7 +73,7 @@ typedef struct ITS_VBILUFac
 
 } ITS_VBILUSpar, *ITS_VBILUPtr; 
 
-typedef struct ILUFac
+typedef struct ITS_ILUSpar_
 {
     int n;
     ITS_CsPtr L;      /* L part elements                            */
@@ -83,7 +83,7 @@ typedef struct ILUFac
 
 } ITS_ILUSpar, ITS_LDUmat, *ITS_ILUPtr;
 
-typedef struct ITS_Per4Mat *ITS_P4Ptr;
+typedef struct ITS_Per4Mat_ *ITS_P4Ptr;
 
 /*------------------------------------------------------------
   | struct for storing the block LU factorization 
@@ -107,17 +107,17 @@ typedef struct ITS_Per4Mat *ITS_P4Ptr;
   | wk     = a work vector of length n needed for various tasks
   |            [reduces number of calls to malloc]           
   |----------------------------------------------------------*/ 
-typedef struct ITS_Per4Mat
+typedef struct ITS_Per4Mat_
 {
     int n;                  
     int nB; 
     int symperm;
     /*   LU factors  */
-    struct SpaFmt *L;
-    struct SpaFmt *U;
+    ITS_SparMat *L;
+    ITS_SparMat *U;
     /* E, F blocks   */
-    struct SpaFmt *E;
-    struct SpaFmt *F;
+    ITS_SparMat *E;
+    ITS_SparMat *F;
     int *rperm;       /* row permutation         */ 
     int *perm;        /* col. permutation        */ 
     double *D1 ;      /* diagonal scaling row    */  
@@ -156,11 +156,13 @@ typedef struct ITS_ILUTFac *ITS_ILUTPtr;
 typedef struct ITS_ILUTFac
 {
     int n;                  
+
     /*-------------------- C matrix of last block */
-    struct SpaFmt *C;
+    ITS_SparMat *C;
+
     /* LU factorization       */
-    struct SpaFmt *L;
-    struct SpaFmt *U;
+    ITS_SparMat *L;
+    ITS_SparMat *U;
 
     int *rperm;   /* row single-sinded permutation */
     int *perm;    /* column perm .                */

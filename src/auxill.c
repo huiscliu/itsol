@@ -127,9 +127,9 @@ int itsol_get_matrix_info(FILE * fmat, ITS_IOT * pio)
     /*-------------------- matrix format */
     if (strcmp(Fmt, "HB") == 0)
         pio->Fmt = 1;
-    else if (strcmp(Fmt, "ITS_MM0") == 0)
+    else if (strcmp(Fmt, "MM0") == 0)
         pio->Fmt = ITS_MM0;
-    else if (strcmp(Fmt, "ITS_MM1") == 0)
+    else if (strcmp(Fmt, "MM1") == 0)
         pio->Fmt = ITS_MM1;
     else
                 /*-------------------- UNKNOWN_FORMAT */
