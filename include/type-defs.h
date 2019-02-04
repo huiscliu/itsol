@@ -80,7 +80,7 @@ typedef struct ILUfac
     double *D;    /* diagonal elements                          */
     ITS_CsPtr U;      /* U part elements                            */
     int *work;    /* working buffer */
-} ITS_ILUSpar, LDUmat, *ITS_ILUPtr;
+} ITS_ILUSpar, ITS_LDUmat, *ITS_ILUPtr;
 
 typedef struct PerMat4 *ITS_P4Ptr;
 
