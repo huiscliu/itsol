@@ -197,7 +197,7 @@ int itsol_diag_scal(ITS_VBSPtr vbmat)
         for (j = 0; j < nzcount; j++) {
             col = ja[j];
             sz = ITS_B_DIM(bsz, col);
-            DGEMM("n", "n", dim, sz, dim, one, D[i], dim, ba[j], dim, zero, buf, dim);
+            itsol_dgemm("n", "n", dim, sz, dim, one, D[i], dim, ba[j], dim, zero, buf, dim);
             itsol_copyBData(dim, sz, ba[j], buf, 0);
         }
     }
@@ -225,7 +225,7 @@ int itsol_diagvec(ITS_VBSPtr vbmat, ITS_BData x, ITS_BData y)
 
     for (i = 0; i < n; i++) {
         dim = ITS_B_DIM(bsz, i);
-        DGEMM("n", "n", dim, sz, dim, one, D[i], dim, x + bsz[i], dim, zero, y + bsz[i], dim);
+        itsol_dgemm("n", "n", dim, sz, dim, one, D[i], dim, x + bsz[i], dim, zero, y + bsz[i], dim);
     }
     return 0;
 }

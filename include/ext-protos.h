@@ -95,7 +95,7 @@ void csrcoo(int *, int *, int *, double *, int *, int *, int *,
 	(alpha), (a), (lda), (x), (incx),				\
 	(beta), (y), (incy))
 
-#define DGEMM(transa,transb,l,n,m,alpha,a,lda,b,ldb,beta,c,ldc)		\
+#define itsol_dgemm(transa,transb,l,n,m,alpha,a,lda,b,ldb,beta,c,ldc)		\
   dgemm((transa),(transb),						\
 	(l),(n),(m),(alpha),(a),					\
 	(lda),(b),(ldb),(beta),(c),(ldc))
@@ -111,7 +111,7 @@ void csrcoo(int *, int *, int *, double *, int *, int *, int *,
 #define itsol_dgemv(transa, m, n, alpha, a, lda, x, incx, beta, y, incy)  \
   dgemv((transa), &(m), &(n), &(alpha), (a), &(lda), (x), &(incx), \
 	 &(beta), (y), &(incy))
-#define DGEMM(transa,transb,l,n,m,alpha,a,lda,b,ldb,beta,c,ldc)	\
+#define itsol_dgemm(transa,transb,l,n,m,alpha,a,lda,b,ldb,beta,c,ldc)	\
   dgemm((transa), (transb), &(l), &(n), &(m), &(alpha), (a),	\
 	 &(lda), b, &(ldb), &(beta), (c), &(ldc)) 
 #define DGETRF(m, n, a, lda, ipvt, info)		\
