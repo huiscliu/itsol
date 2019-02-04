@@ -136,7 +136,7 @@ int main(void)
         /*--------------------------LOOP THROUGH PARAMETERS */
         for (iparam = 1; iparam <= io.nparam; iparam++) {
             fprintf(flog, "iparam = %d\n", iparam);
-            lu = (ITS_ILUPtr) itsol_malloc(sizeof(ILUSpar), "main");
+            lu = (ITS_ILUPtr) itsol_malloc(sizeof(ITS_ILUSpar), "main");
             fprintf(flog, "begin iluk(%d)\n", lfil);
             tm1 = itsol_get_time();
 
