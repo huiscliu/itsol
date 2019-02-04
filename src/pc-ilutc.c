@@ -96,7 +96,7 @@ static int std_drop(int lfil, int i, double tolL, double tolU, double toldiag)
     len = min(Unnz, lfil);
     for (j = 0; j < Unnz; j++)
         w[j] = fabs(wU[Uid[j]]);
-    FC_FUNC(qsplit,QSPLIT)(w, Uid, &Unnz, &len);
+    FC_FUNC(itsol_qsplit,ITSOL_QSPLIT)(w, Uid, &Unnz, &len);
     qsort(Uid, len, sizeof(int), comp);
     /*-------------------- update U */
     U->nzcount[i] = len;
@@ -128,7 +128,7 @@ static int std_drop(int lfil, int i, double tolL, double tolU, double toldiag)
     len = min(Lnnz, lfil);
     for (j = 0; j < Lnnz; j++) w[j] = fabs(wL[Lid[j]]);
 
-    FC_FUNC(qsplit,QSPLIT)(w, Lid, &Lnnz, &len);
+    FC_FUNC(itsol_qsplit,ITSOL_QSPLIT)(w, Lid, &Lnnz, &len);
     qsort(Lid, len, sizeof(int), comp);
 
     /*-------------------- update L                                           */

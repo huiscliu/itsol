@@ -167,7 +167,7 @@ int itsol_pc_vbilutC(ITS_VBSPtr vbmat, ITS_VBILUPtr lu, int lfil, double tol, IT
             }
             /* get the multiplier for row to be eliminated (jrow). */
             /* fact = w(jj)*alu(jrow)                              */
-            FC_FUNC(bxinv,BXINV)(&dim, &szjrow, D[jrow], w[j], buf_fact);
+            FC_FUNC(itsol_bxinv,ITSOL_BXINV)(&dim, &szjrow, D[jrow], w[j], buf_fact);
 
             /* zero out element in row by resetting jw(n+jrow) to -1 */
             iw[jrow] = -1;
@@ -237,7 +237,7 @@ int itsol_pc_vbilutC(ITS_VBSPtr vbmat, ITS_VBILUPtr lu, int lfil, double tol, IT
                 wn[j] = itsol_vbnorm2(dim * sz, w[j]);
                 iw[j] = j;
             }
-            FC_FUNC(qsplit,QSPLIT)(wn, iw, &lenl, &len);
+            FC_FUNC(itsol_qsplit,ITSOL_QSPLIT)(wn, iw, &lenl, &len);
             L->nzcount[i] = len;
             if (len > 0) {
                 L->ja[i] = (int *)itsol_malloc(len * sizeof(int), "vbilut");
@@ -264,7 +264,7 @@ int itsol_pc_vbilutC(ITS_VBSPtr vbmat, ITS_VBILUPtr lu, int lfil, double tol, IT
                 iw[j - 1] = jpos;
             }
             para = lenu - 1;
-            FC_FUNC(qsplit,QSPLIT)(wn, iw, &para, &len);
+            FC_FUNC(itsol_qsplit,ITSOL_QSPLIT)(wn, iw, &para, &len);
             nzcount = U->nzcount[i] = len - 1;
             if (nzcount > 0) {
                 U->ja[i] = (int *)itsol_malloc(nzcount * sizeof(int), "vbilut");
@@ -291,7 +291,7 @@ int itsol_pc_vbilutC(ITS_VBSPtr vbmat, ITS_VBILUPtr lu, int lfil, double tol, IT
             D[i] = (ITS_BData) itsol_malloc(dim * dim * sizeof(double), "vbilut");
             itsol_copyBData(dim, dim, D[i], w[i], 0);
 
-            FC_FUNC(gauss,GAUSS)(&dim, D[i], &ierr);
+            FC_FUNC(itsol_gauss,ITSOL_GAUSS)(&dim, D[i], &ierr);
 
             if (ierr != 0) {
                 fprintf(fp, "singular block encountered.\n");

@@ -1,7 +1,7 @@
 c-----------------------------------------------------------------------
 c     some routines extracted/ modified from SPARSKIT2 + one from blas
 c-----------------------------------------------------------------------
-      subroutine readmtc (nmax,nzmax,job,fname,a,ja,ia,rhs,nrhs,
+      subroutine itsol_readmtc (nmax,nzmax,job,fname,a,ja,ia,rhs,nrhs,
      *     guesol,nrow,ncol,nnz,title,key,type,ierr)
 c-----------------------------------------------------------------------
 c     this  subroutine reads  a boeing/harwell matrix,  given the
@@ -244,7 +244,7 @@ c-----------------------------------------------------------------------
       end
 c-----------------------------------------------------------------------
 
-      subroutine csrcsc (n,job,ipos,a,ja,ia,ao,jao,iao)
+      subroutine itsol_csrcsc (n,job,ipos,a,ja,ia,ao,jao,iao)
       integer ia(n+1),iao(n+1),ja(*),jao(*)
       real*8  a(*),ao(*)
 c-----------------------------------------------------------------------
@@ -283,10 +283,10 @@ c iao   = integer array of size n+1 containing the "ia" index array of
 c         the transpose.
 c
 c-----------------------------------------------------------------------
-      call csrcsc2 (n,n,job,ipos,a,ja,ia,ao,jao,iao)
+      call itsol_csrcsc2 (n,n,job,ipos,a,ja,ia,ao,jao,iao)
       end
 c-----------------------------------------------------------------------
-      subroutine csrcsc2 (n,n2,job,ipos,a,ja,ia,ao,jao,iao)
+      subroutine itsol_csrcsc2 (n,n2,job,ipos,a,ja,ia,ao,jao,iao)
       integer ia(n+1),iao(n2+1),ja(*),jao(*)
       real*8  a(*),ao(*)
 c-----------------------------------------------------------------------
@@ -363,7 +363,7 @@ c--------------- end of csrcsc2 ----------------------------------------
 c-----------------------------------------------------------------------
       end
 c-----------------------------------------------------------------------
-      subroutine gauss (n,a,ierr)
+      subroutine itsol_gauss (n,a,ierr)
 c-----------------------------------------------------------------------
       implicit none
       integer n, ierr
@@ -393,7 +393,7 @@ c
       return
       end
 c-----------------------------------------------------------------------
-      subroutine bxinv (m, n, a, b, c)
+      subroutine itsol_bxinv (m, n, a, b, c)
       implicit none
       integer m, n
       real*8 a(n,n), b(m,n), c(m,n)
@@ -437,7 +437,7 @@ c
       end
 c-----------------------------------------------------------------------
 
-        subroutine qsplit(a,ind,n,ncut)
+        subroutine itsol_qsplit(a,ind,n,ncut)
         real*8 a(n)
         integer ind(n), n, ncut
 c-----------------------------------------------------------------------
@@ -497,7 +497,7 @@ c----------------end-of-qsplit------------------------------------------
 c-----------------------------------------------------------------------
         end
 c
-      subroutine rnrms   (nrow, nrm, a, ia, diag) 
+      subroutine itsol_rnrms   (nrow, nrm, a, ia, diag) 
       real*8 a(*), diag(nrow), scal 
       integer ia(nrow+1) 
 c-----------------------------------------------------------------------
@@ -548,7 +548,7 @@ c-----------------------------------------------------------------------
 c-------------end-of-rnrms----------------------------------------------
       end 
 c----------------------------------------------------------------------- 
-      subroutine cnrms   (nrow, nrm, a, ja, ia, diag) 
+      subroutine itsol_cnrms   (nrow, nrm, a, ja, ia, diag) 
       real*8 a(*), diag(nrow) 
       integer ja(*), ia(nrow+1) 
 c-----------------------------------------------------------------------
@@ -598,7 +598,7 @@ c-----------------------------------------------------------------------
 c------------end-of-cnrms-----------------------------------------------
       end 
 c----------------------------------------------------------------------- 
-      subroutine roscal(nrow,job,nrm,a,ja,ia,diag,b,jb,ib,ierr) 
+      subroutine itsol_roscal(nrow,job,nrm,a,ja,ia,diag,b,jb,ib,ierr) 
       real*8 a(*), b(*), diag(nrow) 
       integer nrow,job,nrm,ja(*),jb(*),ia(nrow+1),ib(nrow+1),ierr 
 c-----------------------------------------------------------------------
@@ -637,7 +637,7 @@ c-------
 c 1)        The column dimension of A is not needed. 
 c 2)        algorithm in place (B can take the place of A).
 c-----------------------------------------------------------------
-      call rnrms (nrow,nrm,a,ia,diag)
+      call itsol_rnrms (nrow,nrm,a,ia,diag)
       ierr = 0
       do 1 j=1, nrow
          if (diag(j) .eq. 0.0d0) then
@@ -647,13 +647,13 @@ c-----------------------------------------------------------------
             diag(j) = 1.0d0/diag(j)
          endif
  1    continue
-      call diamua(nrow,job,a,ja,ia,diag,b,jb,ib)
+      call itsol_diamua(nrow,job,a,ja,ia,diag,b,jb,ib)
       return
 c-------end-of-roscal---------------------------------------------------
 c-----------------------------------------------------------------------
       end
 c-----------------------------------------------------------------------
-      subroutine coscal(nrow,job,nrm,a,ja,ia,diag,b,jb,ib,ierr) 
+      subroutine itsol_coscal(nrow,job,nrm,a,ja,ia,diag,b,jb,ib,ierr) 
 c----------------------------------------------------------------------- 
       real*8 a(*),b(*),diag(nrow) 
       integer nrow,job,ja(*),jb(*),ia(nrow+1),ib(nrow+1),ierr 
@@ -694,7 +694,7 @@ c-------
 c 1)     The column dimension of A is not needed. 
 c 2)     algorithm in place (B can take the place of A).
 c-----------------------------------------------------------------
-      call cnrms (nrow,nrm,a,ja,ia,diag)
+      call itsol_cnrms (nrow,nrm,a,ja,ia,diag)
       ierr = 0
       do 1 j=1, nrow
          if (diag(j) .eq. 0.0) then
@@ -704,13 +704,13 @@ c-----------------------------------------------------------------
             diag(j) = 1.0d0/diag(j)
          endif
  1    continue
-      call amudia (nrow,job,a,ja,ia,diag,b,jb,ib)
+      call itsol_amudia (nrow,job,a,ja,ia,diag,b,jb,ib)
       return
 c--------end-of-coscal-------------------------------------------------- 
 c-----------------------------------------------------------------------
       end
 c-----------------------------------------------------------------------
-      subroutine diamua (nrow,job, a, ja, ia, diag, b, jb, ib)
+      subroutine itsol_diamua (nrow,job, a, ja, ia, diag, b, jb, ib)
       real*8 a(*), b(*), diag(nrow), scal
       integer ja(*),jb(*), ia(nrow+1),ib(nrow+1) 
 c-----------------------------------------------------------------------
@@ -767,7 +767,7 @@ c----------end-of-diamua------------------------------------------------
 c-----------------------------------------------------------------------
       end 
 c----------------------------------------------------------------------- 
-      subroutine amudia (nrow,job, a, ja, ia, diag, b, jb, ib)
+      subroutine itsol_amudia (nrow,job, a, ja, ia, diag, b, jb, ib)
       real*8 a(*), b(*), diag(nrow) 
       integer ja(*),jb(*), ia(nrow+1),ib(nrow+1) 
 c-----------------------------------------------------------------------
@@ -823,7 +823,7 @@ c-----------end-of-amudiag----------------------------------------------
       end 
 c----------------------------------------------------------------------- 
 
-      subroutine csrcoo (nrow,job,nzmax,a,ja,ia,nnz,ao,ir,jc,ierr)
+      subroutine itsol_csrcoo (nrow,job,nzmax,a,ja,ia,nnz,ao,ir,jc,ierr)
 c-----------------------------------------------------------------------
       real*8 a(*),ao(*) 
       integer ir(*),jc(*),ja(*),ia(nrow+1) 

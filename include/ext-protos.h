@@ -53,16 +53,19 @@ extern "C" {
   FC_FUNC(dgetri,DGETRI)(&(n), (a), &(lda), (ipvt), (work), &(lwork), (info))
 
 /* FORTRAN routines */
-void FC_FUNC(readmtc,READMTC)(int*,  int*,  int*,  char*,  double*,  int*,
+void FC_FUNC(itsol_readmtc,ITSOL_READMTC)(int*,  int*,  int*,  char*,  double*,  int*,
         int*,  double*, int*,  char*,  int*,  int*,  int*,
         char*,  char*, char*,  int*) ;
-void FC_FUNC(csrcsc,CSRCSC)(int*, int*, int*, double*, int*, int*, double*,
+
+void FC_FUNC(itsol_csrcsc,ITSOL_CSRCSC)(int*, int*, int*, double*, int*, int*, double*,
         int*, int*) ; 
-void FC_FUNC(qsplit,QSPLIT)(double *a, int *ind, int *n, int *ncut);	
+
+void FC_FUNC(itsol_qsplit,ITSOL_QSPLIT)(double *a, int *ind, int *n, int *ncut);	
+
 void FC_FUNC(dgesvd,DGESVD)(char*, char*, int*, int*, double*, int*, double*,
-        double *, int*, double*, int*, double*, int*,
-        int*); 
-void FC_FUNC(csrcoo,CSRCOO)(int *, int *, int *, double *, int *, int *, int *,
+        double *, int*, double*, int*, double*, int*, int*); 
+
+void FC_FUNC(itsol_csrcoo,ITSOL_CSRCOO)(int *, int *, int *, double *, int *, int *, int *,
         double *, int *, int *, int *);    
 
 double FC_FUNC(ddot,DDOT)(int *n, double *x, int *incx, double *y, int *incy);  
@@ -78,8 +81,8 @@ void FC_FUNC(dgemm,DGEMM)(char *transa, char *transb, int *l, int *m, int *n, do
 void FC_FUNC(dgetrf,DGETRF)(int *m, int *n, double *a, int *lda, int *ipvt, int *info); 
 void FC_FUNC(dgetri,DGETRI)(int *n, double *a, int *lda, int *ipvt, double *work, int *lwork, int *info);
 
-void FC_FUNC(gauss,GAUSS)(int *, double *, int *);
-void FC_FUNC(bxinv,BXINV)(int *, int *, double *, double *, double *);
+void FC_FUNC(itsol_gauss,ITSOL_GAUSS)(int *, double *, int *);
+void FC_FUNC(itsol_bxinv,ITSOL_BXINV)(int *, int *, double *, double *, double *);
 
 #endif 
 
