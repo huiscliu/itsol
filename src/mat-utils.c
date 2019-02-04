@@ -198,7 +198,7 @@ int itsol_diag_scal(ITS_VBSPtr vbmat)
             col = ja[j];
             sz = ITS_B_DIM(bsz, col);
             DGEMM("n", "n", dim, sz, dim, one, D[i], dim, ba[j], dim, zero, buf, dim);
-            itsol_copyITS_BData(dim, sz, ba[j], buf, 0);
+            itsol_copyBData(dim, sz, ba[j], buf, 0);
         }
     }
 

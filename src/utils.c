@@ -468,7 +468,7 @@ void itsol_zrmC(int m, int n, ITS_BData data)
         data[i] = 0;
 }
 
-void itsol_copyITS_BData(int m, int n, ITS_BData dst, ITS_BData src, int isig)
+void itsol_copyBData(int m, int n, ITS_BData dst, ITS_BData src, int isig)
 {
     int mm = m * n, i;
     if (isig == 0)

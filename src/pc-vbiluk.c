@@ -90,13 +90,13 @@ int itsol_pc_vbilukC(int lofM, ITS_VBSPtr vbmat, ITS_VBILUPtr lu, FILE * fp)
             sz = ITS_B_DIM(bsz, col);       /* number of columns of current block */
             jpos = jw[col];
             if (col < i) {
-                itsol_copyITS_BData(dim, sz, L->ba[i][jpos], vbmat->ba[i][j], 0);
+                itsol_copyBData(dim, sz, L->ba[i][jpos], vbmat->ba[i][j], 0);
             }
             else if (col == i) {
-                itsol_copyITS_BData(dim, sz, lu->D[i], vbmat->ba[i][j], 0);
+                itsol_copyBData(dim, sz, lu->D[i], vbmat->ba[i][j], 0);
             }
             else {
-                itsol_copyITS_BData(dim, sz, U->ba[i][jpos], vbmat->ba[i][j], 0);
+                itsol_copyBData(dim, sz, U->ba[i][jpos], vbmat->ba[i][j], 0);
             }
         }
 
@@ -107,7 +107,7 @@ int itsol_pc_vbilukC(int lofM, ITS_VBSPtr vbmat, ITS_VBILUPtr lu, FILE * fp)
             nn = ITS_B_DIM(bsz, jrow);      /* number of cols of current block */
             /* get the multiplier for row to be eliminated (jrow) */
             dgemm("n", "n", &mm, &nn, &nn, &alpha1, L->ba[i][j], &mm, lu->D[jrow], &nn, &beta1, lu->bf, &mm);
-            itsol_copyITS_BData(mm, nn, L->ba[i][j], lu->bf, 0);
+            itsol_copyBData(mm, nn, L->ba[i][j], lu->bf, 0);
 
             /* combine current row and row jrow */
             for (k = 0; k < U->nzcount[jrow]; k++) {

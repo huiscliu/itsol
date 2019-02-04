@@ -30,7 +30,7 @@ int itsol_cleanP4(ITS_P4Ptr amat);
 int itsol_mallocVBRow(ITS_VBILUPtr lu, int nrow); 
 int itsol_mallocRow(ITS_ILUPtr lu, int nrow);
 void itsol_zrmC(int m, int n, ITS_BData data); 
-void itsol_copyITS_BData(int m, int n, ITS_BData dst, ITS_BData src, int isig); 
+void itsol_copyBData(int m, int n, ITS_BData dst, ITS_BData src, int isig); 
 int itsol_CSRcs(int n, double *a, int *ja, int *ia, ITS_CsPtr mat, int rsa); 
 int itsol_csrvbsrC(int job, int nBlk, int *nB, ITS_CsPtr csmat, ITS_VBSPtr vbmat);  
 int itsol_col2vbcol(int col, ITS_VBSPtr vbmat);

@@ -124,17 +124,17 @@ int itsol_pc_vbilutC(ITS_VBSPtr vbmat, ITS_VBILUPtr lu, int lfil, double tol, IT
             if (col < i) {
                 jbuf[lenl] = col;
                 iw[col] = lenl;
-                itsol_copyITS_BData(dim, sz, w[lenl], ba[j], 0);
+                itsol_copyBData(dim, sz, w[lenl], ba[j], 0);
                 lenl++;
             }
             else if (col == i) {
-                itsol_copyITS_BData(dim, dim, w[i], ba[j], 0);
+                itsol_copyBData(dim, dim, w[i], ba[j], 0);
             }
             else {
                 jpos = i + lenu;
                 jbuf[jpos] = col;
                 iw[col] = jpos;
-                itsol_copyITS_BData(dim, sz, w[jpos], ba[j], 0);
+                itsol_copyBData(dim, sz, w[jpos], ba[j], 0);
                 lenu++;
             }
         }
@@ -164,9 +164,9 @@ int itsol_pc_vbilutC(ITS_VBSPtr vbmat, ITS_VBILUPtr lu, int lfil, double tol, IT
                 iw[jrow] = j;
                 iw[col] = jpos;
                 sz = ITS_B_DIM(bsz, col);
-                itsol_copyITS_BData(dim, sz, buf_ns, w[j], 0);
-                itsol_copyITS_BData(dim, szjrow, w[j], w[jpos], 0);
-                itsol_copyITS_BData(dim, sz, w[jpos], buf_ns, 0);
+                itsol_copyBData(dim, sz, buf_ns, w[j], 0);
+                itsol_copyBData(dim, szjrow, w[j], w[jpos], 0);
+                itsol_copyBData(dim, sz, w[jpos], buf_ns, 0);
             }
             /* get the multiplier for row to be eliminated (jrow). */
             /* fact = w(jj)*alu(jrow)                              */
@@ -200,7 +200,7 @@ int itsol_pc_vbilutC(ITS_VBSPtr vbmat, ITS_VBILUPtr lu, int lfil, double tol, IT
                         upos = i + lenu;
                         jbuf[upos] = col;
                         iw[col] = upos;
-                        itsol_copyITS_BData(dim, sz, w[upos], buf_ns, 0);
+                        itsol_copyBData(dim, sz, w[upos], buf_ns, 0);
                         lenu++;
                     }
                     else {
@@ -216,7 +216,7 @@ int itsol_pc_vbilutC(ITS_VBSPtr vbmat, ITS_VBILUPtr lu, int lfil, double tol, IT
                         /* this is a fill-in element */
                         jbuf[lenl] = col;
                         iw[col] = lenl;
-                        itsol_copyITS_BData(dim, sz, w[lenl], buf_ns, 0);
+                        itsol_copyBData(dim, sz, w[lenl], buf_ns, 0);
                         lenl++;
                     }
                     else {
@@ -226,7 +226,7 @@ int itsol_pc_vbilutC(ITS_VBSPtr vbmat, ITS_VBILUPtr lu, int lfil, double tol, IT
                     }
                 }
                 }
-                itsol_copyITS_BData(dim, szjrow, w[len], buf_fact, 1);
+                itsol_copyBData(dim, szjrow, w[len], buf_fact, 1);
                 jbuf[len] = jrow;
                 len++;
             }
@@ -252,7 +252,7 @@ int itsol_pc_vbilutC(ITS_VBSPtr vbmat, ITS_VBILUPtr lu, int lfil, double tol, IT
                 ja[j] = jbuf[jpos];
                 sz = ITS_B_DIM(bsz, ja[j]);
                 ba[j] = (ITS_BData) itsol_malloc(dim * sz * sizeof(double), "vbilut");
-                itsol_copyITS_BData(dim, sz, ba[j], w[jpos], 0);
+                itsol_copyBData(dim, sz, ba[j], w[jpos], 0);
             }
             for (j = 0; j < lenl; j++)
                 iw[j] = -1;
@@ -280,7 +280,7 @@ int itsol_pc_vbilutC(ITS_VBSPtr vbmat, ITS_VBILUPtr lu, int lfil, double tol, IT
                 ja[j] = jbuf[jpos];
                 sz = ITS_B_DIM(bsz, ja[j]);
                 ba[j] = (ITS_BData) itsol_malloc(dim * sz * sizeof(double), "vbilut");
-                itsol_copyITS_BData(dim, sz, ba[j], w[jpos], 0);
+                itsol_copyBData(dim, sz, ba[j], w[jpos], 0);
                 t = max(t, wn[j]);
             }
             for (j = 0; j < lenu - 1; j++)
@@ -291,7 +291,7 @@ int itsol_pc_vbilutC(ITS_VBSPtr vbmat, ITS_VBILUPtr lu, int lfil, double tol, IT
 
             /* store inverse of diagonal element of u */
             D[i] = (ITS_BData) itsol_malloc(dim * dim * sizeof(double), "vbilut");
-            itsol_copyITS_BData(dim, dim, D[i], w[i], 0);
+            itsol_copyBData(dim, dim, D[i], w[i], 0);
 
             gauss(&dim, D[i], &ierr);
 
