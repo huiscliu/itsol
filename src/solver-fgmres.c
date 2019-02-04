@@ -109,7 +109,7 @@ int itsol_solver_fgmres(ITS_SMatptr Amat, ITS_SPreptr lu, double *rhs, double *s
               +------------------------------------------------------------*/
             ptih = i * im1;
             for (j = 0; j <= i; j++) {
-                t = DDOT(n, &vv[j * n], one, &vv[pti1], one);
+                t = itsol_ddot(n, &vv[j * n], one, &vv[pti1], one);
                 hh[ptih + j] = t;
                 negt = -t;
                 DAXPY(n, negt, &vv[j * n], one, &vv[pti1], one);

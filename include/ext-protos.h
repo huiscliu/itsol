@@ -85,9 +85,7 @@ void csrcoo(int *, int *, int *, double *, int *, int *, int *,
 		double *, int *, int *, int *);    
 
 #if defined(_IBM)
-#define DDOT(n,x,incx,y,incy)        ddot((n), (x), (incx), (y), (incy)) 
-#define DCOPY(n,x,incx,y,incy)       dcopy((n), (x), (incx), (y), \
-					   (incy)) 
+#define itsol_ddot(n,x,incx,y,incy)        ddot((n), (x), (incx), (y), (incy)) 
 #define DSCAL(n,alpha,x,incx)        dscal((n), (alpha), (x), (incx)) 
 #define DAXPY(n,alpha,x,incx,y,incy) daxpy((n), (alpha), (x), (incx), (y), (incy)) 
 #define DNRM2(n,x,incx)              dnrm2((n), (x), (incx))
@@ -107,8 +105,7 @@ void csrcoo(int *, int *, int *, double *, int *, int *, int *,
 #define DGETRI(n, a, lda, ipvt, work, lwork, info)		\
   dgetri((n), (a), (lda), (ipvt), (work), (lwork), (info))
 #else
-#define DDOT(n,x,incx,y,incy)        ddot(&(n),(x),&(incx),(y),&(incy))
-#define DCOPY(n,x,incx,y,incy)       dcopy(&(n),(x),&(incx),(y),&(incy))
+#define itsol_ddot(n,x,incx,y,incy)        ddot(&(n),(x),&(incx),(y),&(incy))
 #define DSCAL(n,alpha,x,incx)        dscal(&(n),&(alpha),(x), &(incx))
 #define DAXPY(n,alpha,x,incx,y,incy) daxpy(&(n), &(alpha), (x), &(incx), y, &(incy))
 #define DNRM2(n, x, incx)            dnrm2(&(n), (x), &(incx))
@@ -125,7 +122,6 @@ void csrcoo(int *, int *, int *, double *, int *, int *, int *,
   dgetri(&(n), (a), &(lda), (ipvt), (work), &(lwork), (info))
 
 double ddot(int *n, double *x, int *incx, double *y, int *incy);  
-void   dcopy(int *n, double *x, int *incx, double *y, int *incy); 
 void   dscal(int *n, double *alpha, double *x, int *incx);
 void   daxpy(int *n, double *alpha, double *x, int *incx, double *y, int *incy);
 double dnrm2(int *n, double *x, int *incx);
