@@ -54,7 +54,7 @@ typedef struct VBSpaFmt
     BData **ba;   /* pointer-to-pointer to store nonzero blocks */
     BData *D;     /* to store inversion of diagonals            */
 
-} VBSparMat, *vbsptr;
+} VBSparMat, *ITS_VbsPtr;
 
 typedef struct VBILUfac
 {
@@ -63,8 +63,8 @@ typedef struct VBILUfac
 
     /* diagonal block                             */
     BData *D;     /* diagonal blocks                            */
-    vbsptr L;     /* L part blocks                              */
-    vbsptr U;     /* U part blocks                              */
+    ITS_VbsPtr L;     /* L part blocks                              */
+    ITS_VbsPtr U;     /* U part blocks                              */
     int *work;    /* working buffer                             */
     BData bf;     /* buffer of a temp block                     */
     int DiagOpt;  /* Option for diagonal inversion/solutiob     *
@@ -199,7 +199,7 @@ typedef struct _SMat
     int Mtype;           /*--  type 1 = CSR, 2 = VBCSR, 3 = LDU    */
     ITS_CsPtr CS;        /* place holder for a CSR/CSC type matrix */
     iluptr LDU;          /* struct for an LDU type matrix          */
-    vbsptr VBCSR;        /* place holder for a block matrix        */
+    ITS_VbsPtr VBCSR;        /* place holder for a block matrix        */
     void (*matvec)(struct _SMat*, double *, double *);
 
 } SMat, *SMatptr;

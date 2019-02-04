@@ -64,7 +64,7 @@ extern "C" {
  * will give the usual threshold strategy (however, fill-in is then
  * impredictible).
  *--------------------------------------------------------------------------*/
-int itsol_pc_vbilutC(vbsptr vbmat, vbiluptr lu, int lfil, double tol, BData *w, FILE *fp);
+int itsol_pc_vbilutC(ITS_VbsPtr vbmat, vbiluptr lu, int lfil, double tol, BData *w, FILE *fp);
 
 #ifdef __cplusplus
 }
