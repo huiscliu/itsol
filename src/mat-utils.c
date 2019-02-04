@@ -1064,17 +1064,17 @@ void itsol_matvecC(ITS_CsPtr mat, double *x, double *y)
     }
 }
 
-void itsol_matvecCSR(SMatptr mat, double *x, double *y)
+void itsol_matvecCSR(ITS_SMatptr mat, double *x, double *y)
 {
     itsol_matvec(mat->CS, x, y);
 }
 
-void itsol_matvecCSC(SMatptr mat, double *x, double *y)
+void itsol_matvecCSC(ITS_SMatptr mat, double *x, double *y)
 {
     itsol_matvecC(mat->CS, x, y);
 }
 
-void itsol_matvecVBR(SMatptr mat, double *x, double *y)
+void itsol_matvecVBR(ITS_SMatptr mat, double *x, double *y)
 {
     itsol_vbmatvec(mat->VBCSR, x, y);
 }

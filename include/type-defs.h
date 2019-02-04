@@ -194,16 +194,16 @@ typedef struct __CompressType
 } CompressType;
 
 /*-------------------- 3 types of matrices so far */
-typedef struct _SMat
+typedef struct ITS_SMat
 {
     int n; 
     int Mtype;           /*--  type 1 = CSR, 2 = VBCSR, 3 = LDU    */
     ITS_CsPtr CS;        /* place holder for a CSR/CSC type matrix */
     ITS_ILUPtr LDU;          /* struct for an LDU type matrix          */
     ITS_VBSPtr VBCSR;        /* place holder for a block matrix        */
-    void (*matvec)(struct _SMat*, double *, double *);
+    void (*matvec)(struct ITS_SMat*, double *, double *);
 
-} SMat, *SMatptr;
+} ITS_SMat, *ITS_SMatptr;
 
 /*-------------------- 3 types of matrices so far */
 typedef struct _SPre

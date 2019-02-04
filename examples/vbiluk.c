@@ -21,7 +21,7 @@ int main(void)
     ITS_CsPtr csmat = NULL;         /* matrix in csr formt             */
     ITS_VBSPtr vbmat = NULL;
     ITS_VBILUPtr lu = NULL;         /* vbilu preconditioner structure  */
-    SMatptr MAT;                /* Matrix structure for matvecs    */
+    ITS_SMatptr MAT;                /* Matrix structure for matvecs    */
     SPreptr PRE;                /* general precond structure       */
     double *sol = NULL, *x = NULL, *prhs = NULL, *rhs = NULL;
     /*-------------------- temp COO/HB arrays - fortran style */
@@ -36,7 +36,7 @@ int main(void)
     double terr;
     char line[ITS_MAX_LINE];
 
-    MAT = (SMatptr) itsol_malloc(sizeof(SMat), "main:MAT");
+    MAT = (ITS_SMatptr) itsol_malloc(sizeof(ITS_SMat), "main:MAT");
     PRE = (SPreptr) itsol_malloc(sizeof(SPre), "main:PRE");
 
     /*------------------ read and set parameters and other inputs  */
