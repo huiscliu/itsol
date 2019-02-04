@@ -99,9 +99,9 @@ void csrcoo(int *, int *, int *, double *, int *, int *, int *,
   dgemm((transa),(transb),						\
 	(l),(n),(m),(alpha),(a),					\
 	(lda),(b),(ldb),(beta),(c),(ldc))
-#define DGETRF(m, n, a, lda, ipvt, info)  \
+#define itsol_dgetrf(m, n, a, lda, ipvt, info)  \
   dgetrf((m), (n), (a), (lda), (ipvt), (info))
-#define DGETRI(n, a, lda, ipvt, work, lwork, info)		\
+#define itsol_dgetri(n, a, lda, ipvt, work, lwork, info)		\
   dgetri((n), (a), (lda), (ipvt), (work), (lwork), (info))
 #else
 #define itsol_ddot(n,x,incx,y,incy)        ddot(&(n),(x),&(incx),(y),&(incy))
@@ -114,16 +114,15 @@ void csrcoo(int *, int *, int *, double *, int *, int *, int *,
 #define itsol_dgemm(transa,transb,l,n,m,alpha,a,lda,b,ldb,beta,c,ldc)	\
   dgemm((transa), (transb), &(l), &(n), &(m), &(alpha), (a),	\
 	 &(lda), b, &(ldb), &(beta), (c), &(ldc)) 
-#define DGETRF(m, n, a, lda, ipvt, info)		\
+#define itsol_dgetrf(m, n, a, lda, ipvt, info)		\
   dgetrf(&(m), &(n), (a), &(lda), (ipvt), (info))
-#define DGETRI(n, a, lda, ipvt, work, lwork, info)			\
+#define itsol_dgetri(n, a, lda, ipvt, work, lwork, info)			\
   dgetri(&(n), (a), &(lda), (ipvt), (work), &(lwork), (info))
 
 double ddot(int *n, double *x, int *incx, double *y, int *incy);  
 void   dscal(int *n, double *alpha, double *x, int *incx);
 void   daxpy(int *n, double *alpha, double *x, int *incx, double *y, int *incy);
 double dnrm2(int *n, double *x, int *incx);
-void   idmin(int *n, double *sx, int *incx);
 void   dgemv(char *transa, int *m, int *n, double *alpha, double *a, int *lda, double *x, int *incx,
     double *beta, double *y, int *incy);
 

@@ -61,11 +61,11 @@ int itsol_invGauss(int nn, double *A)
     if (Wk == NULL || ipiv == NULL)
         return -1;
     /*-------------------- get LU factorization with pivoting         */
-    DGETRF(nn, nn, A, nn, ipiv, &info);
+    itsol_dgetrf(nn, nn, A, nn, ipiv, &info);
     if (info != 0)
         return info;
     /*-------------------- compute inverse                            */
-    DGETRI(nn, A, nn, ipiv, Wk, lWk, &info);
+    itsol_dgetri(nn, A, nn, ipiv, Wk, lWk, &info);
 
     free(Wk);
     free(ipiv);
