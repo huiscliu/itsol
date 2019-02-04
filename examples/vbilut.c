@@ -18,7 +18,7 @@ int main(void)
     FILE *fits = NULL;
     /*-------------------- main structs and wraper structs.   */
     ITS_CsPtr csmat = NULL;         /* matrix in csr formt             */
-    ITS_VbsPtr vbmat = NULL;
+    ITS_VBSPtr vbmat = NULL;
     ITS_VBILUPtr lu = NULL;         /* vbilu preconditioner structure  */
     SMatptr MAT;                /* Matrix structure for matvecs    */
     SPreptr PRE;                /* general precond structure       */
@@ -183,7 +183,7 @@ int main(void)
         for (i = 0; i < n; i++) prhs[perm[i]] = rhs[i];
 
         /*-------------------- convert to block matrix. */
-        vbmat = (ITS_VbsPtr) itsol_malloc(sizeof(ITS_VBSparMat), "main");
+        vbmat = (ITS_VBSPtr) itsol_malloc(sizeof(ITS_VBSparMat), "main");
         ierr = itsol_csrvbsrC(1, nBlock, nB, csmat, vbmat);
 
         if (ierr != 0) {

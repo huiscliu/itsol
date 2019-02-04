@@ -229,7 +229,7 @@ int itsol_cleanILU(ITS_ILUPtr lu)
   |             0   --> successful return.
   |            -1   --> memory allocation error.
   |--------------------------------------------------------------------*/
-int itsol_setupVBMat(ITS_VbsPtr vbmat, int n, int *nB)
+int itsol_setupVBMat(ITS_VBSPtr vbmat, int n, int *nB)
 {
     int i;
     vbmat->n = n;
@@ -256,7 +256,7 @@ int itsol_setupVBMat(ITS_VbsPtr vbmat, int n, int *nB)
   |==========
   | ( vbmat )  =  Pointer to a VBSpaFmt struct.
   |--------------------------------------------------------------------*/
-int itsol_cleanVBMat(ITS_VbsPtr vbmat)
+int itsol_cleanVBMat(ITS_VBSPtr vbmat)
 {
     int i, j;
     if (vbmat == NULL)
@@ -289,7 +289,7 @@ int itsol_cleanVBMat(ITS_VbsPtr vbmat)
     return 0;
 }
 
-int itsol_nnzVBMat(ITS_VbsPtr vbmat)
+int itsol_nnzVBMat(ITS_VBSPtr vbmat)
 {
     int nnz = 0, i, n = vbmat->n;
     for (i = 0; i < n; i++) {
@@ -298,7 +298,7 @@ int itsol_nnzVBMat(ITS_VbsPtr vbmat)
     return nnz;
 }
 
-int itsol_memVBMat(ITS_VbsPtr vbmat)
+int itsol_memVBMat(ITS_VBSPtr vbmat)
 {
     int mem = 0, nnz, i, j, n = vbmat->n, *bsz = vbmat->bsz, dm;
     for (i = 0; i < n; i++) {
@@ -347,10 +347,10 @@ int itsol_setupVBILU(ITS_VBILUPtr lu, int n, int *bsz)
     for (i = 0; i <= n; i++) lu->bsz[i] = bsz[i];
 
     lu->D = (ITS_BData *) itsol_malloc(sizeof(ITS_BData) * n, "setupVBILU");
-    lu->L = (ITS_VbsPtr) itsol_malloc(sizeof(ITS_VBSparMat), "setupVBILU");
+    lu->L = (ITS_VBSPtr) itsol_malloc(sizeof(ITS_VBSparMat), "setupVBILU");
     itsol_setupVBMat(lu->L, n, NULL);
 
-    lu->U = (ITS_VbsPtr) itsol_malloc(sizeof(ITS_VBSparMat), "setupVBILU");
+    lu->U = (ITS_VBSPtr) itsol_malloc(sizeof(ITS_VBSparMat), "setupVBILU");
     itsol_setupVBMat(lu->U, n, NULL);
 
     lu->work = (int *)itsol_malloc(sizeof(int) * n, "setupVBILU");
@@ -1035,7 +1035,7 @@ void itsol_coocsc(int n, int nnz, double *val, int *col, int *row, double **a, i
  *             -1  -- error occur
  *
  *---------------------------------------------------------------------*/
-int itsol_csrvbsrC(int job, int nBlk, int *nB, ITS_CsPtr csmat, ITS_VbsPtr vbmat)
+int itsol_csrvbsrC(int job, int nBlk, int *nB, ITS_CsPtr csmat, ITS_VBSPtr vbmat)
 {
     int n, i, j, k;
     int nnz, szofBlock, ipos, b_row, b_col, br, bc;
@@ -1111,7 +1111,7 @@ NEXT_ROW:
  * get the column ID of block matrix by giving the column ID of the original
  * matrix
  *--------------------------------------------------------------------*/
-int itsol_col2vbcol(int col, ITS_VbsPtr vbmat)
+int itsol_col2vbcol(int col, ITS_VBSPtr vbmat)
 {
     int *bsz = vbmat->bsz, n = vbmat->n;
     int begin = 0, mid, end = n - 1;

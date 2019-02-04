@@ -58,7 +58,7 @@ void bxinv(int *, int *, double *, double *, double *);
  * will give the usual threshold strategy (however, fill-in is then
  * impredictible).
  *--------------------------------------------------------------------------*/
-int itsol_pc_vbilutC(ITS_VbsPtr vbmat, ITS_VBILUPtr lu, int lfil, double tol, ITS_BData * w, FILE * fp)
+int itsol_pc_vbilutC(ITS_VBSPtr vbmat, ITS_VBILUPtr lu, int lfil, double tol, ITS_BData * w, FILE * fp)
 {
     int n = vbmat->n, *bsz = vbmat->bsz, ierr;
     double one = 1.0, zero = 0.0;
@@ -66,7 +66,7 @@ int itsol_pc_vbilutC(ITS_VbsPtr vbmat, ITS_VBILUPtr lu, int lfil, double tol, IT
     int max_blk_sz = ITS_MAX_BLOCK_SIZE * ITS_MAX_BLOCK_SIZE * sizeof(double);
     int nzcount, *ja, *jbuf, *iw, i, j, k, kk;
     double t, tnorm, tolnorm, *xnrm, *wn;
-    ITS_VbsPtr L, U;
+    ITS_VBSPtr L, U;
     ITS_BData *ba, *D, buf_fact, buf_ns;
 
     if (lfil < 0) {
