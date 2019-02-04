@@ -82,7 +82,7 @@ typedef struct ILUfac
     int *work;    /* working buffer */
 } ILUSpar, LDUmat, *ITS_IluPtr;
 
-typedef struct PerMat4 *p4ptr;
+typedef struct PerMat4 *ITS_P4Ptr;
 
 /*------------------------------------------------------------
   | struct for storing the block LU factorization 
@@ -124,8 +124,8 @@ typedef struct PerMat4
     double *wk;       /* work array              */
 
     /* pointer to next and previous struct         */
-    p4ptr prev; 
-    p4ptr next;
+    ITS_P4Ptr prev; 
+    ITS_P4Ptr next;
 
 } Per4Mat; 
 
@@ -181,7 +181,7 @@ typedef struct arms_st
     int n;                   /* dimension of matrix */
     int nlev;                /* number of levels    */
     ilutptr ilus;            /* ILU for last level  */
-    p4ptr levmat;            /* level structure     */
+    ITS_P4Ptr levmat;        /* level structure     */
 
 } armsMat;
 

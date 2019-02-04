@@ -351,7 +351,7 @@ void itsol_Usol(ITS_CsPtr mata, double *b, double *x)
   |     |            |  |     |    |    |
   | x used and not touched -- or can be the same as wk.
   |--------------------------------------------------------------------*/
-int itsol_descend(p4ptr levmat, double *x, double *wk)
+int itsol_descend(ITS_P4Ptr levmat, double *x, double *wk)
 {
     /*  local variables   */
     int j, len = levmat->n, lenB = levmat->nB, *iperm = levmat->rperm;
@@ -379,7 +379,7 @@ int itsol_descend(p4ptr levmat, double *x, double *wk)
   |
   |    with x2 = S^{-1} wk2 [assumed to have been computed ] 
   |--------------------------------------------------------------------*/
-int itsol_ascend(p4ptr levmat, double *x, double *wk)
+int itsol_ascend(ITS_P4Ptr levmat, double *x, double *wk)
 {
     int j, len = levmat->n, lenB = levmat->nB, *qperm = levmat->perm;
     double *work = levmat->wk;
@@ -440,10 +440,10 @@ void itsol_matvecz(ITS_CsPtr mata, double *x, double *y, double *z)
    |  
    |  Note : in-place operation -- b and x can occupy the same space..
    | --------------------------------------------------------------------*/
-p4ptr itsol_Lvsol2(double *x, int nlev, p4ptr levmat, ilutptr ilusch)
+ITS_P4Ptr itsol_Lvsol2(double *x, int nlev, ITS_P4Ptr levmat, ilutptr ilusch)
 {
     int nloc = levmat->n, first, lenB;
-    p4ptr last = levmat;
+    ITS_P4Ptr last = levmat;
 
     /*-------------------- take care of  special cases :  nlev==0 --> lusol  */
     if (nlev == 0) {
@@ -481,7 +481,7 @@ p4ptr itsol_Lvsol2(double *x, int nlev, p4ptr levmat, ilutptr ilusch)
    |  
    |  Note : in-place operation -- b and x  can occupy the same space..
    | --------------------------------------------------------------------*/
-int itsol_Uvsol2(double *x, int nlev, int n, p4ptr levmat, ilutptr ilusch)
+int itsol_Uvsol2(double *x, int nlev, int n, ITS_P4Ptr levmat, ilutptr ilusch)
 {
     int nloc, lenB, first;
     if (nlev == 0) {
@@ -522,11 +522,11 @@ int itsol_Uvsol2(double *x, int nlev, int n, p4ptr levmat, ilutptr ilusch)
    | --------------------------------------------------------------------*/
 int itsol_armsol2(double *x, arms Prec)
 {
-    p4ptr levmat = Prec->levmat;
+    ITS_P4Ptr levmat = Prec->levmat;
     ilutptr ilusch = Prec->ilus;
     int nlev = Prec->nlev;
     int n = levmat->n;
-    p4ptr last;
+    ITS_P4Ptr last;
 
     if (nlev == 0) {
         n = ilusch->n;

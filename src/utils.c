@@ -507,7 +507,7 @@ void itsol_copyBData(int m, int n, BData dst, BData src, int isig)
   |             0   --> successful return.
   |             1   --> memory allocation error.
   |--------------------------------------------------------------------*/
-int itsol_setupP4(p4ptr amat, int Bn, int Cn, ITS_CsPtr F, ITS_CsPtr E)
+int itsol_setupP4(ITS_P4Ptr amat, int Bn, int Cn, ITS_CsPtr F, ITS_CsPtr E)
 {
     int n;
     /* size n */
@@ -542,7 +542,7 @@ int itsol_setupP4(p4ptr amat, int Bn, int Cn, ITS_CsPtr F, ITS_CsPtr E)
   |==========
   | ( amat )  =  Pointer to a Per4Mat struct.
   |--------------------------------------------------------------------*/
-int itsol_cleanP4(p4ptr amat)
+int itsol_cleanP4(ITS_P4Ptr amat)
 {
     if (amat == NULL) return 0;
     if (amat->n < 1) return 0;
@@ -662,7 +662,7 @@ int itsol_cleanILUT(ilutptr amat, int indic)
 void itsol_setup_arms(arms Levmat)
 {
     Levmat->ilus = (ilutptr) itsol_malloc(sizeof(IluSpar), "setup_arms:ilus");
-    Levmat->levmat = (p4ptr) itsol_malloc(sizeof(Per4Mat), "setup_arms:levmat");
+    Levmat->levmat = (ITS_P4Ptr) itsol_malloc(sizeof(Per4Mat), "setup_arms:levmat");
 }
 
 /*----------------------------------------------------------------------
@@ -675,12 +675,12 @@ void itsol_setup_arms(arms Levmat)
   |--------------------------------------------------------------------*/
 int itsol_cleanARMS(arms ArmsPre)
 {
-    p4ptr amat = ArmsPre->levmat;
+    ITS_P4Ptr amat = ArmsPre->levmat;
     ilutptr cmat = ArmsPre->ilus;
     /* case when nlev == 0 */
     int indic = (amat->nB != 0);
 
-    p4ptr levc, levn;
+    ITS_P4Ptr levc, levn;
 
     levc = amat;
 
@@ -1165,10 +1165,10 @@ int itsol_nnz_ilu(ITS_IluPtr lu)
     return nnz;
 }
 
-int itsol_nnz_lev4(p4ptr levmat, int *lev, FILE * ft)
+int itsol_nnz_lev4(ITS_P4Ptr levmat, int *lev, FILE * ft)
 {
     int nnzT, nnzL, nnzU, nnzF, nnzE, nnzDown = 0;
-    p4ptr nextmat;
+    ITS_P4Ptr nextmat;
 
     nnzL = itsol_nnz_cs(levmat->L);
     nnzU = itsol_nnz_cs(levmat->U);
@@ -1203,7 +1203,7 @@ int itsol_nnz_cs(ITS_CsPtr A)
   +--------------------------------------------------------*/
 int itsol_nnz_arms(arms PreSt, FILE * ft)
 {
-    p4ptr levmat = PreSt->levmat;
+    ITS_P4Ptr levmat = PreSt->levmat;
     ilutptr ilschu = PreSt->ilus;
     int nlev = PreSt->nlev;
     int ilev = 0, nnz_lev, nnz_sch, nnz_tot;
@@ -2092,7 +2092,7 @@ void itsol_qsort3i(int *wa, int *cor1, int *cor2, int left, int right)
 int itsol_dumpArmsMat(arms PreSt, FILE * ft)
 {
     int lev, nnz, nglob = 0, old = 0;
-    p4ptr levmat = PreSt->levmat;
+    ITS_P4Ptr levmat = PreSt->levmat;
     ilutptr ilus = PreSt->ilus;
     int n = levmat->n;
     int nlev = PreSt->nlev;
