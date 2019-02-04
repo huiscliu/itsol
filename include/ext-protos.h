@@ -71,19 +71,6 @@ extern "C" {
 #define max(a,b) (((a)>(b))?(a):(b))
 #endif
 
-/* FORTRAN routines */
-void readmtc(int*,  int*,  int*,  char*,  double*,  int*,
-	     int*,  double*, int*,  char*,  int*,  int*,  int*,
-	     char*,  char*, char*,  int*) ;
-void csrcsc(int*, int*, int*, double*, int*, int*, double*,
-		    int*, int*) ; 
-void qsplit(double *a, int *ind, int *n, int *ncut);	
-void dgesvd(char*, char*, int*, int*, double*, int*, double*,
-		   double *, int*, double*, int*, double*, int*,
-		   int*); 
-void csrcoo(int *, int *, int *, double *, int *, int *, int *,
-		double *, int *, int *, int *);    
-
 #if defined(_IBM)
 #define itsol_ddot(n,x,incx,y,incy)        ddot((n), (x), (incx), (y), (incy)) 
 #define itsol_dscal(n,alpha,x,incx)        dscal((n), (alpha), (x), (incx)) 
@@ -119,18 +106,31 @@ void csrcoo(int *, int *, int *, double *, int *, int *, int *,
 #define itsol_dgetri(n, a, lda, ipvt, work, lwork, info)			\
   dgetri(&(n), (a), &(lda), (ipvt), (work), &(lwork), (info))
 
-double ddot(int *n, double *x, int *incx, double *y, int *incy);  
-void   dscal(int *n, double *alpha, double *x, int *incx);
-void   daxpy(int *n, double *alpha, double *x, int *incx, double *y, int *incy);
-double dnrm2(int *n, double *x, int *incx);
-void   dgemv(char *transa, int *m, int *n, double *alpha, double *a, int *lda, double *x, int *incx,
-    double *beta, double *y, int *incy);
+/* FORTRAN routines */
+void readmtc(int*,  int*,  int*,  char*,  double*,  int*,
+        int*,  double*, int*,  char*,  int*,  int*,  int*,
+        char*,  char*, char*,  int*) ;
+void csrcsc(int*, int*, int*, double*, int*, int*, double*,
+        int*, int*) ; 
+void qsplit(double *a, int *ind, int *n, int *ncut);	
+void dgesvd(char*, char*, int*, int*, double*, int*, double*,
+        double *, int*, double*, int*, double*, int*,
+        int*); 
+void csrcoo(int *, int *, int *, double *, int *, int *, int *,
+        double *, int *, int *, int *);    
 
-void   dgemm(char *transa, char *transb, int *l, int *m, int *n, double *alpha, double *a, int *lda,
+double ddot(int *n, double *x, int *incx, double *y, int *incy);  
+void dscal(int *n, double *alpha, double *x, int *incx);
+void daxpy(int *n, double *alpha, double *x, int *incx, double *y, int *incy);
+double dnrm2(int *n, double *x, int *incx);
+void dgemv(char *transa, int *m, int *n, double *alpha, double *a, int *lda, double *x, int *incx,
+        double *beta, double *y, int *incy);
+
+void dgemm(char *transa, char *transb, int *l, int *m, int *n, double *alpha, double *a, int *lda,
         double *b, int *ldb, double *beta, double *c, int *ldc);       
 
-void   dgetrf(int *m, int *n, double *a, int *lda, int *ipvt, int *info); 
-void   dgetri(int *n, double *a, int *lda, int *ipvt, double *work, int *lwork, int *info);
+void dgetrf(int *m, int *n, double *a, int *lda, int *ipvt, int *info); 
+void dgetri(int *n, double *a, int *lda, int *ipvt, double *work, int *lwork, int *info);
 #endif 
 
 #ifdef __cplusplus
