@@ -9,8 +9,8 @@
 extern "C" {
 #endif
 
-int itsol_pc_lofC(int lofM, ITS_CsPtr csmat, ITS_IluPtr lu, FILE *fp); 
-int itsol_pc_ilukC(int lofM, ITS_CsPtr csmat, ITS_IluPtr lu, FILE *fp);
+int itsol_pc_lofC(int lofM, ITS_CsPtr csmat, ITS_ILUPtr lu, FILE *fp); 
+int itsol_pc_ilukC(int lofM, ITS_CsPtr csmat, ITS_ILUPtr lu, FILE *fp);
 
 #ifdef __cplusplus
 }

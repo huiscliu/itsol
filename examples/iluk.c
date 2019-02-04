@@ -18,7 +18,7 @@ int main(void)
     ITS_CsPtr csmat = NULL;         /* matrix in csr formt             */
     SMatptr MAT;                /* Matrix structure for matvecs    */
     SPreptr PRE;                /* general precond structure       */
-    ITS_IluPtr lu = NULL;           /* ilu preconditioner structure    */
+    ITS_ILUPtr lu = NULL;           /* ilu preconditioner structure    */
     double *sol = NULL, *x = NULL, *rhs = NULL;
     /*-------------------- temp Harwell Boeing arrays */
     double *AA;
@@ -136,7 +136,7 @@ int main(void)
         /*--------------------------LOOP THROUGH PARAMETERS */
         for (iparam = 1; iparam <= io.nparam; iparam++) {
             fprintf(flog, "iparam = %d\n", iparam);
-            lu = (ITS_IluPtr) itsol_malloc(sizeof(ILUSpar), "main");
+            lu = (ITS_ILUPtr) itsol_malloc(sizeof(ILUSpar), "main");
             fprintf(flog, "begin iluk(%d)\n", lfil);
             tm1 = itsol_get_time();
 

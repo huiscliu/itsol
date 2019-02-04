@@ -50,7 +50,7 @@
  * will give the usual threshold strategy (however, fill-in is then
  * impredictible).
  *--------------------------------------------------------------------------*/
-int itsol_pc_ilut(ITS_CsPtr csmat, ITS_IluPtr lu, int lfil, double tol, FILE * fp)
+int itsol_pc_ilut(ITS_CsPtr csmat, ITS_ILUPtr lu, int lfil, double tol, FILE * fp)
 {
     int n = csmat->n;
     int len, lenu, lenl;
@@ -289,7 +289,7 @@ int itsol_pc_ilut(ITS_CsPtr csmat, ITS_IluPtr lu, int lfil, double tol, FILE * f
  *    x  = solution on return
  *    lu = LU matrix as produced by ilut.
  *--------------------------------------------------------------------*/
-int itsol_pc_lutsolC(double *y, double *x, ITS_IluPtr lu)
+int itsol_pc_lutsolC(double *y, double *x, ITS_ILUPtr lu)
 {
     int n = lu->n, i, j, nzcount, *ja;
     double *D, *ma;

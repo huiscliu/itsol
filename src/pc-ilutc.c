@@ -18,7 +18,7 @@ static ITS_CsPtr U;
 /*---------------------------------------------------------------------
  * update diagonals D_{i+1,...,n}
  *---------------------------------------------------------------------*/
-static int update_diagonals(ITS_IluPtr lu, int i)
+static int update_diagonals(ITS_ILUPtr lu, int i)
 {
     double *diag = lu->D, scale = diag[i];
     /* By using the expansion arrays, only the shorter one of L(k) and U(k)
@@ -248,7 +248,7 @@ static int std_drop(int lfil, int i, double tolL, double tolU, double toldiag)
  * Ulist(n)   Ulist(j) points to a linked list of rows that will update the
  *            j-th column in L part
  *----------------------------------------------------------------------*/
-int itsol_pc_ilutc(ITS_IluPtr mt, ITS_IluPtr lu, int lfil, double tol, int drop, FILE * fp)
+int itsol_pc_ilutc(ITS_ILUPtr mt, ITS_ILUPtr lu, int lfil, double tol, int drop, FILE * fp)
 {
     int n = mt->n, i, j, k;
     int lfst, ufst, row, col, newrow, newcol, iptr;

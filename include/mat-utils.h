@@ -33,7 +33,7 @@ int itsol_invSVD(int nn, double *A);
 
 void itsol_matvecC(ITS_CsPtr mat, double *x, double *y);
 void itsol_matvecCSC(SMatptr mat, double *x, double *y);
-int itsol_CondestC(ITS_IluPtr lu, FILE * fp);
+int itsol_CondestC(ITS_ILUPtr lu, FILE * fp);
 int itsol_diag_scal(ITS_VbsPtr vbmat);
 int itsol_diagvec(ITS_VbsPtr vbmat, ITS_BData x, ITS_BData y);
 void itsol_matvec(ITS_CsPtr mata, double *x, double *y); 
@@ -42,7 +42,7 @@ void itsol_matvecz(ITS_CsPtr mata, double *x, double *y, double *z);
 void itsol_vbmatvec(ITS_VbsPtr vbmat, double *x, double *y);
 void itsol_luinv(int n, double *a, double *x, double *y); 
 int itsol_vblusolC(double *y, double *x, ITS_VBILUPtr lu); 
-int itsol_lusolC(double *y, double *x, ITS_IluPtr lu); 
+int itsol_lusolC(double *y, double *x, ITS_ILUPtr lu); 
 int itsol_rpermC(ITS_CsPtr mat, int *perm); 
 int itsol_cpermC(ITS_CsPtr mat, int *perm) ; 
 int itsol_dpermC(ITS_CsPtr mat, int *perm) ; 
@@ -55,7 +55,7 @@ int itsol_descend(ITS_P4Ptr levmat, double *x, double *wk);
 int itsol_armsol2(double *x, arms Prec);
 int itsol_condestArms(arms armspre, double *y, FILE *fp);
 int itsol_VBcondestC(ITS_VBILUPtr, FILE *fp); 
-int itsol_CondestLUM(ITS_IluPtr lu, double *y, double *x, FILE *fp);
+int itsol_CondestLUM(ITS_ILUPtr lu, double *y, double *x, FILE *fp);
 void itsol_matvecVBR(SMatptr mat, double *x, double *y);
 void itsol_matvecLDU(SMatptr mat, double *x, double *y);
 int itsol_preconILU(double *x, double *y, SPreptr mat);
@@ -66,8 +66,8 @@ ITS_P4Ptr itsol_Lvsol2(double *x, int nlev, ITS_P4Ptr levmat, ITS_IlutPtr ilusch
 int itsol_Uvsol2(double *x, int nlev, int n, ITS_P4Ptr levmat, ITS_IlutPtr ilusch); 
 void itsol_SchLsol(ITS_IlutPtr ilusch, double *y) ;
 void itsol_SchUsol(ITS_IlutPtr ilusch, double *y) ;
-int itsol_lumsolC(double *y, double *x, ITS_IluPtr lu);
-int itsol_condestLU(ITS_IluPtr lu, FILE *fp);
+int itsol_lumsolC(double *y, double *x, ITS_ILUPtr lu);
+int itsol_condestLU(ITS_ILUPtr lu, FILE *fp);
 int itsol_invGauss(int nn, double *A); 
 
 /*----------------------------------------------------------------------------

@@ -23,8 +23,8 @@ int main(void)
     ITS_CsPtr csmat = NULL;         /* matrix in csr formt             */
     SMatptr MAT = NULL;         /* Matrix structure for matvecs    */
     SPreptr PRE = NULL;         /* General precond structure       */
-    ITS_IluPtr lumat = NULL;        /* ilu preconditioner structure    */
-    ITS_IluPtr lu = NULL;           /* a temporary lu matrix           */
+    ITS_ILUPtr lumat = NULL;        /* ilu preconditioner structure    */
+    ITS_ILUPtr lu = NULL;           /* a temporary lu matrix           */
     double *sol = NULL, *x = NULL, *rhs = NULL;
     /*-------------------- method for incrementing lfil is set here */
     int lfil;
@@ -85,7 +85,7 @@ int main(void)
         fprintf(flog, "MATRIX: %s...\n", io.MatNam);
 
         /*-------------------- Read  matrix */
-        lumat = (ITS_IluPtr) itsol_malloc(sizeof(LDUmat), "main:lumat");
+        lumat = (ITS_ILUPtr) itsol_malloc(sizeof(LDUmat), "main:lumat");
         csmat = (ITS_CsPtr) itsol_malloc(sizeof(ITS_SparMat), "main:csmat");
 
         /*-------------------- case: COO formats (0-indexing) */
@@ -153,7 +153,7 @@ int main(void)
         /*-------------------- LOOP through parameters */
         for (iparam = 1; iparam <= io.nparam; iparam++) {
             fprintf(flog, "iparam = %d\n", iparam);
-            lu = (ITS_IluPtr) itsol_malloc(sizeof(ILUSpar), "main");
+            lu = (ITS_ILUPtr) itsol_malloc(sizeof(ILUSpar), "main");
             tm1 = itsol_get_time();
 
             /*-------------------- call ILUC preconditioner set-up  */
