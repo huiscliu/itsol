@@ -24,9 +24,9 @@
 #define ITS_MAX_MAT	        100
 #define ITS_MaxNamLen       64
 #define ITS_HB   1
-#define MM0  2
-#define MM1  3
-#define UNK  4
+#define ITS_MM0  2
+#define ITS_MM1  3
+#define ITS_UNK  4
 
 /*--------------------------------------------- 
   | C-style CSR format - used internally

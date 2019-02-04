@@ -127,10 +127,10 @@ int itsol_get_matrix_info(FILE * fmat, ITS_IOT * pio)
     /*-------------------- matrix format */
     if (strcmp(Fmt, "HB") == 0)
         pio->Fmt = 1;
-    else if (strcmp(Fmt, "MM0") == 0)
-        pio->Fmt = MM0;
-    else if (strcmp(Fmt, "MM1") == 0)
-        pio->Fmt = MM1;
+    else if (strcmp(Fmt, "ITS_MM0") == 0)
+        pio->Fmt = ITS_MM0;
+    else if (strcmp(Fmt, "ITS_MM1") == 0)
+        pio->Fmt = ITS_MM1;
     else
                 /*-------------------- UNKNOWN_FORMAT */
         return (ERR_AUXIL + 2);
@@ -216,13 +216,13 @@ int itsol_read_coo(double **VAL, int **COL, int **ROW, ITS_IOT * pio, double **r
         aa[k] = atof(str);
     }
     /*------- adjust for cases when indices start at one */
-    if (pio->Fmt == MM1 && job == 0) {
+    if (pio->Fmt == ITS_MM1 && job == 0) {
         for (k = 0; k < nnz; k++) {
             ii[k]--;
             jj[k]--;
         }
     }
-    if (pio->Fmt == MM0 && job == 1) {
+    if (pio->Fmt == ITS_MM0 && job == 1) {
         for (k = 0; k < nnz; k++) {
             ii[k]++;
             jj[k]++;
