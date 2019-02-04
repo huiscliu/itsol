@@ -146,7 +146,7 @@ int itsol_pc_arms2(ITS_CsPtr Amat, int *ipar, double *droptol, int *lfil, double
     /*-------------------- move above to itsol.h */
     ITS_P4Ptr levp, levc, levn, levmat = PreMat->levmat;
     ITS_CsPtr schur, B, F, E, C = NULL;
-    ITS_IlutPtr ilsch = PreMat->ilus;
+    ITS_ILUTPtr ilsch = PreMat->ilus;
     /*-------------------- local variables  (initialized)   */
     double *dd1, *dd2;
     int nlev = ipar[0], bsize = ipar[2], iout = ipar[3], ierr = 0;

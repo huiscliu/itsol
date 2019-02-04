@@ -610,7 +610,7 @@ int itsol_cleanP4(ITS_P4Ptr amat)
   |             0   --> successful return.
   |             1   --> memory allocation error.
   |--------------------------------------------------------------------*/
-int itsol_setupILUT(ITS_IlutPtr amat, int len)
+int itsol_setupILUT(ITS_ILUTPtr amat, int len)
 {
     amat->n = len;
     amat->wk = (double *)itsol_malloc(2 * len * sizeof(double), "itsol_setupILUT:5");
@@ -624,14 +624,14 @@ int itsol_setupILUT(ITS_IlutPtr amat, int len)
 }
 
 /*----------------------------------------------------------------------
-  | Free up memory allocated for IluSpar structs.
+  | Free up memory allocated for ITS_ILUTSpar structs.
   |----------------------------------------------------------------------
   | on entry:
   |==========
-  | ( amat )  =  Pointer to a IluSpar struct.
+  | ( amat )  =  Pointer to a ITS_ILUTSpar struct.
   |  indic    = indicator for number of levels.  indic=0 -> zero level.
   |--------------------------------------------------------------------*/
-int itsol_cleanILUT(ITS_IlutPtr amat, int indic)
+int itsol_cleanILUT(ITS_ILUTPtr amat, int indic)
 {
     if (amat->wk) {
         free(amat->wk);
@@ -661,7 +661,7 @@ int itsol_cleanILUT(ITS_IlutPtr amat, int indic)
 
 void itsol_setup_arms(arms Levmat)
 {
-    Levmat->ilus = (ITS_IlutPtr) itsol_malloc(sizeof(IluSpar), "setup_arms:ilus");
+    Levmat->ilus = (ITS_ILUTPtr) itsol_malloc(sizeof(ITS_ILUTSpar), "setup_arms:ilus");
     Levmat->levmat = (ITS_P4Ptr) itsol_malloc(sizeof(ITS_Per4Mat), "setup_arms:levmat");
 }
 
@@ -671,12 +671,12 @@ void itsol_setup_arms(arms Levmat)
   | on entry:
   |==========
   | ( amat )  =  Pointer to a ITS_Per4Mat struct.
-  | ( cmat )  =  Pointer to a IluSpar struct.
+  | ( cmat )  =  Pointer to a ITS_ILUTSpar struct.
   |--------------------------------------------------------------------*/
 int itsol_cleanARMS(arms ArmsPre)
 {
     ITS_P4Ptr amat = ArmsPre->levmat;
-    ITS_IlutPtr cmat = ArmsPre->ilus;
+    ITS_ILUTPtr cmat = ArmsPre->ilus;
     /* case when nlev == 0 */
     int indic = (amat->nB != 0);
 
@@ -1204,7 +1204,7 @@ int itsol_nnz_cs(ITS_CsPtr A)
 int itsol_nnz_arms(arms PreSt, FILE * ft)
 {
     ITS_P4Ptr levmat = PreSt->levmat;
-    ITS_IlutPtr ilschu = PreSt->ilus;
+    ITS_ILUTPtr ilschu = PreSt->ilus;
     int nlev = PreSt->nlev;
     int ilev = 0, nnz_lev, nnz_sch, nnz_tot;
     nnz_lev = 0;
@@ -2093,7 +2093,7 @@ int itsol_dumpArmsMat(arms PreSt, FILE * ft)
 {
     int lev, nnz, nglob = 0, old = 0;
     ITS_P4Ptr levmat = PreSt->levmat;
-    ITS_IlutPtr ilus = PreSt->ilus;
+    ITS_ILUTPtr ilus = PreSt->ilus;
     int n = levmat->n;
     int nlev = PreSt->nlev;
     FILE *dummy = NULL;

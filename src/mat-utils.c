@@ -440,7 +440,7 @@ void itsol_matvecz(ITS_CsPtr mata, double *x, double *y, double *z)
    |  
    |  Note : in-place operation -- b and x can occupy the same space..
    | --------------------------------------------------------------------*/
-ITS_P4Ptr itsol_Lvsol2(double *x, int nlev, ITS_P4Ptr levmat, ITS_IlutPtr ilusch)
+ITS_P4Ptr itsol_Lvsol2(double *x, int nlev, ITS_P4Ptr levmat, ITS_ILUTPtr ilusch)
 {
     int nloc = levmat->n, first, lenB;
     ITS_P4Ptr last = levmat;
@@ -481,7 +481,7 @@ ITS_P4Ptr itsol_Lvsol2(double *x, int nlev, ITS_P4Ptr levmat, ITS_IlutPtr ilusch
    |  
    |  Note : in-place operation -- b and x  can occupy the same space..
    | --------------------------------------------------------------------*/
-int itsol_Uvsol2(double *x, int nlev, int n, ITS_P4Ptr levmat, ITS_IlutPtr ilusch)
+int itsol_Uvsol2(double *x, int nlev, int n, ITS_P4Ptr levmat, ITS_ILUTPtr ilusch)
 {
     int nloc, lenB, first;
     if (nlev == 0) {
@@ -523,7 +523,7 @@ int itsol_Uvsol2(double *x, int nlev, int n, ITS_P4Ptr levmat, ITS_IlutPtr ilusc
 int itsol_armsol2(double *x, arms Prec)
 {
     ITS_P4Ptr levmat = Prec->levmat;
-    ITS_IlutPtr ilusch = Prec->ilus;
+    ITS_ILUTPtr ilusch = Prec->ilus;
     int nlev = Prec->nlev;
     int n = levmat->n;
     ITS_P4Ptr last;
@@ -551,7 +551,7 @@ int itsol_armsol2(double *x, arms Prec)
   | on return
   | y       = solution of LU x = y. [overwritten] 
   |---------------------------------------------------------------------*/
-void itsol_SchLsol(ITS_IlutPtr ilusch, double *y)
+void itsol_SchLsol(ITS_ILUTPtr ilusch, double *y)
 {
     int n = ilusch->n, j, *perm = ilusch->rperm;
     double *work = ilusch->wk;
@@ -580,7 +580,7 @@ void itsol_SchLsol(ITS_IlutPtr ilusch, double *y)
   | on return 
   | y       = solution of U x = y. [overwritten on y] 
   |----------------------------------------------------------------------*/
-void itsol_SchUsol(ITS_IlutPtr ilusch, double *y)
+void itsol_SchUsol(ITS_ILUTPtr ilusch, double *y)
 {
     int n = ilusch->n, j, *perm = ilusch->perm, *cperm;
     double *work = ilusch->wk;

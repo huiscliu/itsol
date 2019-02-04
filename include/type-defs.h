@@ -77,12 +77,13 @@ typedef struct ILUfac
 {
     int n;
     ITS_CsPtr L;      /* L part elements                            */
-    double *D;    /* diagonal elements                          */
+    double *D;        /* diagonal elements                          */
     ITS_CsPtr U;      /* U part elements                            */
-    int *work;    /* working buffer */
+    int *work;        /* working buffer */
+
 } ITS_ILUSpar, ITS_LDUmat, *ITS_ILUPtr;
 
-typedef struct ITS_PerMat4 *ITS_P4Ptr;
+typedef struct ITS_Per4Mat *ITS_P4Ptr;
 
 /*------------------------------------------------------------
   | struct for storing the block LU factorization 
@@ -106,7 +107,7 @@ typedef struct ITS_PerMat4 *ITS_P4Ptr;
   | wk     = a work vector of length n needed for various tasks
   |            [reduces number of calls to malloc]           
   |----------------------------------------------------------*/ 
-typedef struct ITS_PerMat4
+typedef struct ITS_Per4Mat
 {
     int n;                  
     int nB; 
@@ -151,8 +152,8 @@ typedef struct ITS_PerMat4
   | wk     = a work vector of length n needed for various tasks
   |            [reduces number of calls to malloc]           
   |-----------------------------------------------------------*/
-typedef struct ILUTfac *ITS_IlutPtr;
-typedef struct ILUTfac
+typedef struct ILUTFac *ITS_ILUTPtr;
+typedef struct ILUTFac
 {
     int n;                  
     /*-------------------- C matrix of last block */
@@ -168,22 +169,22 @@ typedef struct ILUTfac
     double *D2;
     double *wk;
 
-} IluSpar;
+} ITS_ILUTSpar;
 
 /* this is the arms preconditioner struct 
    | it consists of a linked list of p4mat structs
    | and the ILUt factorization (in the  form of an 
-   | IluSpar struct  
+   | ITS_ILUTSpar struct  
    |---------------------------------------------- */
-typedef struct arms_st *arms;
-typedef struct arms_st
+typedef struct ITS_ARMS_ *arms;
+typedef struct ITS_ARMS_
 {
     int n;                   /* dimension of matrix */
     int nlev;                /* number of levels    */
-    ITS_IlutPtr ilus;        /* ILU for last level  */
+    ITS_ILUTPtr ilus;        /* ILU for last level  */
     ITS_P4Ptr levmat;        /* level structure     */
 
-} armsMat;
+} ITS_ARMSMat;
 
 typedef struct __CompressType
 {

@@ -155,7 +155,7 @@ int main(void)
                 droptol[j] = tol * dropcoef[j];
             }
 
-            ArmsSt = (arms) itsol_malloc(sizeof(armsMat), "main:ArmsSt");
+            ArmsSt = (arms) itsol_malloc(sizeof(ITS_ARMSMat), "main:ArmsSt");
             itsol_setup_arms(ArmsSt);
             fprintf(flog, "begin arms\n");
             tm1 = itsol_get_time();
