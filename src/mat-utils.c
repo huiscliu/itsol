@@ -1079,27 +1079,27 @@ void itsol_matvecVBR(ITS_SMatptr mat, double *x, double *y)
     itsol_vbmatvec(mat->VBCSR, x, y);
 }
 
-int itsol_preconILU(double *x, double *y, SPreptr mat)
+int itsol_preconILU(double *x, double *y, ITS_SPreptr mat)
 {
-    /*-------------------- precon for csr format using the SPre struct*/
+    /*-------------------- precon for csr format using the ITS_SPre struct*/
     return itsol_lusolC(x, y, mat->ILU);
 }
 
-int itsol_preconVBR(double *x, double *y, SPreptr mat)
+int itsol_preconVBR(double *x, double *y, ITS_SPreptr mat)
 {
-    /*-------------------- precon for ldu format using the SPre struct*/
+    /*-------------------- precon for ldu format using the ITS_SPre struct*/
     return itsol_vblusolC(x, y, mat->VBILU);
 }
 
-int itsol_preconLDU(double *x, double *y, SPreptr mat)
+int itsol_preconLDU(double *x, double *y, ITS_SPreptr mat)
 {
-    /*-------------------- precon for vbr format using the SPre struct*/
+    /*-------------------- precon for vbr format using the ITS_SPre struct*/
     return itsol_lumsolC(x, y, mat->ILU);
 }
 
-int itsol_preconARMS(double *x, double *y, SPreptr mat)
+int itsol_preconARMS(double *x, double *y, ITS_SPreptr mat)
 {
-    /*-------------------- precon for ldu format using the SPre struct*/
+    /*-------------------- precon for ldu format using the ITS_SPre struct*/
     int n = (mat->ARMS)->n;
     memcpy(y, x, n * sizeof(double));
     return itsol_armsol2(y, mat->ARMS);

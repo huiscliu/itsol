@@ -206,15 +206,15 @@ typedef struct ITS_SMat
 } ITS_SMat, *ITS_SMatptr;
 
 /*-------------------- 3 types of matrices so far */
-typedef struct _SPre
+typedef struct ITS_SPre
 {
     int Ptype;           /*-- Ptype 1 = ILU, 2 = VBILU, 3 = Crout */
     ITS_ILUPtr   ILU;        /* struct for an ILU type preconditioner */
     ITS_VBILUPtr VBILU;      /* struct for a block preconditioner */
     ITS_ARMSPtr ARMS;           /* struct for a block preconditioner */
-    int (*precon) (double *, double *, struct _SPre*); 
+    int (*precon) (double *, double *, struct ITS_SPre *); 
 
-} SPre, *SPreptr;
+} ITS_SPre, *ITS_SPreptr;
 
 typedef struct ITS_IOT_
 {
