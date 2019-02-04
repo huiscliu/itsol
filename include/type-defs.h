@@ -65,7 +65,7 @@ typedef struct ITS_VBILUSpar_
     ITS_BData *D;     /* diagonal blocks                            */
     ITS_VBSPtr L;     /* L part blocks                              */
     ITS_VBSPtr U;     /* U part blocks                              */
-    int *work;    /* working buffer                             */
+    int *work;        /* working buffer                             */
     ITS_BData bf;     /* buffer of a temp block                     */
     int DiagOpt;  /* Option for diagonal inversion/solutiob     *
                    * opt =  1 -->> call luinv 
@@ -152,8 +152,8 @@ typedef struct ITS_Per4Mat_
   | wk     = a work vector of length n needed for various tasks
   |            [reduces number of calls to malloc]           
   |-----------------------------------------------------------*/
-typedef struct ITS_ILUTFac *ITS_ILUTPtr;
-typedef struct ITS_ILUTFac
+typedef struct ITS_ILUTSpar_ *ITS_ILUTPtr;
+typedef struct ITS_ILUTSpar_
 {
     int n;                  
 
@@ -201,8 +201,8 @@ typedef struct ITS_SMat
     int n; 
     int Mtype;           /*--  type 1 = CSR, 2 = VBCSR, 3 = LDU    */
     ITS_CsPtr CS;        /* place holder for a CSR/CSC type matrix */
-    ITS_ILUPtr LDU;          /* struct for an LDU type matrix          */
-    ITS_VBSPtr VBCSR;        /* place holder for a block matrix        */
+    ITS_ILUPtr LDU;      /* struct for an LDU type matrix          */
+    ITS_VBSPtr VBCSR;    /* place holder for a block matrix        */
     void (*matvec)(struct ITS_SMat*, double *, double *);
 
 } ITS_SMat, *ITS_SMatptr;
@@ -210,10 +210,10 @@ typedef struct ITS_SMat
 /*-------------------- 3 types of matrices so far */
 typedef struct ITS_SPre
 {
-    int Ptype;           /*-- Ptype 1 = ILU, 2 = VBILU, 3 = Crout */
+    int Ptype;               /*-- Ptype 1 = ILU, 2 = VBILU, 3 = Crout */
     ITS_ILUPtr   ILU;        /* struct for an ILU type preconditioner */
     ITS_VBILUPtr VBILU;      /* struct for a block preconditioner */
-    ITS_ARMSPtr ARMS;           /* struct for a block preconditioner */
+    ITS_ARMSPtr ARMS;        /* struct for a block preconditioner */
     int (*precon) (double *, double *, struct ITS_SPre *); 
 
 } ITS_SPre, *ITS_SPreptr;
@@ -235,8 +235,8 @@ typedef struct ITS_IOT_
     int im;                     /* Dim of Krylov subspace [fgmr]   */
     int maxits;                 /* maximum number of fgmres iters  */
     double tol;                 /* tolerance for stopping fgmres   */
-    double eps;   /* for checking how close two rows of matrix are */
-    int nparam;         /* number of tests for each preconditioner */
+    double eps;                 /* for checking how close two rows of matrix are */
+    int nparam;                 /* number of tests for each preconditioner */
     int lfil0;                  /* initial lfil                    */
     int lfilInc;                /* increment for lfil              */
     double tol0;                /* initial drop tolerance          */
