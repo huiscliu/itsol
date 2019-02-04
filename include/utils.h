@@ -9,7 +9,7 @@ extern "C" {
 #endif
 
 /* sets.c */
-int itsol_nnz_arms(arms PreSt,  FILE *ft);
+int itsol_nnz_arms(ITS_ARMSPtr PreSt,  FILE *ft);
 void itsol_errexit(char *f_str, ...);
 void * itsol_malloc(int nbytes, char *msg); 
 int itsol_setupCS(ITS_CsPtr amat, int len, int job); 
@@ -42,8 +42,8 @@ int itsol_COOcs(int n, int nnz,  double *a, int *ja, int *ia, ITS_CsPtr bmat);
 void itsol_coocsr_(int*, int*, double*, int*, int*, double*, int*, int*);
 
 int itsol_csSplit4(ITS_CsPtr amat, int bsize, int csize, ITS_CsPtr B, ITS_CsPtr F, ITS_CsPtr E, ITS_CsPtr C);
-void itsol_setup_arms (arms Levmat);
-int itsol_cleanARMS(arms ArmsPre);
+void itsol_setup_arms (ITS_ARMSPtr Levmat);
+int itsol_cleanARMS(ITS_ARMSPtr ArmsPre);
 void itsol_coocsc(int n, int nnz, double *val, int *col, int *row, double **a, int **ja, int **ia, int job);
 int itsol_nnz_ilu(ITS_ILUPtr lu);
 int itsol_CSClum(int n, double *a, int *ja, int *ia, ITS_ILUPtr mat, int rsa);
@@ -65,7 +65,7 @@ int itsol_roscalC(ITS_CsPtr mata, double *diag, int nrm);
 void itsol_swapj(int v[], int i, int j);
 void itsol_swapm(double v[], int i, int j);
 double itsol_get_time(void);
-int itsol_dumpArmsMat(arms PreSt, FILE *ft);
+int itsol_dumpArmsMat(ITS_ARMSPtr PreSt, FILE *ft);
 int itsol_outputLU(ITS_ILUPtr lu, char *filename);
 int itsol_checkperm(int *p, int n);
 void itsol_qsortR1I(double *wa, int *cor1, int left, int right);

@@ -520,7 +520,7 @@ int itsol_Uvsol2(double *x, int nlev, int n, ITS_P4Ptr levmat, ITS_ILUTPtr ilusc
    |  
    |  Note : in-place operation -- b and x can occupy the same space..
    | --------------------------------------------------------------------*/
-int itsol_armsol2(double *x, arms Prec)
+int itsol_armsol2(double *x, ITS_ARMSPtr Prec)
 {
     ITS_P4Ptr levmat = Prec->levmat;
     ITS_ILUTPtr ilusch = Prec->ilus;
@@ -996,7 +996,7 @@ int itsol_condestLU(ITS_ILUPtr lu, FILE * fp)
 }
 
 /*-------------------- simple estimate of cond. number of precon */
-int itsol_condestArms(arms armspre, double *y, FILE * fp)
+int itsol_condestArms(ITS_ARMSPtr armspre, double *y, FILE * fp)
 {
     int n = armspre->n, i;
     double norm = 0.0;

@@ -176,7 +176,7 @@ typedef struct ILUTFac
    | and the ILUt factorization (in the  form of an 
    | ITS_ILUTSpar struct  
    |---------------------------------------------- */
-typedef struct ITS_ARMS_ *arms;
+typedef struct ITS_ARMS_ *ITS_ARMSPtr;
 typedef struct ITS_ARMS_
 {
     int n;                   /* dimension of matrix */
@@ -211,7 +211,7 @@ typedef struct _SPre
     int Ptype;           /*-- Ptype 1 = ILU, 2 = VBILU, 3 = Crout */
     ITS_ILUPtr   ILU;        /* struct for an ILU type preconditioner */
     ITS_VBILUPtr VBILU;      /* struct for a block preconditioner */
-    arms ARMS;           /* struct for a block preconditioner */
+    ITS_ARMSPtr ARMS;           /* struct for a block preconditioner */
     int (*precon) (double *, double *, struct _SPre*); 
 
 } SPre, *SPreptr;

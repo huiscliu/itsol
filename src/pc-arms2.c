@@ -140,7 +140,7 @@ actually] -- indeed it makes sense to take
 | ipar[0]   = number of levels found (may differ from input value) 
     |
     +---------------------------------------------------------------------*/
-int itsol_pc_arms2(ITS_CsPtr Amat, int *ipar, double *droptol, int *lfil, double tolind, arms PreMat, FILE * ft)
+int itsol_pc_arms2(ITS_CsPtr Amat, int *ipar, double *droptol, int *lfil, double tolind, ITS_ARMSPtr PreMat, FILE * ft)
 {
     /*-------------------- function  prototyping  done in LIB/itsol.h    */
     /*-------------------- move above to itsol.h */
