@@ -117,7 +117,7 @@ int itsol_invSVD(int nn, double *A)
     /*-------------------- compute S\inv * VT                        */
     for (i = 0; i < nn; i++) {
         tmp = one / max(S[i], nrm);
-        DSCAL(nn, tmp, &VT[i], nn);
+        itsol_dscal(nn, tmp, &VT[i], nn);
     }
     /*-------------------- do [V^T S\inv ] * U^T                     */
     dgemm("t", "t", &nn, &nn, &nn, &one, VT, &nn, U, &nn, &zero, A, &nn);
@@ -970,7 +970,7 @@ double itsol_vbnorm2(int sz, double *a)
 {
     int tmp = 1;
 
-    return DNRM2(sz, a, tmp) / (double)sz;
+    return itsol_dnrm2(sz, a, tmp) / (double)sz;
 }
 
 /*-----------------------------------------------------------*/

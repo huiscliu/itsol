@@ -72,7 +72,7 @@ int itsol_solver_fgmres(ITS_SMatptr Amat, ITS_SPreptr lu, double *rhs, double *s
         Amat->matvec(Amat, sol, vv);
         for (j = 0; j < n; j++)
             vv[j] = rhs[j] - vv[j];     /*  vv[0]= initial residual */
-        beta = DNRM2(n, vv, one);
+        beta = itsol_dnrm2(n, vv, one);
         /*-------------------- print info if fits != null */
         if (fits != NULL && its == 0)
             fprintf(fits, "%8d   %10.2e\n", its, beta);
@@ -80,7 +80,7 @@ int itsol_solver_fgmres(ITS_SMatptr Amat, ITS_SPreptr lu, double *rhs, double *s
             break;
         t = 1.0 / beta;
         /*--------------------   normalize:  vv    =  vv   / beta */
-        DSCAL(n, t, vv, one);
+        itsol_dscal(n, t, vv, one);
         if (its == 0)
             eps1 = tol * beta;
         /*--------------------initialize 1-st term  of rhs of hessenberg mtx */
@@ -112,16 +112,16 @@ int itsol_solver_fgmres(ITS_SMatptr Amat, ITS_SPreptr lu, double *rhs, double *s
                 t = itsol_ddot(n, &vv[j * n], one, &vv[pti1], one);
                 hh[ptih + j] = t;
                 negt = -t;
-                DAXPY(n, negt, &vv[j * n], one, &vv[pti1], one);
+                itsol_daxpy(n, negt, &vv[j * n], one, &vv[pti1], one);
             }
             /*-------------------- h_{j+1,j} = ||w||_{2}    */
-            t = DNRM2(n, &vv[pti1], one);
+            t = itsol_dnrm2(n, &vv[pti1], one);
             hh[ptih + i1] = t;
             if (t == 0.0)
                 return (1);
             t = 1.0 / t;
             /*-------------------- v_{j+1} = w / h_{j+1,j}  */
-            DSCAL(n, t, &vv[pti1], one);
+            itsol_dscal(n, t, &vv[pti1], one);
             /*-------- done with modified gram schimdt/arnoldi step
               | now  update factorization of hh.
               | perform previous transformations  on i-th column of h
@@ -159,7 +159,7 @@ int itsol_solver_fgmres(ITS_SMatptr Amat, ITS_SPreptr lu, double *rhs, double *s
         }
         /*---------- linear combination of z_j's to get sol. */
         for (j = 0; j <= i; j++)
-            DAXPY(n, rs[j], &z[j * n], one, sol, one);
+            itsol_daxpy(n, rs[j], &z[j * n], one, sol, one);
         /*--------------------  restart outer loop if needed */
         if (beta < eps1)
             break;

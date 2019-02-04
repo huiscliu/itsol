@@ -86,11 +86,10 @@ void csrcoo(int *, int *, int *, double *, int *, int *, int *,
 
 #if defined(_IBM)
 #define itsol_ddot(n,x,incx,y,incy)        ddot((n), (x), (incx), (y), (incy)) 
-#define DSCAL(n,alpha,x,incx)        dscal((n), (alpha), (x), (incx)) 
-#define DAXPY(n,alpha,x,incx,y,incy) daxpy((n), (alpha), (x), (incx), (y), (incy)) 
-#define DNRM2(n,x,incx)              dnrm2((n), (x), (incx))
+#define itsol_dscal(n,alpha,x,incx)        dscal((n), (alpha), (x), (incx)) 
+#define itsol_daxpy(n,alpha,x,incx,y,incy) daxpy((n), (alpha), (x), (incx), (y), (incy)) 
+#define itsol_dnrm2(n,x,incx)              dnrm2((n), (x), (incx))
 
-#define IDMIN(n,sx,incx)             idmin((n), (sx), (incx))
 #define DGEMV(transa,m,n,alpha,a,lda,x,incx,beta,y,incy)		\
   dgemv((transa), (m), (n),						\
 	(alpha), (a), (lda), (x), (incx),				\
@@ -106,10 +105,9 @@ void csrcoo(int *, int *, int *, double *, int *, int *, int *,
   dgetri((n), (a), (lda), (ipvt), (work), (lwork), (info))
 #else
 #define itsol_ddot(n,x,incx,y,incy)        ddot(&(n),(x),&(incx),(y),&(incy))
-#define DSCAL(n,alpha,x,incx)        dscal(&(n),&(alpha),(x), &(incx))
-#define DAXPY(n,alpha,x,incx,y,incy) daxpy(&(n), &(alpha), (x), &(incx), y, &(incy))
-#define DNRM2(n, x, incx)            dnrm2(&(n), (x), &(incx))
-#define IDMIN(n, sx, incx)           idmin((&(n), (sx), &(incx))
+#define itsol_dscal(n,alpha,x,incx)        dscal(&(n),&(alpha),(x), &(incx))
+#define itsol_daxpy(n,alpha,x,incx,y,incy) daxpy(&(n), &(alpha), (x), &(incx), y, &(incy))
+#define itsol_dnrm2(n, x, incx)            dnrm2(&(n), (x), &(incx))
 #define DGEMV(transa, m, n, alpha, a, lda, x, incx, beta, y, incy)  \
   dgemv((transa), &(m), &(n), &(alpha), (a), &(lda), (x), &(incx), \
 	 &(beta), (y), &(incy))
