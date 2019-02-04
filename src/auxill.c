@@ -112,7 +112,7 @@ int itsol_read_inputs(char *in_file, ITS_IOT * pio)
 
 int itsol_get_matrix_info(FILE * fmat, ITS_IOT * pio)
 {
-    char path[ITS_MAX_LINE], MatNam[MaxNamLen], Fmt[4];
+    char path[ITS_MAX_LINE], MatNam[ITS_MaxNamLen], Fmt[4];
     int count;
     /*-------------------- READ LINE */
     fscanf(fmat, "%s %s %s\n", path, MatNam, Fmt);
@@ -122,7 +122,7 @@ int itsol_get_matrix_info(FILE * fmat, ITS_IOT * pio)
     memcpy(pio->Fname, path, count * sizeof(char));
     /*-------------------- file short name */
     count = strlen(MatNam);
-    memset(pio->MatNam, 0, MaxNamLen * sizeof(char));
+    memset(pio->MatNam, 0, ITS_MaxNamLen * sizeof(char));
     memcpy(pio->MatNam, MatNam, count * sizeof(char));
     /*-------------------- matrix format */
     if (strcmp(Fmt, "HB") == 0)

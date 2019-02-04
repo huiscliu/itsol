@@ -919,7 +919,7 @@ int itsol_dpermC(ITS_CsPtr mat, int *perm)
   |             0   --> successful return.
   |             1   --> memory allocation error.
   |---------------------------------------------------------------------*/
-int itsol_CSparTran(ITS_CsPtr amat, ITS_CsPtr bmat, CompressType * compress)
+int itsol_CSparTran(ITS_CsPtr amat, ITS_CsPtr bmat, ITS_CompressType * compress)
 {
     int i, j, *ind, nzcount, pos, size = amat->n, *aja;
     ind = bmat->nzcount;
@@ -1164,7 +1164,7 @@ int itsol_init_blocks(ITS_CsPtr csmat, int *pnBlock, int **pnB, int **pperm, dou
     int n = csmat->n, nBlock = 0, i, j, k;
     ITS_CsPtr at = NULL;
     KeyType *group = NULL;
-    CompressType *compress = NULL;
+    ITS_CompressType *compress = NULL;
     int *perm = NULL, *nB = NULL;
     int nzcount0, nzcount, key0, key, *ja0, *ja, row0, row, newblock;
     int *iw = NULL, *jbuf = NULL;
@@ -1174,7 +1174,7 @@ int itsol_init_blocks(ITS_CsPtr csmat, int *pnBlock, int **pnB, int **pperm, dou
 
     t1 = itsol_get_time();           /* begin Hash method timer */
     group = (KeyType *) itsol_malloc(n * sizeof(KeyType), "init_blocks");
-    compress = (CompressType *) itsol_malloc(n * sizeof(CompressType), "init_blocks");
+    compress = (ITS_CompressType *) itsol_malloc(n * sizeof(ITS_CompressType), "init_blocks");
     perm = (int *)itsol_malloc(n * sizeof(int), "init_blocks");
     iw = perm;                  /* iw and perm array can share memory here because they will
                                  * never be used at the same time */

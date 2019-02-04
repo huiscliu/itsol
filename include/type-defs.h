@@ -22,7 +22,7 @@
 #define ITS_MAX_LINE        256
 #define ITS_MAX_HBNAME      64
 #define ITS_MAX_MAT	        100
-#define MaxNamLen       64
+#define ITS_MaxNamLen       64
 #define HB   1
 #define MM0  2
 #define MM1  3
@@ -43,20 +43,20 @@ typedef struct SpaFmt
 
 typedef double *ITS_BData;
 
-typedef struct VBSpaFmt
+typedef struct ITS_VBSpaFmt
 {
     int n;        /* the block row dimension of the matrix      */
     int *bsz;     /* the row/col of the first element of each   */
 
     /* diagonal block                             */
-    int *nzcount;  /* length of each row                         */
-    int **ja;     /* pointer-to-pointer to store column indices */
+    int *nzcount;     /* length of each row                         */
+    int **ja;         /* pointer-to-pointer to store column indices */
     ITS_BData **ba;   /* pointer-to-pointer to store nonzero blocks */
     ITS_BData *D;     /* to store inversion of diagonals            */
 
 } ITS_VBSparMat, *ITS_VBSPtr;
 
-typedef struct VBILUfac
+typedef struct ITS_VBILUFac
 {
     int n;
     int *bsz;     /* the row/col of the first element of each   */
@@ -73,7 +73,7 @@ typedef struct VBILUfac
 
 } ITS_VBILUSpar, *ITS_VBILUPtr; 
 
-typedef struct ILUfac
+typedef struct ILUFac
 {
     int n;
     ITS_CsPtr L;      /* L part elements                            */
@@ -152,8 +152,8 @@ typedef struct ITS_Per4Mat
   | wk     = a work vector of length n needed for various tasks
   |            [reduces number of calls to malloc]           
   |-----------------------------------------------------------*/
-typedef struct ILUTFac *ITS_ILUTPtr;
-typedef struct ILUTFac
+typedef struct ITS_ILUTFac *ITS_ILUTPtr;
+typedef struct ITS_ILUTFac
 {
     int n;                  
     /*-------------------- C matrix of last block */
@@ -186,12 +186,12 @@ typedef struct ITS_ARMS_
 
 } ITS_ARMSMat;
 
-typedef struct __CompressType
+typedef struct ITS_CompressType
 {
     int grp;   /* -1: begin new group, >=0: belong to grp-th row */
     int count; /* block size, valid only if grp = -1 */
 
-} CompressType;
+} ITS_CompressType;
 
 /*-------------------- 3 types of matrices so far */
 typedef struct ITS_SMat
@@ -221,7 +221,7 @@ typedef struct ITS_IOT_
     FILE *fout;                     /* output file handle              */
     char outfile[ITS_MAX_LINE];     /* output filename                 */
     char Fname[ITS_MAX_LINE];       /* full matrix path name           */
-    char MatNam[MaxNamLen];         /* short name                      */
+    char MatNam[ITS_MaxNamLen];     /* short name                      */
     char PrecMeth[ITS_MAX_LINE];    /* preconditioner being tested     */
 
     char type[4];               /* type for HB matrices            */

@@ -46,7 +46,7 @@ int itsol_lusolC(double *y, double *x, ITS_ILUPtr lu);
 int itsol_rpermC(ITS_CsPtr mat, int *perm); 
 int itsol_cpermC(ITS_CsPtr mat, int *perm) ; 
 int itsol_dpermC(ITS_CsPtr mat, int *perm) ; 
-int itsol_CSparTran(ITS_CsPtr amat, ITS_CsPtr bmat, CompressType *compress);
+int itsol_CSparTran(ITS_CsPtr amat, ITS_CsPtr bmat, ITS_CompressType *compress);
 double itsol_vbnorm2(int sz, double *a);
 void itsol_Lsol(ITS_CsPtr mata, double *b, double *x);
 void itsol_Usol(ITS_CsPtr mata, double *b, double *x);
