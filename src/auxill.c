@@ -257,7 +257,7 @@ int itsol_readhb_c(int *NN, double **AA, int **JA, int **IA, ITS_IOT * pio, doub
     *rsa = 0;
     job = 0;
     tmp1 = tmp2 = 1;
-    readmtc(&tmp1, &tmp2, &job, pio->Fname, Ta, Tja, Tia, *rhs, &nrhs,
+    FC_FUNC(readmtc,READMTC)(&tmp1, &tmp2, &job, pio->Fname, Ta, Tja, Tia, *rhs, &nrhs,
             guesol, &nrow, &ncol, &nnz, title, key, type, &ierr);
     if (ierr != 0) {
         fprintf(stderr, "readhb: err in read matrix header = %d\n", ierr);
@@ -281,8 +281,10 @@ int itsol_readhb_c(int *NN, double **AA, int **JA, int **IA, ITS_IOT * pio, doub
     job = 2;
     tmp1 = n + 1;
     tmp2 = nnz;
-    readmtc(&tmp1, &tmp2, &job, pio->Fname, Ta, Tja, Tia, *rhs, &nrhs,
+
+    FC_FUNC(readmtc,READMTC)(&tmp1, &tmp2, &job, pio->Fname, Ta, Tja, Tia, *rhs, &nrhs,
             guesol, &nrow, &ncol, &nnz, title, key, type, &ierr);
+
     if (ierr != 0) {
         fprintf(stderr, "readhb: err in read matrix data = %d\n", ierr);
         return (ERR_AUXIL + 7);
@@ -291,8 +293,10 @@ int itsol_readhb_c(int *NN, double **AA, int **JA, int **IA, ITS_IOT * pio, doub
     ia = (int *)itsol_malloc(sizeof(int) * (n + 1), "readhb");
     ja = (int *)itsol_malloc(sizeof(int) * nnz, "readhb");
     a = (double *)itsol_malloc(sizeof(double) * nnz, "readhb");
+
     /*----------- convert to row format */
-    csrcsc(&n, &tmp1, &tmp2, Ta, Tja, Tia, a, ja, ia);
+    FC_FUNC(csrcsc,CSRCSC)(&n, &tmp1, &tmp2, Ta, Tja, Tia, a, ja, ia);
+
     /*-------------------- io struct update */
     pio->ndim = n;
     pio->nnz = nnz;
@@ -341,12 +345,15 @@ int itsol_readhb_2(int *NN, double **AA, int **JA, int **IA, ITS_IOT * pio, doub
     *rsa = 0;
     job = 0;
     tmp1 = tmp2 = 1;
-    readmtc(&tmp1, &tmp2, &job, pio->Fname, Ta, Tja, Tia, *rhs, &nrhs,
+
+    FC_FUNC(readmtc,READMTC)(&tmp1, &tmp2, &job, pio->Fname, Ta, Tja, Tia, *rhs, &nrhs,
             guesol, &nrow, &ncol, &nnz, title, key, type, &ierr);
+
     if (ierr != 0) {
         fprintf(stderr, "readhb: err in read matrix header = %d\n", ierr);
         return (ERR_AUXIL + 5);
     }
+
     /* some consistency checks ------------------------------------------ */
     pio->ndim = n = ncol;
     if (nrow != ncol) {
@@ -365,7 +372,7 @@ int itsol_readhb_2(int *NN, double **AA, int **JA, int **IA, ITS_IOT * pio, doub
     job = 2;
     tmp1 = n + 1;
     tmp2 = nnz;
-    readmtc(&tmp1, &tmp2, &job, pio->Fname, Ta, Tja, Tia, *rhs, &nrhs,
+    FC_FUNC(readmtc,READMTC)(&tmp1, &tmp2, &job, pio->Fname, Ta, Tja, Tia, *rhs, &nrhs,
             guesol, &nrow, &ncol, &nnz, title, key, type, &ierr);
     if (ierr != 0) {
         fprintf(stderr, "readhb: err in read matrix data = %d\n", ierr);
@@ -379,7 +386,7 @@ int itsol_readhb_2(int *NN, double **AA, int **JA, int **IA, ITS_IOT * pio, doub
         ja = (int *)itsol_malloc(sizeof(int) * nnz, "readhb");
         a = (double *)itsol_malloc(sizeof(double) * nnz, "readhb");
         /*----------- convert to row format */
-        csrcsc(&n, &tmp1, &tmp2, Ta, Tja, Tia, a, ja, ia);
+        FC_FUNC(csrcsc,CSRCSC)(&n, &tmp1, &tmp2, Ta, Tja, Tia, a, ja, ia);
     }
     /*-------------------- io struct update */
     pio->ndim = n;

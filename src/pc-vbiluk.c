@@ -106,7 +106,7 @@ int itsol_pc_vbilukC(int lofM, ITS_VBSPtr vbmat, ITS_VBILUPtr lu, FILE * fp)
             mm = dim;           /* number of rows of current block */
             nn = ITS_B_DIM(bsz, jrow);      /* number of cols of current block */
             /* get the multiplier for row to be eliminated (jrow) */
-            dgemm("n", "n", &mm, &nn, &nn, &alpha1, L->ba[i][j], &mm, lu->D[jrow], &nn, &beta1, lu->bf, &mm);
+            FC_FUNC(dgemm, DGEMM)("n", "n", &mm, &nn, &nn, &alpha1, L->ba[i][j], &mm, lu->D[jrow], &nn, &beta1, lu->bf, &mm);
             itsol_copyBData(mm, nn, L->ba[i][j], lu->bf, 0);
 
             /* combine current row and row jrow */
@@ -117,16 +117,16 @@ int itsol_pc_vbilukC(int lofM, ITS_VBSPtr vbmat, ITS_VBILUPtr lu, FILE * fp)
                     continue;
                 if (col < i) {
                     kk = ITS_B_DIM(bsz, col);
-                    dgemm("n", "n", &mm, &kk, &nn, &alpha2, L->ba[i][j],
+                    FC_FUNC(dgemm,DGEMM)("n", "n", &mm, &kk, &nn, &alpha2, L->ba[i][j],
                             &mm, U->ba[jrow][k], &nn, &beta2, L->ba[i][jpos], &mm);
                 }
                 else if (col == i) {
-                    dgemm("n", "n", &mm, &mm, &nn, &alpha2, L->ba[i][j],
+                    FC_FUNC(dgemm,DGEMM)("n", "n", &mm, &mm, &nn, &alpha2, L->ba[i][j],
                             &mm, U->ba[jrow][k], &nn, &beta2, lu->D[i], &mm);
                 }
                 else {
                     kk = ITS_B_DIM(bsz, col);
-                    dgemm("n", "n", &mm, &kk, &nn, &alpha2, L->ba[i][j],
+                    FC_FUNC(dgemm,DGEMM)("n", "n", &mm, &kk, &nn, &alpha2, L->ba[i][j],
                             &mm, U->ba[jrow][k], &nn, &beta2, U->ba[i][jpos], &mm);
                 }
             }

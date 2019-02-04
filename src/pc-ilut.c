@@ -234,7 +234,7 @@ int itsol_pc_ilut(ITS_CsPtr csmat, ITS_ILUPtr lu, int lfil, double tol, FILE * f
             wn[j] = fabs(w[j]);
             iw[j] = j;
         }
-        qsplit(wn, iw, &lenl, &len);
+        FC_FUNC(qsplit,QSPLIT)(wn, iw, &lenl, &len);
         L->nzcount[i] = len;
         if (len > 0) {
             ja = L->ja[i] = (int *)itsol_malloc(len * sizeof(int), "ilut");
@@ -256,7 +256,7 @@ int itsol_pc_ilut(ITS_CsPtr csmat, ITS_ILUPtr lu, int lfil, double tol, FILE * f
             iw[j] = i + j + 1;
         }
 
-        qsplit(wn, iw, &lenu, &len);
+        FC_FUNC(qsplit,QSPLIT)(wn, iw, &lenu, &len);
         U->nzcount[i] = len;
         if (len > 0) {
             ja = U->ja[i] = (int *)itsol_malloc(len * sizeof(int), "ilut");

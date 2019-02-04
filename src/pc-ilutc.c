@@ -96,7 +96,7 @@ static int std_drop(int lfil, int i, double tolL, double tolU, double toldiag)
     len = min(Unnz, lfil);
     for (j = 0; j < Unnz; j++)
         w[j] = fabs(wU[Uid[j]]);
-    qsplit(w, Uid, &Unnz, &len);
+    FC_FUNC(qsplit,QSPLIT)(w, Uid, &Unnz, &len);
     qsort(Uid, len, sizeof(int), comp);
     /*-------------------- update U */
     U->nzcount[i] = len;
@@ -126,10 +126,11 @@ static int std_drop(int lfil, int i, double tolL, double tolU, double toldiag)
     /*-------------------- find the largest lfil elements in column k         */
     Lnnz = len;
     len = min(Lnnz, lfil);
-    for (j = 0; j < Lnnz; j++)
-        w[j] = fabs(wL[Lid[j]]);
-    qsplit(w, Lid, &Lnnz, &len);
+    for (j = 0; j < Lnnz; j++) w[j] = fabs(wL[Lid[j]]);
+
+    FC_FUNC(qsplit,QSPLIT)(w, Lid, &Lnnz, &len);
     qsort(Lid, len, sizeof(int), comp);
+
     /*-------------------- update L                                           */
     L->nzcount[i] = len;
     if (len > 0) {

@@ -110,7 +110,7 @@ int itsol_invSVD(int nn, double *A)
         }
     }
     /*-------------------- general case                              */
-    dgesvd("A", "A", &nn, &nn, A, &nn, S, U, &nn, VT, &nn, Wk, &lWk, &info);
+    FC_FUNC(dgesvd,DGESVD)("A", "A", &nn, &nn, A, &nn, S, U, &nn, VT, &nn, Wk, &lWk, &info);
     if (S[0] == 0.0)
         return 1;
     nrm = S[0] * tol;
@@ -120,7 +120,8 @@ int itsol_invSVD(int nn, double *A)
         itsol_dscal(nn, tmp, &VT[i], nn);
     }
     /*-------------------- do [V^T S\inv ] * U^T                     */
-    dgemm("t", "t", &nn, &nn, &nn, &one, VT, &nn, U, &nn, &zero, A, &nn);
+    FC_FUNC(dgemm,DGEMM)("t", "t", &nn, &nn, &nn, &one, VT, &nn, U, &nn, &zero, A, &nn);
+
     /*-------------------- Done -------------------------------------*/
     free(U);
     free(VT);
@@ -128,6 +129,7 @@ int itsol_invSVD(int nn, double *A)
     free(Wk);
     return 0;
 }
+
 /*----------------------------------------------------------------------------
  * Diagonal scaling:
  * For the matrix with block diagonals D1, D2, ..., Dp :
