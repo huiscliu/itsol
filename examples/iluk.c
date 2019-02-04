@@ -15,7 +15,7 @@ int main(void)
     char pltfile[256];
     FILE *fits = NULL;
     /*-------------------- main structs and wraper structs.   */
-    csptr csmat = NULL;         /* matrix in csr formt             */
+    ITS_CsPtr csmat = NULL;         /* matrix in csr formt             */
     SMatptr MAT;                /* Matrix structure for matvecs    */
     SPreptr PRE;                /* general precond structure       */
     iluptr lu = NULL;           /* ilu preconditioner structure    */
@@ -30,7 +30,7 @@ int main(void)
     double tm1, tm2;
     int mat, numat, iparam, i;
     double terr;
-    char line[MAX_LINE];
+    char line[ITS_MAX_LINE];
 
     MAT = (SMatptr) itsol_malloc(sizeof(SMat), "main:MAT");
     PRE = (SPreptr) itsol_malloc(sizeof(SPre), "main:PRE");
@@ -49,8 +49,8 @@ int main(void)
         exit(2);
     }
 
-    memset(line, 0, MAX_LINE);
-    fgets(line, MAX_LINE, fmat);
+    memset(line, 0, ITS_MAX_LINE);
+    fgets(line, ITS_MAX_LINE, fmat);
 
     if ((numat = atoi(line)) <= 0) {
         fprintf(flog, "Invalid count of matrices...\n");
@@ -78,7 +78,7 @@ int main(void)
         fprintf(flog, "MATRIX: %s...\n", io.MatNam);
 
         /*------------------------- Read matrix */
-        csmat = (csptr) itsol_malloc(sizeof(SparMat), "main");
+        csmat = (ITS_CsPtr) itsol_malloc(sizeof(SparMat), "main");
 
         /*-------------------- case: COO formats */
         if (io.Fmt > HB) {

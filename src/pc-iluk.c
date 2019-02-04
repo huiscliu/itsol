@@ -32,12 +32,12 @@
  * ======
  * All the diagonals of the input matrix must not be zero
  *--------------------------------------------------------------------------*/
-int itsol_pc_ilukC(int lofM, csptr csmat, iluptr lu, FILE * fp)
+int itsol_pc_ilukC(int lofM, ITS_CsPtr csmat, iluptr lu, FILE * fp)
 {
     int ierr;
     int n = csmat->n;
     int *jw, i, j, k, col, jpos, jrow;
-    csptr L, U;
+    ITS_CsPtr L, U;
     double *D;
 
     itsol_setupILU(lu, n);
@@ -156,12 +156,12 @@ int itsol_pc_ilukC(int lofM, csptr csmat, iluptr lu, FILE * fp)
  *   ->L    = L part -- stored in SpaFmt format, patterns only in lofC
  *   ->U    = U part -- stored in SpaFmt format, patterns only in lofC
  *------------------------------------------------------------------*/
-int itsol_pc_lofC(int lofM, csptr csmat, iluptr lu, FILE * fp)
+int itsol_pc_lofC(int lofM, ITS_CsPtr csmat, iluptr lu, FILE * fp)
 {
     int n = csmat->n;
     int *levls = NULL, *jbuf = NULL, *iw = lu->work;
     int **ulvl;                 /*  stores lev-fils for U part of ILU factorization */
-    csptr L = lu->L, U = lu->U;
+    ITS_CsPtr L = lu->L, U = lu->U;
 
     /*--------------------------------------------------------------------
      * n        = number of rows or columns in matrix

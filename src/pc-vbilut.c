@@ -63,7 +63,7 @@ int itsol_pc_vbilutC(vbsptr vbmat, vbiluptr lu, int lfil, double tol, BData * w,
     int n = vbmat->n, *bsz = vbmat->bsz, ierr;
     double one = 1.0, zero = 0.0;
     int dim, szjrow, sz, len, lenu, lenl, col, jpos, jrow, upos, para;
-    int max_blk_sz = MAX_BLOCK_SIZE * MAX_BLOCK_SIZE * sizeof(double);
+    int max_blk_sz = ITS_MAX_BLOCK_SIZE * ITS_MAX_BLOCK_SIZE * sizeof(double);
     int nzcount, *ja, *jbuf, *iw, i, j, k, kk;
     double t, tnorm, tolnorm, *xnrm, *wn;
     vbsptr L, U;

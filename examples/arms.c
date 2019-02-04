@@ -21,7 +21,7 @@ int main(void)
     double tol, tolind = TOL_DD;
     int j, nnz = 0, lfil;
     /*-------------------- main structs and wraper structs.     */
-    csptr csmat = NULL;         /* matrix in csr formt             */
+    ITS_CsPtr csmat = NULL;         /* matrix in csr formt             */
     arms ArmsSt = NULL;         /* arms preconditioner structure   */
     SMatptr MAT = NULL;         /* Matrix structure for matvecs    */
     SPreptr PRE = NULL;         /* general precond structure       */
@@ -43,7 +43,7 @@ int main(void)
     double tm1, tm2;
     int mat, numat, iparam, i;
     double terr;
-    char line[MAX_LINE];
+    char line[ITS_MAX_LINE];
 
     MAT = (SMatptr) itsol_malloc(sizeof(SMat), "main:MAT");
     PRE = (SPreptr) itsol_malloc(sizeof(SPre), "main:PRE");
@@ -61,7 +61,7 @@ int main(void)
         exit(2);
     }
 
-    memset(line, 0, MAX_LINE);
+    memset(line, 0, ITS_MAX_LINE);
     fscanf(fmat, "%d", &numat);
     if (numat <= 0) {
         fprintf(flog, "Invalid count of matrices...\n");
@@ -94,7 +94,7 @@ int main(void)
         fprintf(flog, "MATRIX: %s...\n", io.MatNam);
 
         /*-------------------- Read matrix - case: COO formats */
-        csmat = (csptr) itsol_malloc(sizeof(SparMat), "main:csmat");
+        csmat = (ITS_CsPtr) itsol_malloc(sizeof(SparMat), "main:csmat");
 
         if (io.Fmt > HB) {
             ierr = itsol_read_coo(&AA, &JA, &IA, &io, &rhs, &sol, 0);

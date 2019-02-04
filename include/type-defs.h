@@ -11,7 +11,7 @@
 #include "config.h"
 #include "ext-protos.h"
 
-#define MAX_BLOCK_SIZE   100
+#define ITS_MAX_BLOCK_SIZE   100
 
 /* FORTRAN style vblock format, compatible for many FORTRAN routines */
 #define DATA(a,row,i,j)  (a[(j)*(row)+(i)])
@@ -19,9 +19,9 @@
 /* the dimension of ith Block */
 #define B_DIM(bs,i)      (bs[i+1]-bs[i])
 
-#define MAX_LINE        256
-#define MAX_HBNAME      64
-#define MAX_MAT	        100
+#define ITS_MAX_LINE        256
+#define ITS_MAX_HBNAME      64
+#define ITS_MAX_MAT	        100
 #define MaxNamLen       64
 #define HB   1
 #define MM0  2
@@ -39,7 +39,7 @@ typedef struct SpaFmt
     int **ja;      /* pointer-to-pointer to store column indices  */
     double **ma;   /* pointer-to-pointer to store nonzero entries */
 
-} SparMat, *csptr;
+} SparMat, *ITS_CsPtr;
 
 typedef double *BData;
 
@@ -76,9 +76,9 @@ typedef struct VBILUfac
 typedef struct ILUfac
 {
     int n;
-    csptr L;      /* L part elements                            */
+    ITS_CsPtr L;      /* L part elements                            */
     double *D;    /* diagonal elements                          */
-    csptr U;      /* U part elements                            */
+    ITS_CsPtr U;      /* U part elements                            */
     int *work;    /* working buffer */
 } ILUSpar, LDUmat, *iluptr;
 
@@ -122,9 +122,11 @@ typedef struct PerMat4
     double *D1 ;      /* diagonal scaling row    */  
     double *D2 ;      /* diagonal scaling columns*/  
     double *wk;       /* work array              */
+
     /* pointer to next and previous struct         */
     p4ptr prev; 
     p4ptr next;
+
 } Per4Mat; 
 
 /*------------------------------------------------------------
@@ -195,7 +197,7 @@ typedef struct _SMat
 {
     int n; 
     int Mtype;           /*--  type 1 = CSR, 2 = VBCSR, 3 = LDU    */
-    csptr CS;            /* place holder for a CSR/CSC type matrix */
+    ITS_CsPtr CS;        /* place holder for a CSR/CSC type matrix */
     iluptr LDU;          /* struct for an LDU type matrix          */
     vbsptr VBCSR;        /* place holder for a block matrix        */
     void (*matvec)(struct _SMat*, double *, double *);
@@ -215,11 +217,12 @@ typedef struct _SPre
 
 typedef struct _io_t
 {
-    FILE *fout;                 /* output file handle              */
-    char outfile[MAX_LINE];     /* output filename                 */
-    char Fname[MAX_LINE];       /* full matrix path name           */
-    char MatNam[MaxNamLen];     /* short name                      */
-    char PrecMeth[MAX_LINE];    /* preconditioner being tested     */
+    FILE *fout;                     /* output file handle              */
+    char outfile[ITS_MAX_LINE];     /* output filename                 */
+    char Fname[ITS_MAX_LINE];       /* full matrix path name           */
+    char MatNam[MaxNamLen];         /* short name                      */
+    char PrecMeth[ITS_MAX_LINE];    /* preconditioner being tested     */
+
     char type[4];               /* type for HB matrices            */
     int Fmt;                    /* matrix format type              */
     int ndim;                   /* matrix size                     */

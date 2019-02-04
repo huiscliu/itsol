@@ -11,7 +11,7 @@ extern "C" {
 int itsol_add2is(int *last, int nod, int *iord, int *riord);
 int itsol_add2com(int *nback, int nod, int *iord, int *riord);
 
-int itsol_PQperm(csptr mat, int bsize, int *Pord, int *Qord, int *nnod, double tol);
+int itsol_PQperm(ITS_CsPtr mat, int bsize, int *Pord, int *Qord, int *nnod, double tol);
 
 /*--------------------------------------------------------------------- 
 | greedy algorithm for independent set ordering -- 
@@ -42,8 +42,8 @@ int itsol_PQperm(csptr mat, int bsize, int *Pord, int *Qord, int *nnod, double t
 |     the (BSIZE-1) nearest nodes of the current to form a block of
 |     size BSIZE. The current algorithm does not use values of the matrix.
 |---------------------------------------------------------------------*/ 
-int itsol_indsetC(csptr mat, int bsize, int *iord, int *nnod, double tol);
-int itsol_weightsC(csptr mat, double *w);
+int itsol_indsetC(ITS_CsPtr mat, int bsize, int *iord, int *nnod, double tol);
+int itsol_weightsC(ITS_CsPtr mat, double *w);
 
 /*---------------------------------------------------------------------
 | does a preselection of possible diagonal entries. will return a list
@@ -52,7 +52,7 @@ int itsol_weightsC(csptr mat, double *w);
 | to worst). The list is in the form (icor(ii), jcor(ii)) 
 |
 |      ON ENTRY: 
-|       mat   = matrix in csptr format 
+|       mat   = matrix in ITS_CsPtr format 
 |       tol   = tolerance used for selecting best rows -|
 |       job   = indicates whether or not to permute the max entry in 
 |               each row to first position 
@@ -64,7 +64,7 @@ int itsol_weightsC(csptr mat, double *w);
 |       jcor  = list of column indices of entries selected 
 |       count = number of entries selected (size of B block) 
 |--------------------------------------------------------------------*/
-int itsol_preSel(csptr mat, int *icor, int *jcor, int job, double tol, int *count);
+int itsol_preSel(ITS_CsPtr mat, int *icor, int *jcor, int job, double tol, int *count);
 
 #ifdef __cplusplus
 }

@@ -31,25 +31,25 @@ int itsol_invGauss(int nn, double *A);
  */
 int itsol_invSVD(int nn, double *A);
 
-void itsol_matvecC(csptr mat, double *x, double *y);
+void itsol_matvecC(ITS_CsPtr mat, double *x, double *y);
 void itsol_matvecCSC(SMatptr mat, double *x, double *y);
 int itsol_CondestC(iluptr lu, FILE * fp);
 int itsol_diag_scal(vbsptr vbmat);
 int itsol_diagvec(vbsptr vbmat, BData x, BData y);
-void itsol_matvec(csptr mata, double *x, double *y); 
+void itsol_matvec(ITS_CsPtr mata, double *x, double *y); 
 void itsol_matvecCSR(SMatptr mat, double *x, double *y);
-void itsol_matvecz(csptr mata, double *x, double *y, double *z);
+void itsol_matvecz(ITS_CsPtr mata, double *x, double *y, double *z);
 void itsol_vbmatvec(vbsptr vbmat, double *x, double *y);
 void itsol_luinv(int n, double *a, double *x, double *y); 
 int itsol_vblusolC(double *y, double *x, vbiluptr lu); 
 int itsol_lusolC(double *y, double *x, iluptr lu); 
-int itsol_rpermC(csptr mat, int *perm); 
-int itsol_cpermC(csptr mat, int *perm) ; 
-int itsol_dpermC(csptr mat, int *perm) ; 
-int itsol_CSparTran(csptr amat, csptr bmat, CompressType *compress);
+int itsol_rpermC(ITS_CsPtr mat, int *perm); 
+int itsol_cpermC(ITS_CsPtr mat, int *perm) ; 
+int itsol_dpermC(ITS_CsPtr mat, int *perm) ; 
+int itsol_CSparTran(ITS_CsPtr amat, ITS_CsPtr bmat, CompressType *compress);
 double itsol_vbnorm2(int sz, double *a);
-void itsol_Lsol(csptr mata, double *b, double *x);
-void itsol_Usol(csptr mata, double *b, double *x);
+void itsol_Lsol(ITS_CsPtr mata, double *b, double *x);
+void itsol_Usol(ITS_CsPtr mata, double *b, double *x);
 int itsol_ascend (p4ptr levmat, double *x, double *wk);
 int itsol_descend(p4ptr levmat, double *x, double *wk);
 int itsol_armsol2(double *x, arms Prec);
@@ -105,7 +105,7 @@ int itsol_invGauss(int nn, double *A);
  *        we merge row_i and row_j by resetting
  *        group[j] = i and size[i] = size[i]+size[j]
  *--------------------------------------------------------------------------*/
-int itsol_init_blocks(csptr csmat, int *pnBlock, int **pnB, int **pperm,
+int itsol_init_blocks(ITS_CsPtr csmat, int *pnBlock, int **pnB, int **pperm,
         double eps, double *t_hash, double *t_angle);
 
 #ifdef __cplusplus

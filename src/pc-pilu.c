@@ -69,7 +69,7 @@
   |----------------------------------------------------------------------- 
   |     All processing is done using C indexing.
   |--------------------------------------------------------------------*/
-int itsol_pc_pilu(p4ptr amat, csptr B, csptr C, double *droptol, int *lfil, csptr schur)
+int itsol_pc_pilu(p4ptr amat, ITS_CsPtr B, ITS_CsPtr C, double *droptol, int *lfil, ITS_CsPtr schur)
 {
     int i, ii, j, jj, jcol, jpos, jrow, k, *jw, *jwrev;
     int **lfja, *lflen, len, len2, lenu, lenl, rmax;

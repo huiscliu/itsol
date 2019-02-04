@@ -12,8 +12,8 @@
                 /* (for Lij) : Lij < B*tol*D[i]+(1-B)*Norm (inv(L)*e_k) */
 static int Lnnz, *Lfirst, *Llist, *Lid, Unnz, *Ufirst, *Ulist, *Uid;
 static double Mnorm, *wL, *wU, *w, *D;
-static csptr L;
-static csptr U;
+static ITS_CsPtr L;
+static ITS_CsPtr U;
 
 /*---------------------------------------------------------------------
  * update diagonals D_{i+1,...,n}

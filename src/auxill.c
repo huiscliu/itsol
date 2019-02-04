@@ -2,45 +2,45 @@
 #include "auxill.h"
 
 #define ERR_AUXIL  10
-#define MAX_NUM_LEV 10          /* maximum number of levels for arms    */
+#define ITS_MAX_NUM_LEV 10          /* maximum number of levels for arms    */
 
 int itsol_read_inputs(char *in_file, io_t * pio)
 {
     FILE *finputs;
-    char line[MAX_LINE], *p1, *p2;
+    char line[ITS_MAX_LINE], *p1, *p2;
     char pp1, pp2;
     p1 = &pp1;
     p2 = &pp2;
 
     if (NULL == (finputs = fopen(in_file, "r")))
         return (ERR_AUXIL);
-    memset(line, 0, MAX_LINE);
+    memset(line, 0, ITS_MAX_LINE);
     /*-------------------- line 1 : Number of params = number of tests*/
-    if (NULL == fgets(line, MAX_LINE, finputs))
+    if (NULL == fgets(line, ITS_MAX_LINE, finputs))
         return (ERR_AUXIL);
     for (p1 = line; ' ' == *p1; p1++) ;
     for (p2 = p1; ' ' != *p2; p2++) ;
     *p2 = '\0';
     pio->nparam = atoi(p1);
     /*-------------------- line 2 : krylov subspace dimension */
-    memset(line, 0, MAX_LINE);
-    if (NULL == fgets(line, MAX_LINE, finputs))
+    memset(line, 0, ITS_MAX_LINE);
+    if (NULL == fgets(line, ITS_MAX_LINE, finputs))
         return (ERR_AUXIL);
     for (p1 = line; ' ' == *p1; p1++) ;
     for (p2 = p1; ' ' != *p2; p2++) ;
     *p2 = '\0';
     pio->im = atoi(p1);
     /*-------------------- Line 3 : maximum number of iterations */
-    memset(line, 0, MAX_LINE);
-    if (NULL == fgets(line, MAX_LINE, finputs))
+    memset(line, 0, ITS_MAX_LINE);
+    if (NULL == fgets(line, ITS_MAX_LINE, finputs))
         return (ERR_AUXIL);
     for (p1 = line; ' ' == *p1; p1++) ;
     for (p2 = p1; ' ' != *p2; p2++) ;
     *p2 = '\0';
     pio->maxits = atoi(p1);
     /*-------------------- Line 4 : tolerance for stopping */
-    memset(line, 0, MAX_LINE);
-    if (NULL == fgets(line, MAX_LINE, finputs))
+    memset(line, 0, ITS_MAX_LINE);
+    if (NULL == fgets(line, ITS_MAX_LINE, finputs))
         return (ERR_AUXIL);
     for (p1 = line; ' ' == *p1; p1++) ;
     for (p2 = p1; ' ' != *p2; p2++) ;
@@ -48,40 +48,40 @@ int itsol_read_inputs(char *in_file, io_t * pio)
     pio->tol = atof(p1);
 
     /*-------------------- Line 5 : initial lfil for iluk, ilut etc */
-    memset(line, 0, MAX_LINE);
-    if (NULL == fgets(line, MAX_LINE, finputs))
+    memset(line, 0, ITS_MAX_LINE);
+    if (NULL == fgets(line, ITS_MAX_LINE, finputs))
         return (ERR_AUXIL);
     for (p1 = line; ' ' == *p1; p1++) ;
     for (p2 = p1; ' ' != *p2; p2++) ;
     *p2 = '\0';
     pio->lfil0 = atoi(p1);
     /*----------- Line 6 : increment for lfil for consecutive tests */
-    memset(line, 0, MAX_LINE);
-    if (NULL == fgets(line, MAX_LINE, finputs))
+    memset(line, 0, ITS_MAX_LINE);
+    if (NULL == fgets(line, ITS_MAX_LINE, finputs))
         return (ERR_AUXIL);
     for (p1 = line; ' ' == *p1; p1++) ;
     for (p2 = p1; ' ' != *p2; p2++) ;
     *p2 = '\0';
     pio->lfilInc = atoi(p1);
     /*-------------------- Line 7 : initial drop tol for ilut etc.. */
-    memset(line, 0, MAX_LINE);
-    if (NULL == fgets(line, MAX_LINE, finputs))
+    memset(line, 0, ITS_MAX_LINE);
+    if (NULL == fgets(line, ITS_MAX_LINE, finputs))
         return (ERR_AUXIL);
     for (p1 = line; ' ' == *p1; p1++) ;
     for (p2 = p1; ' ' != *p2; p2++) ;
     *p2 = '\0';
     pio->tol0 = atof(p1);
     /*--------- Line 8: multiplier for droptol in consecutive tests */
-    memset(line, 0, MAX_LINE);
-    if (NULL == fgets(line, MAX_LINE, finputs))
+    memset(line, 0, ITS_MAX_LINE);
+    if (NULL == fgets(line, ITS_MAX_LINE, finputs))
         return (ERR_AUXIL);
     for (p1 = line; ' ' == *p1; p1++) ;
     for (p2 = p1; ' ' != *p2; p2++) ;
     *p2 = '\0';
     pio->tolMul = atof(p1);
     /*-------------------- Line 9: fill-level used by ILUK ONLY */
-    memset(line, 0, MAX_LINE);
-    if (NULL == fgets(line, MAX_LINE, finputs))
+    memset(line, 0, ITS_MAX_LINE);
+    if (NULL == fgets(line, ITS_MAX_LINE, finputs))
         return (ERR_AUXIL);
     for (p1 = line; ' ' == *p1; p1++) ;
     for (p2 = p1; ' ' != *p2; p2++) ;
@@ -90,16 +90,16 @@ int itsol_read_inputs(char *in_file, io_t * pio)
     /*-------------------- Fill-lev increment is set to one */
     pio->fill_lev_inc = 1;
     /*----------------- Line 10: Ind. set perms or PQ perms [ARMS only] */
-    memset(line, 0, MAX_LINE);
-    if (NULL == fgets(line, MAX_LINE, finputs))
+    memset(line, 0, ITS_MAX_LINE);
+    if (NULL == fgets(line, ITS_MAX_LINE, finputs))
         return (ERR_AUXIL);
     for (p1 = line; ' ' == *p1; p1++) ;
     for (p2 = p1; ' ' != *p2; p2++) ;
     *p2 = '\0';
     pio->perm_type = atoi(p1);
     /*-------------------- Line 11: Block size --  */
-    memset(line, 0, MAX_LINE);
-    if (NULL == fgets(line, MAX_LINE, finputs))
+    memset(line, 0, ITS_MAX_LINE);
+    if (NULL == fgets(line, ITS_MAX_LINE, finputs))
         return (ERR_AUXIL);
     for (p1 = line; ' ' == *p1; p1++) ;
     for (p2 = p1; ' ' != *p2; p2++) ;
@@ -112,13 +112,13 @@ int itsol_read_inputs(char *in_file, io_t * pio)
 
 int itsol_get_matrix_info(FILE * fmat, io_t * pio)
 {
-    char path[MAX_LINE], MatNam[MaxNamLen], Fmt[4];
+    char path[ITS_MAX_LINE], MatNam[MaxNamLen], Fmt[4];
     int count;
     /*-------------------- READ LINE */
     fscanf(fmat, "%s %s %s\n", path, MatNam, Fmt);
     /*-------------------- file pathname */
     count = strlen(path);
-    memset(pio->Fname, 0, MAX_LINE * sizeof(char));
+    memset(pio->Fname, 0, ITS_MAX_LINE * sizeof(char));
     memcpy(pio->Fname, path, count * sizeof(char));
     /*-------------------- file short name */
     count = strlen(MatNam);
@@ -177,7 +177,7 @@ int itsol_read_coo(double **VAL, int **COL, int **ROW, io_t * pio, double **rhs,
     double *aa;
     int *ii, *jj;
     int k, n, nnz;
-    char str[MAX_LINE];
+    char str[ITS_MAX_LINE];
     /*-------------------- start */
     if ((matf = fopen(pio->Fname, "r")) == NULL) {
         fprintf(stdout, "Cannot Open Matrix\n");
@@ -187,7 +187,7 @@ int itsol_read_coo(double **VAL, int **COL, int **ROW, io_t * pio, double **rhs,
       nnz are read separately per line */
     /*-------------------- try a 100 lines max of comments */
     for (k = 0; k < 100; k++) {
-        fgets(str, MAX_LINE, matf);
+        fgets(str, ITS_MAX_LINE, matf);
         if (memcmp(str, "%", sizeof(char)) != 0)
             break;
     }
@@ -487,7 +487,7 @@ void itsol_set_arms_pars(io_t * io, int Dscale, int *ipar, double *dropcoef, int
         ipar[j] = 0;
 
     /*-------------------- */
-    ipar[0] = MAX_NUM_LEV;      /* max number of levels allowed */
+    ipar[0] = ITS_MAX_NUM_LEV;      /* max number of levels allowed */
     fprintf(stdout, " %d maxlev \n", ipar[0]);
     ipar[1] = io->perm_type;    /* Indset (0) / PQ (1)    permutation   */
     /* note that these refer to completely  */

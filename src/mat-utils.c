@@ -158,7 +158,7 @@ int itsol_diag_scal(vbsptr vbmat)
     int i, j, k, dim, sz, size, ierr = 0, col;
     double one = 1.0, zero = 0.0;
     int nzcount, n = vbmat->n, *bsz = vbmat->bsz, *ja;
-    int bufsz = sizeof(double) * MAX_BLOCK_SIZE * MAX_BLOCK_SIZE;
+    int bufsz = sizeof(double) * ITS_MAX_BLOCK_SIZE * ITS_MAX_BLOCK_SIZE;
     BData *ba, *D, buf;
 
     D = (BData *) itsol_malloc(sizeof(BData) * n, "diag_scal");
@@ -240,7 +240,7 @@ int itsol_diagvec(vbsptr vbmat, BData x, BData y)
   | on return
   | y     = the product A * x
   |--------------------------------------------------------------------*/
-void itsol_matvec(csptr mata, double *x, double *y)
+void itsol_matvec(ITS_CsPtr mata, double *x, double *y)
 {
     int i, k, *ki;
     double *kr;
@@ -293,7 +293,7 @@ void itsol_vbmatvec(vbsptr vbmat, double *x, double *y)
   | on return
   | x     = the solution of L x = b 
   |--------------------------------------------------------------------*/
-void itsol_Lsol(csptr mata, double *b, double *x)
+void itsol_Lsol(ITS_CsPtr mata, double *b, double *x)
 {
     int i, k;
     double *kr;
@@ -324,7 +324,7 @@ void itsol_Lsol(csptr mata, double *b, double *x)
   | x     = the solution of U * x = b 
   |
   |---------------------------------------------------------------------*/
-void itsol_Usol(csptr mata, double *b, double *x)
+void itsol_Usol(ITS_CsPtr mata, double *b, double *x)
 {
     int i, k, *ki;
     double *kr;
@@ -414,7 +414,7 @@ int itsol_ascend(p4ptr levmat, double *x, double *wk)
   | z-location must be different from that of x 
   | i.e., y and x are used but not modified.
   |--------------------------------------------------------------------*/
-void itsol_matvecz(csptr mata, double *x, double *y, double *z)
+void itsol_matvecz(ITS_CsPtr mata, double *x, double *y, double *z)
 {
     int i, k, *ki;
     double *kr, t;
@@ -655,7 +655,7 @@ int itsol_lusolC(double *y, double *x, iluptr lu)
 {
     int n = lu->n, i, j, nzcount, *ja;
     double *D;
-    csptr L, U;
+    ITS_CsPtr L, U;
 
     L = lu->L;
     U = lu->U;
@@ -693,8 +693,8 @@ int itsol_lumsolC(double *y, double *x, iluptr lu)
 {
     int n = lu->n, i, j, nzcount, nnzL, *ia, *ja;
     double *D = lu->D, *ma;
-    csptr L = lu->L;
-    csptr U = lu->U;
+    ITS_CsPtr L = lu->L;
+    ITS_CsPtr U = lu->U;
 
     for (i = 0; i < n; i++)
         x[i] = y[i];
@@ -809,7 +809,7 @@ int itsol_vblusolC(double *y, double *x, vbiluptr lu)
   |             0   --> successful return.
   |             1   --> memory allocation error.
   |---------------------------------------------------------------------*/
-int itsol_rpermC(csptr mat, int *perm)
+int itsol_rpermC(ITS_CsPtr mat, int *perm)
 {
     int **addj, *nnz, i, size = mat->n;
     double **addm;
@@ -854,7 +854,7 @@ int itsol_rpermC(csptr mat, int *perm)
   |             0   --> successful return.
   |             1   --> memory allocation error.
   |---------------------------------------------------------------------*/
-int itsol_cpermC(csptr mat, int *perm)
+int itsol_cpermC(ITS_CsPtr mat, int *perm)
 {
     int i, j, *newj, size = mat->n, *aja;
 
@@ -892,7 +892,7 @@ int itsol_cpermC(csptr mat, int *perm)
   |             0   --> successful return.
   |             1   --> memory allocation error.
   |---------------------------------------------------------------------*/
-int itsol_dpermC(csptr mat, int *perm)
+int itsol_dpermC(ITS_CsPtr mat, int *perm)
 {
     if (itsol_rpermC(mat, perm)) return 1;
 
@@ -919,7 +919,7 @@ int itsol_dpermC(csptr mat, int *perm)
   |             0   --> successful return.
   |             1   --> memory allocation error.
   |---------------------------------------------------------------------*/
-int itsol_CSparTran(csptr amat, csptr bmat, CompressType * compress)
+int itsol_CSparTran(ITS_CsPtr amat, ITS_CsPtr bmat, CompressType * compress)
 {
     int i, j, *ind, nzcount, pos, size = amat->n, *aja;
     ind = bmat->nzcount;
@@ -1047,7 +1047,7 @@ int itsol_VBcondestC(vbiluptr lu, FILE * fp)
   | on return
   | y     = the product A * x
   |--------------------------------------------------------------------*/
-void itsol_matvecC(csptr mat, double *x, double *y)
+void itsol_matvecC(ITS_CsPtr mat, double *x, double *y)
 {
     int n = mat->n, i, k, *ki;
     double *kr;
@@ -1159,10 +1159,10 @@ static int KeyComp(const void *vfst, const void *vsnd)
  *        we merge row_i and row_j by resetting
  *        group[j] = i and size[i] = size[i]+size[j]
  *--------------------------------------------------------------------------*/
-int itsol_init_blocks(csptr csmat, int *pnBlock, int **pnB, int **pperm, double eps, double *t_hash, double *t_angle)
+int itsol_init_blocks(ITS_CsPtr csmat, int *pnBlock, int **pnB, int **pperm, double eps, double *t_hash, double *t_angle)
 {
     int n = csmat->n, nBlock = 0, i, j, k;
-    csptr at = NULL;
+    ITS_CsPtr at = NULL;
     KeyType *group = NULL;
     CompressType *compress = NULL;
     int *perm = NULL, *nB = NULL;
@@ -1247,7 +1247,7 @@ int itsol_init_blocks(csptr csmat, int *pnBlock, int **pnB, int **pperm, double 
 
     /*-------------------- compress matrix based on angle algorithm */
     /*-------------------- calculate compressed A^T                 */
-    at = (csptr) itsol_malloc(sizeof(SparMat), "init_blocks");
+    at = (ITS_CsPtr) itsol_malloc(sizeof(SparMat), "init_blocks");
     itsol_setupCS(at, n, 0);
 
     if (itsol_CSparTran(csmat, at, compress) != 0) return -1;
@@ -1318,8 +1318,8 @@ int itsol_init_blocks(csptr csmat, int *pnBlock, int **pnB, int **pperm, double 
     *pnBlock = nBlock;
     *pnB = (int *)itsol_malloc(nBlock * sizeof(int), "init_blocks");
     for (i = 0; i < nBlock; i++) {
-        if (nB[i] > MAX_BLOCK_SIZE) {
-            fprintf(stderr, "Block of size = %d exceeds MAX_BLOCK_SIZE\n", nB[i]);
+        if (nB[i] > ITS_MAX_BLOCK_SIZE) {
+            fprintf(stderr, "Block of size = %d exceeds ITS_MAX_BLOCK_SIZE\n", nB[i]);
             return -1;
         }
         (*pnB)[i] = nB[i];
