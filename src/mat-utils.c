@@ -730,7 +730,7 @@ int itsol_lumsolC(double *y, double *x, iluptr lu)
  *
  *    note: lu->bf is used to store vector
  *--------------------------------------------------------------------*/
-int itsol_vblusolC(double *y, double *x, vbiluptr lu)
+int itsol_vblusolC(double *y, double *x, ITS_VbiluPtr lu)
 {
     int n = lu->n, *bsz = lu->bsz, i, j, bi, icol, dim, sz;
     int nzcount, nBs, nID, *ja, inc = 1, OPT;
@@ -1017,7 +1017,7 @@ int itsol_condestArms(arms armspre, double *y, FILE * fp)
     return 0;
 }
 
-int itsol_VBcondestC(vbiluptr lu, FILE * fp)
+int itsol_VBcondestC(ITS_VbiluPtr lu, FILE * fp)
 {
     int n = lu->n, i, ndim = lu->bsz[n];
     double norm = 0.0;
