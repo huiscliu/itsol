@@ -80,7 +80,7 @@ typedef struct ILUfac
     double *D;    /* diagonal elements                          */
     ITS_CsPtr U;      /* U part elements                            */
     int *work;    /* working buffer */
-} ILUSpar, LDUmat, *iluptr;
+} ILUSpar, LDUmat, *ITS_IluPtr;
 
 typedef struct PerMat4 *p4ptr;
 
@@ -198,7 +198,7 @@ typedef struct _SMat
     int n; 
     int Mtype;           /*--  type 1 = CSR, 2 = VBCSR, 3 = LDU    */
     ITS_CsPtr CS;        /* place holder for a CSR/CSC type matrix */
-    iluptr LDU;          /* struct for an LDU type matrix          */
+    ITS_IluPtr LDU;          /* struct for an LDU type matrix          */
     ITS_VbsPtr VBCSR;        /* place holder for a block matrix        */
     void (*matvec)(struct _SMat*, double *, double *);
 
@@ -208,7 +208,7 @@ typedef struct _SMat
 typedef struct _SPre
 {
     int Ptype;           /*-- Ptype 1 = ILU, 2 = VBILU, 3 = Crout */
-    iluptr   ILU;        /* struct for an ILU type preconditioner */
+    ITS_IluPtr   ILU;        /* struct for an ILU type preconditioner */
     ITS_VbiluPtr VBILU;      /* struct for a block preconditioner */
     arms ARMS;           /* struct for a block preconditioner */
     int (*precon) (double *, double *, struct _SPre*); 

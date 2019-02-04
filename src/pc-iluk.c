@@ -32,7 +32,7 @@
  * ======
  * All the diagonals of the input matrix must not be zero
  *--------------------------------------------------------------------------*/
-int itsol_pc_ilukC(int lofM, ITS_CsPtr csmat, iluptr lu, FILE * fp)
+int itsol_pc_ilukC(int lofM, ITS_CsPtr csmat, ITS_IluPtr lu, FILE * fp)
 {
     int ierr;
     int n = csmat->n;
@@ -156,7 +156,7 @@ int itsol_pc_ilukC(int lofM, ITS_CsPtr csmat, iluptr lu, FILE * fp)
  *   ->L    = L part -- stored in SpaFmt format, patterns only in lofC
  *   ->U    = U part -- stored in SpaFmt format, patterns only in lofC
  *------------------------------------------------------------------*/
-int itsol_pc_lofC(int lofM, ITS_CsPtr csmat, iluptr lu, FILE * fp)
+int itsol_pc_lofC(int lofM, ITS_CsPtr csmat, ITS_IluPtr lu, FILE * fp)
 {
     int n = csmat->n;
     int *levls = NULL, *jbuf = NULL, *iw = lu->work;

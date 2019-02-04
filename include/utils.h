@@ -24,11 +24,11 @@ int itsol_nnzVBMat(ITS_VbsPtr vbmat) ;
 int itsol_memVBMat(ITS_VbsPtr vbmat); 
 int itsol_setupVBILU(ITS_VbiluPtr lu, int n, int *bsz);
 int itsol_cleanVBILU(ITS_VbiluPtr lu); 
-int itsol_cleanILU(iluptr lu);
+int itsol_cleanILU(ITS_IluPtr lu);
 int itsol_cleanILUT(ilutptr amat, int indic);
 int itsol_cleanP4(p4ptr amat);
 int itsol_mallocVBRow(ITS_VbiluPtr lu, int nrow); 
-int itsol_mallocRow(iluptr lu, int nrow);
+int itsol_mallocRow(ITS_IluPtr lu, int nrow);
 void itsol_zrmC(int m, int n, BData data); 
 void itsol_copyBData(int m, int n, BData dst, BData src, int isig); 
 int itsol_CSRcs(int n, double *a, int *ja, int *ia, ITS_CsPtr mat, int rsa); 
@@ -36,8 +36,8 @@ int itsol_csrvbsrC(int job, int nBlk, int *nB, ITS_CsPtr csmat, ITS_VbsPtr vbmat
 int itsol_col2vbcol(int col, ITS_VbsPtr vbmat);
 int itsol_nnz_vbilu(ITS_VbiluPtr lu); 
 int itsol_nnz_lev4(p4ptr levmat, int *lev, FILE *ft);
-int itsol_setupILU(iluptr lu, int n);
-int itsol_CS2lum(int n, ITS_CsPtr Amat, iluptr mat, int typ);
+int itsol_setupILU(ITS_IluPtr lu, int n);
+int itsol_CS2lum(int n, ITS_CsPtr Amat, ITS_IluPtr mat, int typ);
 int itsol_COOcs(int n, int nnz,  double *a, int *ja, int *ia, ITS_CsPtr bmat);
 void itsol_coocsr_(int*, int*, double*, int*, int*, double*, int*, int*);
 
@@ -45,9 +45,9 @@ int itsol_csSplit4(ITS_CsPtr amat, int bsize, int csize, ITS_CsPtr B, ITS_CsPtr 
 void itsol_setup_arms (arms Levmat);
 int itsol_cleanARMS(arms ArmsPre);
 void itsol_coocsc(int n, int nnz, double *val, int *col, int *row, double **a, int **ja, int **ia, int job);
-int itsol_nnz_ilu(iluptr lu);
-int itsol_CSClum(int n, double *a, int *ja, int *ia, iluptr mat, int rsa);
-int itsol_CSClumC(ITS_CsPtr amat, iluptr mat, int rsa);
+int itsol_nnz_ilu(ITS_IluPtr lu);
+int itsol_CSClum(int n, double *a, int *ja, int *ia, ITS_IluPtr mat, int rsa);
+int itsol_CSClumC(ITS_CsPtr amat, ITS_IluPtr mat, int rsa);
 
 /* misc.c */
 int itsol_SparTran(ITS_CsPtr amat, ITS_CsPtr bmat, int job, int flag); 
@@ -66,7 +66,7 @@ void itsol_swapj(int v[], int i, int j);
 void itsol_swapm(double v[], int i, int j);
 double itsol_get_time(void);
 int itsol_dumpArmsMat(arms PreSt, FILE *ft);
-int itsol_outputLU(iluptr lu, char *filename);
+int itsol_outputLU(ITS_IluPtr lu, char *filename);
 int itsol_checkperm(int *p, int n);
 void itsol_qsortR1I(double *wa, int *cor1, int left, int right);
 

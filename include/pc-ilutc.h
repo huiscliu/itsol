@@ -109,7 +109,7 @@ extern "C" {
  * Ulist(n)   Ulist(j) points to a linked list of rows that will update the
  *            j-th column in L part
  *----------------------------------------------------------------------*/
-int itsol_pc_ilutc(iluptr mt, iluptr lu, int lfil, double tol, int drop, FILE *fp);
+int itsol_pc_ilutc(ITS_IluPtr mt, ITS_IluPtr lu, int lfil, double tol, int drop, FILE *fp);
 
 #ifdef __cplusplus
 }
