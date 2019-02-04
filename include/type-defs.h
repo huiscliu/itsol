@@ -215,7 +215,7 @@ typedef struct _SPre
 
 } SPre, *SPreptr;
 
-typedef struct _io_t
+typedef struct ITS_IOT_
 {
     FILE *fout;                     /* output file handle              */
     char outfile[ITS_MAX_LINE];     /* output filename                 */
@@ -262,6 +262,6 @@ typedef struct _io_t
     double enorm;               /* error norm:          || x- x0|| */
     double rnorm;               /* final residual norm: ||Ax-Ax0|| */
 
-} io_t;
+} ITS_IOT;
 
 #endif  /* __VBLOCK_HEADER_H__ */

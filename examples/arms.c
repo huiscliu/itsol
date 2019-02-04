@@ -38,7 +38,7 @@ int main(void)
     /*-------------------- IO-related           */
     FILE *flog = stdout;        /* to output stats */
     FILE *fmat = NULL;          /* matrix file     */
-    io_t io;                    /* structure for handling I/O 
+    ITS_IOT io;                    /* structure for handling I/O 
                                    functions + a few other things */
     double tm1, tm2;
     int mat, numat, iparam, i;

@@ -9,14 +9,14 @@
 extern "C" {
 #endif
 
-int itsol_read_inputs(char *in_file, io_t *pio);
+int itsol_read_inputs(char *in_file, ITS_IOT *pio);
 
-int itsol_get_matrix_info(FILE *fmat, io_t *pio);
+int itsol_get_matrix_info(FILE *fmat, ITS_IOT *pio);
 void itsol_output_blocks(int nBlock, int *nB, FILE *f);
 void itsol_output_perm(int n, int *perm, FILE *f);
-int itsol_read_coo(double **VAL, int **COL, int **ROW, io_t *pio, double **rhs, double **sol, int job);
+int itsol_read_coo(double **VAL, int **COL, int **ROW, ITS_IOT *pio, double **rhs, double **sol, int job);
 
-int itsol_readhb_c(int *NN, double **AA, int **JA, int **IA, io_t *pio, 
+int itsol_readhb_c(int *NN, double **AA, int **JA, int **IA, ITS_IOT *pio, 
 	     double **rhs, double **sol, int *rsa);
 
 /*-----------------------------------------------------------*
@@ -24,20 +24,20 @@ int itsol_readhb_c(int *NN, double **AA, int **JA, int **IA, io_t *pio,
    fmt == 0, output in CSC
    fmt == 1, output in CSR
  *-----------------------------------------------------------*/
-int itsol_readhb_2(int *NN, double **AA, int **JA, int **IA, io_t *pio, double **rhs, double **sol, int *rsa, int fmt);
+int itsol_readhb_2(int *NN, double **AA, int **JA, int **IA, ITS_IOT *pio, double **rhs, double **sol, int *rsa, int fmt);
 
-void itsol_output_header(io_t *pio);
+void itsol_output_header(ITS_IOT *pio);
 
-void itsol_output_header_vb(io_t *pio);
+void itsol_output_header_vb(ITS_IOT *pio);
 
-void itsol_output_result(int lfil, io_t *pio, int iparam);
+void itsol_output_result(int lfil, ITS_IOT *pio, int iparam);
 
 /*-------------------------------------------------*/
 /* sets parameters required by arms preconditioner */
-/* input io_t, Dscale                            */
+/* input ITS_IOT, Dscale                            */
 /* output ipar tolcoef, lfil                       */
 /*-------------------- trigger an error if not set */
-void itsol_set_arms_pars(io_t* io, int Dscale, int *ipar, double *dropcoef, int *lfil);
+void itsol_set_arms_pars(ITS_IOT* io, int Dscale, int *ipar, double *dropcoef, int *lfil);
 
 void itsol_randvec (double *v, int n);
 

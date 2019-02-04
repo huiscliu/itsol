@@ -34,7 +34,7 @@ int main(void)
     double tol;
     /*-------------------- IO */
     FILE *flog = stdout, *fmat = NULL;
-    io_t io;
+    ITS_IOT io;
     /*---------------------------------------------------------*/
     double tm1, tm2;
     int mat, numat, iparam, i;
