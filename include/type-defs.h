@@ -41,7 +41,7 @@ typedef struct SpaFmt
 
 } ITS_SparMat, *ITS_CsPtr;
 
-typedef double *BData;
+typedef double *ITS_BData;
 
 typedef struct VBSpaFmt
 {
@@ -51,8 +51,8 @@ typedef struct VBSpaFmt
     /* diagonal block                             */
     int *nzcount;  /* length of each row                         */
     int **ja;     /* pointer-to-pointer to store column indices */
-    BData **ba;   /* pointer-to-pointer to store nonzero blocks */
-    BData *D;     /* to store inversion of diagonals            */
+    ITS_BData **ba;   /* pointer-to-pointer to store nonzero blocks */
+    ITS_BData *D;     /* to store inversion of diagonals            */
 
 } ITS_VBSparMat, *ITS_VbsPtr;
 
@@ -62,11 +62,11 @@ typedef struct VBILUfac
     int *bsz;     /* the row/col of the first element of each   */
 
     /* diagonal block                             */
-    BData *D;     /* diagonal blocks                            */
+    ITS_BData *D;     /* diagonal blocks                            */
     ITS_VbsPtr L;     /* L part blocks                              */
     ITS_VbsPtr U;     /* U part blocks                              */
     int *work;    /* working buffer                             */
-    BData bf;     /* buffer of a temp block                     */
+    ITS_BData bf;     /* buffer of a temp block                     */
     int DiagOpt;  /* Option for diagonal inversion/solutiob     *
                    * opt =  1 -->> call luinv 
                    * opt == 2 -->> block inverted call dgemv    */

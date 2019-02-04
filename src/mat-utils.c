@@ -159,10 +159,10 @@ int itsol_diag_scal(ITS_VbsPtr vbmat)
     double one = 1.0, zero = 0.0;
     int nzcount, n = vbmat->n, *bsz = vbmat->bsz, *ja;
     int bufsz = sizeof(double) * ITS_MAX_BLOCK_SIZE * ITS_MAX_BLOCK_SIZE;
-    BData *ba, *D, buf;
+    ITS_BData *ba, *D, buf;
 
-    D = (BData *) itsol_malloc(sizeof(BData) * n, "diag_scal");
-    buf = (BData) itsol_malloc(bufsz, "diag_scal");
+    D = (ITS_BData *) itsol_malloc(sizeof(ITS_BData) * n, "diag_scal");
+    buf = (ITS_BData) itsol_malloc(bufsz, "diag_scal");
 
     for (i = 0; i < n; i++) {
         nzcount = vbmat->nzcount[i];
@@ -174,7 +174,7 @@ int itsol_diag_scal(ITS_VbsPtr vbmat)
 
             dim = ITS_B_DIM(bsz, i);
             size = sizeof(double) * dim * dim;
-            D[i] = (BData) itsol_malloc(size, "diag_scal");
+            D[i] = (ITS_BData) itsol_malloc(size, "diag_scal");
             memcpy(D[i], vbmat->ba[i][j], size);
 
             ierr = itsol_invSVD(dim, D[i]);
@@ -198,7 +198,7 @@ int itsol_diag_scal(ITS_VbsPtr vbmat)
             col = ja[j];
             sz = ITS_B_DIM(bsz, col);
             DGEMM("n", "n", dim, sz, dim, one, D[i], dim, ba[j], dim, zero, buf, dim);
-            itsol_copyBData(dim, sz, ba[j], buf, 0);
+            itsol_copyITS_BData(dim, sz, ba[j], buf, 0);
         }
     }
 
@@ -217,11 +217,11 @@ int itsol_diag_scal(ITS_VbsPtr vbmat)
   | on return
   | y     = the product inv(D) * x
   |--------------------------------------------------------------------*/
-int itsol_diagvec(ITS_VbsPtr vbmat, BData x, BData y)
+int itsol_diagvec(ITS_VbsPtr vbmat, ITS_BData x, ITS_BData y)
 {
     int i, n = vbmat->n, *bsz = vbmat->bsz, dim, sz = 1;
     double zero = 0.0, one = 1.0;
-    BData *D = vbmat->D;
+    ITS_BData *D = vbmat->D;
 
     for (i = 0; i < n; i++) {
         dim = ITS_B_DIM(bsz, i);
@@ -260,7 +260,7 @@ void itsol_vbmatvec(ITS_VbsPtr vbmat, double *x, double *y)
     int i, j, nzcount, col, inc = 1, dim, sz, nBs, nBsj;
     int n = vbmat->n, *ja, *bsz = vbmat->bsz;
     double one = 1.0;
-    BData *ba;
+    ITS_BData *ba;
 
     for (i = 0; i < n; i++) {
         nBs = bsz[i];
@@ -736,7 +736,7 @@ int itsol_vblusolC(double *y, double *x, ITS_VbiluPtr lu)
     int nzcount, nBs, nID, *ja, inc = 1, OPT;
     double *data, alpha = -1.0, beta = 1.0, alpha2 = 1.0, beta2 = 0.0;
     ITS_VbsPtr L, U;
-    BData *D, *ba;
+    ITS_BData *D, *ba;
 
     L = lu->L;
     U = lu->U;

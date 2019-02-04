@@ -35,7 +35,7 @@ void itsol_matvecC(ITS_CsPtr mat, double *x, double *y);
 void itsol_matvecCSC(SMatptr mat, double *x, double *y);
 int itsol_CondestC(ITS_IluPtr lu, FILE * fp);
 int itsol_diag_scal(ITS_VbsPtr vbmat);
-int itsol_diagvec(ITS_VbsPtr vbmat, BData x, BData y);
+int itsol_diagvec(ITS_VbsPtr vbmat, ITS_BData x, ITS_BData y);
 void itsol_matvec(ITS_CsPtr mata, double *x, double *y); 
 void itsol_matvecCSR(SMatptr mat, double *x, double *y);
 void itsol_matvecz(ITS_CsPtr mata, double *x, double *y, double *z);

@@ -244,7 +244,7 @@ int itsol_setupVBMat(ITS_VbsPtr vbmat, int n, int *nB)
         vbmat->bsz = NULL;
     vbmat->nzcount = (int *)itsol_malloc(sizeof(int) * n, "itsol_setupVBMat");
     vbmat->ja = (int **)itsol_malloc(sizeof(int *) * n, "itsol_setupVBMat");
-    vbmat->ba = (BData **) itsol_malloc(sizeof(BData *) * n, "itsol_setupVBMat");
+    vbmat->ba = (ITS_BData **) itsol_malloc(sizeof(ITS_BData *) * n, "itsol_setupVBMat");
     vbmat->D = NULL;
     return 0;
 }
@@ -346,7 +346,7 @@ int itsol_setupVBILU(ITS_VbiluPtr lu, int n, int *bsz)
 
     for (i = 0; i <= n; i++) lu->bsz[i] = bsz[i];
 
-    lu->D = (BData *) itsol_malloc(sizeof(BData) * n, "setupVBILU");
+    lu->D = (ITS_BData *) itsol_malloc(sizeof(ITS_BData) * n, "setupVBILU");
     lu->L = (ITS_VbsPtr) itsol_malloc(sizeof(ITS_VBSparMat), "setupVBILU");
     itsol_setupVBMat(lu->L, n, NULL);
 
@@ -354,7 +354,7 @@ int itsol_setupVBILU(ITS_VbiluPtr lu, int n, int *bsz)
     itsol_setupVBMat(lu->U, n, NULL);
 
     lu->work = (int *)itsol_malloc(sizeof(int) * n, "setupVBILU");
-    lu->bf = (BData) itsol_malloc(max_block_size, "setupVBILU");
+    lu->bf = (ITS_BData) itsol_malloc(max_block_size, "setupVBILU");
     return 0;
 }
 
@@ -441,34 +441,34 @@ int itsol_mallocVBRow(ITS_VbiluPtr lu, int nrow)
     int *bsz = lu->bsz;
 
     nzcount = lu->L->nzcount[nrow];
-    lu->L->ba[nrow] = (BData *) itsol_malloc(sizeof(BData) * nzcount, "mallocVBRow");
+    lu->L->ba[nrow] = (ITS_BData *) itsol_malloc(sizeof(ITS_BData) * nzcount, "mallocVBRow");
     for (j = 0; j < nzcount; j++) {
         ncol = lu->L->ja[nrow][j];
         szOfBlock = ITS_B_DIM(bsz, nrow) * ITS_B_DIM(bsz, ncol) * sizeof(double);
-        lu->L->ba[nrow][j] = (BData) itsol_malloc(szOfBlock, "mallocVBRow");
+        lu->L->ba[nrow][j] = (ITS_BData) itsol_malloc(szOfBlock, "mallocVBRow");
     }
 
     szOfBlock = sizeof(double) * ITS_B_DIM(bsz, nrow) * ITS_B_DIM(bsz, nrow);
-    lu->D[nrow] = (BData) itsol_malloc(szOfBlock, "mallocVBRow");
+    lu->D[nrow] = (ITS_BData) itsol_malloc(szOfBlock, "mallocVBRow");
 
     nzcount = lu->U->nzcount[nrow];
-    lu->U->ba[nrow] = (BData *) itsol_malloc(sizeof(BData) * nzcount, "mallocVBRow");
+    lu->U->ba[nrow] = (ITS_BData *) itsol_malloc(sizeof(ITS_BData) * nzcount, "mallocVBRow");
     for (j = 0; j < nzcount; j++) {
         ncol = lu->U->ja[nrow][j];
         szOfBlock = ITS_B_DIM(bsz, nrow) * ITS_B_DIM(bsz, ncol) * sizeof(double);
-        lu->U->ba[nrow][j] = (BData) itsol_malloc(szOfBlock, "mallocVBRow");
+        lu->U->ba[nrow][j] = (ITS_BData) itsol_malloc(szOfBlock, "mallocVBRow");
     }
     return 0;
 }
 
-void itsol_zrmC(int m, int n, BData data)
+void itsol_zrmC(int m, int n, ITS_BData data)
 {
     int mn = m * n, i;
     for (i = 0; i < mn; i++)
         data[i] = 0;
 }
 
-void itsol_copyBData(int m, int n, BData dst, BData src, int isig)
+void itsol_copyITS_BData(int m, int n, ITS_BData dst, ITS_BData src, int isig)
 {
     int mm = m * n, i;
     if (isig == 0)
@@ -1080,10 +1080,10 @@ int itsol_csrvbsrC(int job, int nBlk, int *nB, ITS_CsPtr csmat, ITS_VbsPtr vbmat
 
         /* copy data to the (b_row)-th row of the block matrix from the
            original matrix */
-        vbmat->ba[b_row] = (BData *) itsol_malloc(sizeof(BData) * nnz, "csrvbsrC_3");
+        vbmat->ba[b_row] = (ITS_BData *) itsol_malloc(sizeof(ITS_BData) * nnz, "csrvbsrC_3");
         for (j = 0; j < nnz; j++) {
             szofBlock = sizeof(double) * nB[b_row] * nB[vbmat->ja[b_row][j]];
-            vbmat->ba[b_row][j] = (BData) itsol_malloc(szofBlock, "csrvbsrC_4");
+            vbmat->ba[b_row][j] = (ITS_BData) itsol_malloc(szofBlock, "csrvbsrC_4");
             memset(vbmat->ba[b_row][j], 0, szofBlock);
         }
         for (j = i; j < i + nB[b_row]; j++) {

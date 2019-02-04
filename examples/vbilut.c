@@ -28,7 +28,7 @@ int main(void)
     double *AA;
     /*---------------------------------------------------------*/
     int n, nnz, rsa;
-    BData *w = NULL;
+    ITS_BData *w = NULL;
     int lfil, max_blk_sz = ITS_MAX_BLOCK_SIZE * ITS_MAX_BLOCK_SIZE * sizeof(double);
     int nBlock, *nB = NULL, *perm = NULL;
     double tol;
@@ -216,7 +216,7 @@ int main(void)
         itsol_output_header_vb(&io);
         lfil = io.lfil0;
         tol = io.tol0;
-        w = (BData *) itsol_malloc(vbmat->n * sizeof(BData), "main");
+        w = (ITS_BData *) itsol_malloc(vbmat->n * sizeof(ITS_BData), "main");
 
         for (i = 0; i < vbmat->n; i++)
             w[i] = (double *)itsol_malloc(max_blk_sz, "main");
