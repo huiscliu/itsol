@@ -258,7 +258,7 @@ int itsol_pc_arms2(ITS_CsPtr Amat, int *ipar, double *droptol, int *lfil, double
             itsol_cleanCS(C);
 
             /*-------------------- create the next level */
-            levn = (ITS_P4Ptr) itsol_malloc(sizeof(Per4Mat), "arms2:6");
+            levn = (ITS_P4Ptr) itsol_malloc(sizeof(ITS_Per4Mat), "arms2:6");
             /* levc->prev = levp; */
             levc->next = levn;
             levp = levc;

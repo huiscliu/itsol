@@ -82,7 +82,7 @@ typedef struct ILUfac
     int *work;    /* working buffer */
 } ITS_ILUSpar, ITS_LDUmat, *ITS_ILUPtr;
 
-typedef struct PerMat4 *ITS_P4Ptr;
+typedef struct ITS_PerMat4 *ITS_P4Ptr;
 
 /*------------------------------------------------------------
   | struct for storing the block LU factorization 
@@ -106,7 +106,7 @@ typedef struct PerMat4 *ITS_P4Ptr;
   | wk     = a work vector of length n needed for various tasks
   |            [reduces number of calls to malloc]           
   |----------------------------------------------------------*/ 
-typedef struct PerMat4
+typedef struct ITS_PerMat4
 {
     int n;                  
     int nB; 
@@ -127,7 +127,7 @@ typedef struct PerMat4
     ITS_P4Ptr prev; 
     ITS_P4Ptr next;
 
-} Per4Mat; 
+} ITS_Per4Mat; 
 
 /*------------------------------------------------------------
   | struct for storing data related to the last schur complement 

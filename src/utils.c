@@ -536,11 +536,11 @@ int itsol_setupP4(ITS_P4Ptr amat, int Bn, int Cn, ITS_CsPtr F, ITS_CsPtr E)
 }
 
 /*----------------------------------------------------------------------
-  | Free up memory allocated for Per4Mat structs.
+  | Free up memory allocated for ITS_Per4Mat structs.
   |----------------------------------------------------------------------
   | on entry:
   |==========
-  | ( amat )  =  Pointer to a Per4Mat struct.
+  | ( amat )  =  Pointer to a ITS_Per4Mat struct.
   |--------------------------------------------------------------------*/
 int itsol_cleanP4(ITS_P4Ptr amat)
 {
@@ -662,7 +662,7 @@ int itsol_cleanILUT(ITS_IlutPtr amat, int indic)
 void itsol_setup_arms(arms Levmat)
 {
     Levmat->ilus = (ITS_IlutPtr) itsol_malloc(sizeof(IluSpar), "setup_arms:ilus");
-    Levmat->levmat = (ITS_P4Ptr) itsol_malloc(sizeof(Per4Mat), "setup_arms:levmat");
+    Levmat->levmat = (ITS_P4Ptr) itsol_malloc(sizeof(ITS_Per4Mat), "setup_arms:levmat");
 }
 
 /*----------------------------------------------------------------------
@@ -670,7 +670,7 @@ void itsol_setup_arms(arms Levmat)
   |----------------------------------------------------------------------
   | on entry:
   |==========
-  | ( amat )  =  Pointer to a Per4Mat struct.
+  | ( amat )  =  Pointer to a ITS_Per4Mat struct.
   | ( cmat )  =  Pointer to a IluSpar struct.
   |--------------------------------------------------------------------*/
 int itsol_cleanARMS(arms ArmsPre)
