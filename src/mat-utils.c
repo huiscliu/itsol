@@ -277,7 +277,7 @@ void itsol_vbmatvec(ITS_VBSPtr vbmat, double *x, double *y)
             nBsj = bsz[col];
             sz = ITS_B_DIM(bsz, col);
 
-            DGEMV("n", dim, sz, one, ba[j], dim, &x[nBsj], inc, one, &y[nBs], inc);
+            itsol_dgemv("n", dim, sz, one, ba[j], dim, &x[nBsj], inc, one, &y[nBs], inc);
         }
     }
 }
@@ -758,7 +758,7 @@ int itsol_vblusolC(double *y, double *x, ITS_VBILUPtr lu)
             icol = ja[j];
             sz = ITS_B_DIM(bsz, icol);
             data = ba[j];
-            DGEMV("n", dim, sz, alpha, data, dim, x + bsz[icol], inc, beta, x + nBs, inc);
+            itsol_dgemv("n", dim, sz, alpha, data, dim, x + bsz[icol], inc, beta, x + nBs, inc);
         }
     }
     /* Block -- U solve */
@@ -772,13 +772,13 @@ int itsol_vblusolC(double *y, double *x, ITS_VBILUPtr lu)
             icol = ja[j];
             sz = ITS_B_DIM(bsz, icol);
             data = ba[j];
-            DGEMV("n", dim, sz, alpha, data, dim, x + bsz[icol], inc, beta, x + nBs, inc);
+            itsol_dgemv("n", dim, sz, alpha, data, dim, x + bsz[icol], inc, beta, x + nBs, inc);
         }
         data = D[i];
         if (OPT == 1)
             itsol_luinv(dim, data, x + nBs, lu->bf);
         else
-            DGEMV("n", dim, dim, alpha2, data, dim, x + nBs, inc, beta2, lu->bf, inc);
+            itsol_dgemv("n", dim, dim, alpha2, data, dim, x + nBs, inc, beta2, lu->bf, inc);
 
         for (bi = 0; bi < dim; bi++) {
             x[nBs + bi] = lu->bf[bi];

@@ -90,7 +90,7 @@ void csrcoo(int *, int *, int *, double *, int *, int *, int *,
 #define itsol_daxpy(n,alpha,x,incx,y,incy) daxpy((n), (alpha), (x), (incx), (y), (incy)) 
 #define itsol_dnrm2(n,x,incx)              dnrm2((n), (x), (incx))
 
-#define DGEMV(transa,m,n,alpha,a,lda,x,incx,beta,y,incy)		\
+#define itsol_dgemv(transa,m,n,alpha,a,lda,x,incx,beta,y,incy)		\
   dgemv((transa), (m), (n),						\
 	(alpha), (a), (lda), (x), (incx),				\
 	(beta), (y), (incy))
@@ -108,7 +108,7 @@ void csrcoo(int *, int *, int *, double *, int *, int *, int *,
 #define itsol_dscal(n,alpha,x,incx)        dscal(&(n),&(alpha),(x), &(incx))
 #define itsol_daxpy(n,alpha,x,incx,y,incy) daxpy(&(n), &(alpha), (x), &(incx), y, &(incy))
 #define itsol_dnrm2(n, x, incx)            dnrm2(&(n), (x), &(incx))
-#define DGEMV(transa, m, n, alpha, a, lda, x, incx, beta, y, incy)  \
+#define itsol_dgemv(transa, m, n, alpha, a, lda, x, incx, beta, y, incy)  \
   dgemv((transa), &(m), &(n), &(alpha), (a), &(lda), (x), &(incx), \
 	 &(beta), (y), &(incy))
 #define DGEMM(transa,transb,l,n,m,alpha,a,lda,b,ldb,beta,c,ldc)	\
