@@ -96,7 +96,7 @@ int main(void)
         /*-------------------- Read matrix - case: COO formats */
         csmat = (ITS_CsPtr) itsol_malloc(sizeof(ITS_SparMat), "main:csmat");
 
-        if (io.Fmt > HB) {
+        if (io.Fmt > ITS_HB) {
             ierr = itsol_read_coo(&AA, &JA, &IA, &io, &rhs, &sol, 0);
             if (ierr == 0)
                 fprintf(flog, "matrix read successfully\n");
@@ -116,7 +116,7 @@ int main(void)
         }
 
         /*-------------------- Read matrix - case: HB formats */
-        if (io.Fmt == HB) {
+        if (io.Fmt == ITS_HB) {
             /* NOTE: (AA,JA,IA) is in CSR format */
             ierr = itsol_readhb_c(&n, &AA, &JA, &IA, &io, &rhs, &sol, &rsa);
             if (ierr != 0) {
