@@ -14,10 +14,10 @@
 #define ITS_MAX_BLOCK_SIZE   100
 
 /* FORTRAN style vblock format, compatible for many FORTRAN routines */
-#define DATA(a,row,i,j)  (a[(j)*(row)+(i)])
+#define ITS_DATA(a,row,i,j)  (a[(j)*(row)+(i)])
 
 /* the dimension of ith Block */
-#define B_DIM(bs,i)      (bs[i+1]-bs[i])
+#define ITS_B_DIM(bs,i)      (bs[i+1]-bs[i])
 
 #define ITS_MAX_LINE        256
 #define ITS_MAX_HBNAME      64
@@ -71,7 +71,7 @@ typedef struct VBILUfac
                    * opt =  1 -->> call luinv 
                    * opt == 2 -->> block inverted call dgemv    */
 
-} VBILUSpar, *ITS_VbiluPtr; 
+} ITS_VBILUSpar, *ITS_VbiluPtr; 
 
 typedef struct ILUfac
 {

@@ -63,7 +63,7 @@ int itsol_pc_vbilukC(int lofM, ITS_VbsPtr vbmat, ITS_VbiluPtr lu, FILE * fp)
 
     /* beginning of main loop */
     for (i = 0; i < n; i++) {
-        dim = B_DIM(bsz, i);    /* number of rows of blocks in i-th row */
+        dim = ITS_B_DIM(bsz, i);    /* number of rows of blocks in i-th row */
         /* set up the i-th row accroding to the nonzero information from
            symbolic factorization */
         itsol_mallocVBRow(lu, i);
@@ -71,7 +71,7 @@ int itsol_pc_vbilukC(int lofM, ITS_VbsPtr vbmat, ITS_VbiluPtr lu, FILE * fp)
         /* setup array jw[], and initial i-th row */
         for (j = 0; j < L->nzcount[i]; j++) {   /* initialize L part   */
             col = L->ja[i][j];
-            sz = B_DIM(bsz, col);
+            sz = ITS_B_DIM(bsz, col);
             jw[col] = j;
             itsol_zrmC(dim, sz, L->ba[i][j]);
         }
@@ -79,7 +79,7 @@ int itsol_pc_vbilukC(int lofM, ITS_VbsPtr vbmat, ITS_VbiluPtr lu, FILE * fp)
         itsol_zrmC(dim, dim, lu->D[i]);       /* initialize diagonal */
         for (j = 0; j < U->nzcount[i]; j++) {   /* initialize U part   */
             col = U->ja[i][j];
-            sz = B_DIM(bsz, col);
+            sz = ITS_B_DIM(bsz, col);
             jw[col] = j;
             itsol_zrmC(dim, sz, U->ba[i][j]);
         }
@@ -87,7 +87,7 @@ int itsol_pc_vbilukC(int lofM, ITS_VbsPtr vbmat, ITS_VbiluPtr lu, FILE * fp)
         /* copy row from vbmat into lu */
         for (j = 0; j < vbmat->nzcount[i]; j++) {
             col = vbmat->ja[i][j];
-            sz = B_DIM(bsz, col);       /* number of columns of current block */
+            sz = ITS_B_DIM(bsz, col);       /* number of columns of current block */
             jpos = jw[col];
             if (col < i) {
                 itsol_copyBData(dim, sz, L->ba[i][jpos], vbmat->ba[i][j], 0);
@@ -104,7 +104,7 @@ int itsol_pc_vbilukC(int lofM, ITS_VbsPtr vbmat, ITS_VbiluPtr lu, FILE * fp)
         for (j = 0; j < L->nzcount[i]; j++) {
             jrow = L->ja[i][j];
             mm = dim;           /* number of rows of current block */
-            nn = B_DIM(bsz, jrow);      /* number of cols of current block */
+            nn = ITS_B_DIM(bsz, jrow);      /* number of cols of current block */
             /* get the multiplier for row to be eliminated (jrow) */
             dgemm("n", "n", &mm, &nn, &nn, &alpha1, L->ba[i][j], &mm, lu->D[jrow], &nn, &beta1, lu->bf, &mm);
             itsol_copyBData(mm, nn, L->ba[i][j], lu->bf, 0);
@@ -116,7 +116,7 @@ int itsol_pc_vbilukC(int lofM, ITS_VbsPtr vbmat, ITS_VbiluPtr lu, FILE * fp)
                 if (jpos == -1)
                     continue;
                 if (col < i) {
-                    kk = B_DIM(bsz, col);
+                    kk = ITS_B_DIM(bsz, col);
                     dgemm("n", "n", &mm, &kk, &nn, &alpha2, L->ba[i][j],
                             &mm, U->ba[jrow][k], &nn, &beta2, L->ba[i][jpos], &mm);
                 }
@@ -125,7 +125,7 @@ int itsol_pc_vbilukC(int lofM, ITS_VbsPtr vbmat, ITS_VbiluPtr lu, FILE * fp)
                             &mm, U->ba[jrow][k], &nn, &beta2, lu->D[i], &mm);
                 }
                 else {
-                    kk = B_DIM(bsz, col);
+                    kk = ITS_B_DIM(bsz, col);
                     dgemm("n", "n", &mm, &kk, &nn, &alpha2, L->ba[i][j],
                             &mm, U->ba[jrow][k], &nn, &beta2, U->ba[i][jpos], &mm);
                 }

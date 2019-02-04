@@ -224,7 +224,7 @@ int main(void)
         /* ----------------------- LOOP THROUGH PARAMETERS ------------- */
         for (iparam = 1; iparam <= io.nparam; iparam++) {
             fprintf(flog, "iparam = %d\n", iparam);
-            lu = (ITS_VbiluPtr) itsol_malloc(sizeof(VBILUSpar), "main");
+            lu = (ITS_VbiluPtr) itsol_malloc(sizeof(ITS_VBILUSpar), "main");
             fprintf(flog, "begin vbilut\n");
 
             tm1 = itsol_get_time();

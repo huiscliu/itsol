@@ -305,9 +305,9 @@ int itsol_memVBMat(ITS_VbsPtr vbmat)
         nnz = vbmat->nzcount[i];
         dm = 0;
         for (j = 0; j < nnz; j++) {
-            dm += B_DIM(bsz, vbmat->ja[i][j]);
+            dm += ITS_B_DIM(bsz, vbmat->ja[i][j]);
         }
-        mem += dm * B_DIM(bsz, i);
+        mem += dm * ITS_B_DIM(bsz, i);
     }
     return mem;
 }
@@ -444,18 +444,18 @@ int itsol_mallocVBRow(ITS_VbiluPtr lu, int nrow)
     lu->L->ba[nrow] = (BData *) itsol_malloc(sizeof(BData) * nzcount, "mallocVBRow");
     for (j = 0; j < nzcount; j++) {
         ncol = lu->L->ja[nrow][j];
-        szOfBlock = B_DIM(bsz, nrow) * B_DIM(bsz, ncol) * sizeof(double);
+        szOfBlock = ITS_B_DIM(bsz, nrow) * ITS_B_DIM(bsz, ncol) * sizeof(double);
         lu->L->ba[nrow][j] = (BData) itsol_malloc(szOfBlock, "mallocVBRow");
     }
 
-    szOfBlock = sizeof(double) * B_DIM(bsz, nrow) * B_DIM(bsz, nrow);
+    szOfBlock = sizeof(double) * ITS_B_DIM(bsz, nrow) * ITS_B_DIM(bsz, nrow);
     lu->D[nrow] = (BData) itsol_malloc(szOfBlock, "mallocVBRow");
 
     nzcount = lu->U->nzcount[nrow];
     lu->U->ba[nrow] = (BData *) itsol_malloc(sizeof(BData) * nzcount, "mallocVBRow");
     for (j = 0; j < nzcount; j++) {
         ncol = lu->U->ja[nrow][j];
-        szOfBlock = B_DIM(bsz, nrow) * B_DIM(bsz, ncol) * sizeof(double);
+        szOfBlock = ITS_B_DIM(bsz, nrow) * ITS_B_DIM(bsz, ncol) * sizeof(double);
         lu->U->ba[nrow][j] = (BData) itsol_malloc(szOfBlock, "mallocVBRow");
     }
     return 0;
@@ -1094,7 +1094,7 @@ int itsol_csrvbsrC(int job, int nBlk, int *nB, ITS_CsPtr csmat, ITS_VbsPtr vbmat
                 ipos = iw[b_col];
                 br = j - i;
                 bc = csmat->ja[j][k] - vbmat->bsz[b_col];
-                DATA(vbmat->ba[b_row][ipos], nB[b_row], br, bc) = csmat->ma[j][k];
+                ITS_DATA(vbmat->ba[b_row][ipos], nB[b_row], br, bc) = csmat->ma[j][k];
             }
         }
 NEXT_ROW:
@@ -1141,14 +1141,14 @@ int itsol_nnz_vbilu(ITS_VbiluPtr lu)
         nzcount = 0;
         for (j = 0; j < lu->L->nzcount[i]; j++) {
             col = lu->L->ja[i][j];
-            nzcount += B_DIM(bsz, col);
+            nzcount += ITS_B_DIM(bsz, col);
         }
         for (j = 0; j < lu->U->nzcount[i]; j++) {
             col = lu->U->ja[i][j];
-            nzcount += B_DIM(bsz, col);
+            nzcount += ITS_B_DIM(bsz, col);
         }
-        nzcount += B_DIM(bsz, i);       /* diagonal */
-        nzcount *= B_DIM(bsz, i);
+        nzcount += ITS_B_DIM(bsz, i);       /* diagonal */
+        nzcount *= ITS_B_DIM(bsz, i);
         nnz += nzcount;
     }
     return nnz;

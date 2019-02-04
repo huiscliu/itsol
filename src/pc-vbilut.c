@@ -92,13 +92,13 @@ int itsol_pc_vbilutC(ITS_VbsPtr vbmat, ITS_VbiluPtr lu, int lfil, double tol, BD
 
     /* beginning of main loop */
     for (i = 0; i < n; i++) {
-        dim = B_DIM(bsz, i);    /* number of rows of blocks in i-th row */
+        dim = ITS_B_DIM(bsz, i);    /* number of rows of blocks in i-th row */
         nzcount = vbmat->nzcount[i];
         ja = vbmat->ja[i];
         ba = vbmat->ba[i];
         tnorm = 0;
         for (j = 0; j < nzcount; j++) {
-            sz = B_DIM(bsz, ja[j]);
+            sz = ITS_B_DIM(bsz, ja[j]);
             t = itsol_vbnorm2(dim * sz, ba[j]);
             tnorm = max(t, tnorm);
         }
@@ -117,7 +117,7 @@ int itsol_pc_vbilutC(ITS_VbsPtr vbmat, ITS_VbiluPtr lu, int lfil, double tol, BD
 
         for (j = 0; j < nzcount; j++) {
             col = ja[j];
-            sz = B_DIM(bsz, col);
+            sz = ITS_B_DIM(bsz, col);
             t = itsol_vbnorm2(dim * sz, ba[j]);
             if (t < tolnorm && col != i)
                 continue;
@@ -156,14 +156,14 @@ int itsol_pc_vbilutC(ITS_VbsPtr vbmat, ITS_VbiluPtr lu, int lfil, double tol, BD
                     jpos = k;
                 }
             }
-            szjrow = B_DIM(bsz, jrow);
+            szjrow = ITS_B_DIM(bsz, jrow);
             if (jpos != j) {
                 col = jbuf[j];
                 jbuf[j] = jbuf[jpos];
                 jbuf[jpos] = col;
                 iw[jrow] = j;
                 iw[col] = jpos;
-                sz = B_DIM(bsz, col);
+                sz = ITS_B_DIM(bsz, col);
                 itsol_copyBData(dim, sz, buf_ns, w[j], 0);
                 itsol_copyBData(dim, szjrow, w[j], w[jpos], 0);
                 itsol_copyBData(dim, sz, w[jpos], buf_ns, 0);
@@ -183,7 +183,7 @@ int itsol_pc_vbilutC(ITS_VbsPtr vbmat, ITS_VbiluPtr lu, int lfil, double tol, BD
             ba = U->ba[jrow];
             for (k = 0; k < nzcount; k++) {
                 col = ja[k];
-                sz = B_DIM(bsz, col);
+                sz = ITS_B_DIM(bsz, col);
                 dgemm("n", "n", &dim, &sz, &szjrow, &one, buf_fact, &dim,
                         ba[k], &szjrow, &zero, buf_ns, &dim);
                 jpos = iw[col];
@@ -235,7 +235,7 @@ int itsol_pc_vbilutC(ITS_VbsPtr vbmat, ITS_VbiluPtr lu, int lfil, double tol, BD
             lenl = len;
             len = min(lenl, lfil);
             for (j = 0; j < lenl; j++) {
-                sz = B_DIM(bsz, jbuf[j]);
+                sz = ITS_B_DIM(bsz, jbuf[j]);
                 wn[j] = itsol_vbnorm2(dim * sz, w[j]);
                 iw[j] = j;
             }
@@ -250,7 +250,7 @@ int itsol_pc_vbilutC(ITS_VbsPtr vbmat, ITS_VbiluPtr lu, int lfil, double tol, BD
             for (j = 0; j < len; j++) {
                 jpos = iw[j];
                 ja[j] = jbuf[jpos];
-                sz = B_DIM(bsz, ja[j]);
+                sz = ITS_B_DIM(bsz, ja[j]);
                 ba[j] = (BData) itsol_malloc(dim * sz * sizeof(double), "vbilut");
                 itsol_copyBData(dim, sz, ba[j], w[jpos], 0);
             }
@@ -261,7 +261,7 @@ int itsol_pc_vbilutC(ITS_VbsPtr vbmat, ITS_VbiluPtr lu, int lfil, double tol, BD
             len = min(lenu, lfil);
             for (j = 1; j < lenu; j++) {
                 jpos = i + j;
-                sz = B_DIM(bsz, jbuf[jpos]);
+                sz = ITS_B_DIM(bsz, jbuf[jpos]);
                 wn[j - 1] = itsol_vbnorm2(dim * sz, w[jpos]);
                 iw[j - 1] = jpos;
             }
@@ -278,7 +278,7 @@ int itsol_pc_vbilutC(ITS_VbsPtr vbmat, ITS_VbiluPtr lu, int lfil, double tol, BD
             for (j = 0; j < nzcount; j++) {
                 jpos = iw[j];
                 ja[j] = jbuf[jpos];
-                sz = B_DIM(bsz, ja[j]);
+                sz = ITS_B_DIM(bsz, ja[j]);
                 ba[j] = (BData) itsol_malloc(dim * sz * sizeof(double), "vbilut");
                 itsol_copyBData(dim, sz, ba[j], w[jpos], 0);
                 t = max(t, wn[j]);

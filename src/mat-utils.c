@@ -172,7 +172,7 @@ int itsol_diag_scal(ITS_VbsPtr vbmat)
             if (ja[j] != i)
                 continue;
 
-            dim = B_DIM(bsz, i);
+            dim = ITS_B_DIM(bsz, i);
             size = sizeof(double) * dim * dim;
             D[i] = (BData) itsol_malloc(size, "diag_scal");
             memcpy(D[i], vbmat->ba[i][j], size);
@@ -189,14 +189,14 @@ int itsol_diag_scal(ITS_VbsPtr vbmat)
     }
 
     for (i = 0; i < n; i++) {
-        dim = B_DIM(bsz, i);
+        dim = ITS_B_DIM(bsz, i);
         nzcount = vbmat->nzcount[i];
         ja = vbmat->ja[i];
         ba = vbmat->ba[i];
 
         for (j = 0; j < nzcount; j++) {
             col = ja[j];
-            sz = B_DIM(bsz, col);
+            sz = ITS_B_DIM(bsz, col);
             DGEMM("n", "n", dim, sz, dim, one, D[i], dim, ba[j], dim, zero, buf, dim);
             itsol_copyBData(dim, sz, ba[j], buf, 0);
         }
@@ -224,7 +224,7 @@ int itsol_diagvec(ITS_VbsPtr vbmat, BData x, BData y)
     BData *D = vbmat->D;
 
     for (i = 0; i < n; i++) {
-        dim = B_DIM(bsz, i);
+        dim = ITS_B_DIM(bsz, i);
         DGEMM("n", "n", dim, sz, dim, one, D[i], dim, x + bsz[i], dim, zero, y + bsz[i], dim);
     }
     return 0;
@@ -264,7 +264,7 @@ void itsol_vbmatvec(ITS_VbsPtr vbmat, double *x, double *y)
 
     for (i = 0; i < n; i++) {
         nBs = bsz[i];
-        dim = B_DIM(bsz, i);
+        dim = ITS_B_DIM(bsz, i);
 
         for (j = 0; j < dim; j++)
             y[nBs + j] = 0;
@@ -275,7 +275,7 @@ void itsol_vbmatvec(ITS_VbsPtr vbmat, double *x, double *y)
         for (j = 0; j < nzcount; j++) {
             col = ja[j];
             nBsj = bsz[col];
-            sz = B_DIM(bsz, col);
+            sz = ITS_B_DIM(bsz, col);
 
             DGEMV("n", dim, sz, one, ba[j], dim, &x[nBsj], inc, one, &y[nBs], inc);
         }
@@ -744,7 +744,7 @@ int itsol_vblusolC(double *y, double *x, ITS_VbiluPtr lu)
     OPT = lu->DiagOpt;
     /* Block L solve */
     for (i = 0; i < n; i++) {
-        dim = B_DIM(bsz, i);
+        dim = ITS_B_DIM(bsz, i);
         nBs = bsz[i];
         for (j = 0; j < dim; j++) {
             nID = nBs + j;
@@ -756,21 +756,21 @@ int itsol_vblusolC(double *y, double *x, ITS_VbiluPtr lu)
         ba = L->ba[i];
         for (j = 0; j < nzcount; j++) {
             icol = ja[j];
-            sz = B_DIM(bsz, icol);
+            sz = ITS_B_DIM(bsz, icol);
             data = ba[j];
             DGEMV("n", dim, sz, alpha, data, dim, x + bsz[icol], inc, beta, x + nBs, inc);
         }
     }
     /* Block -- U solve */
     for (i = n - 1; i >= 0; i--) {
-        dim = B_DIM(bsz, i);
+        dim = ITS_B_DIM(bsz, i);
         nzcount = U->nzcount[i];
         nBs = bsz[i];
         ja = U->ja[i];
         ba = U->ba[i];
         for (j = 0; j < nzcount; j++) {
             icol = ja[j];
-            sz = B_DIM(bsz, icol);
+            sz = ITS_B_DIM(bsz, icol);
             data = ba[j];
             DGEMV("n", dim, sz, alpha, data, dim, x + bsz[icol], inc, beta, x + nBs, inc);
         }
