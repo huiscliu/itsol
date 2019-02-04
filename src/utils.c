@@ -336,7 +336,7 @@ int itsol_memVBMat(ITS_VbsPtr vbmat)
   |             0   --> successful return.
   |            -1   --> memory allocation error.
   |--------------------------------------------------------------------*/
-int itsol_setupVBILU(ITS_VbiluPtr lu, int n, int *bsz)
+int itsol_setupVBILU(ITS_VBILUPtr lu, int n, int *bsz)
 {
     int i;
     int max_block_size = sizeof(double) * ITS_MAX_BLOCK_SIZE * ITS_MAX_BLOCK_SIZE;
@@ -365,7 +365,7 @@ int itsol_setupVBILU(ITS_VbiluPtr lu, int n, int *bsz)
   |==========
   |   ( lu )  =  Pointer to a VBILUSpar struct.
   |--------------------------------------------------------------------*/
-int itsol_cleanVBILU(ITS_VbiluPtr lu)
+int itsol_cleanVBILU(ITS_VBILUPtr lu)
 {
     int n = lu->n, i;
     if (NULL == lu)
@@ -435,7 +435,7 @@ int itsol_mallocRow(ITS_IluPtr lu, int nrow)
   |             0   --> successful return.
   |            -1   --> memory allocation error.
   |--------------------------------------------------------------------*/
-int itsol_mallocVBRow(ITS_VbiluPtr lu, int nrow)
+int itsol_mallocVBRow(ITS_VBILUPtr lu, int nrow)
 {
     int j, nzcount, ncol, szOfBlock;
     int *bsz = lu->bsz;
@@ -1133,7 +1133,7 @@ int itsol_col2vbcol(int col, ITS_VbsPtr vbmat)
     return begin;
 }
 
-int itsol_nnz_vbilu(ITS_VbiluPtr lu)
+int itsol_nnz_vbilu(ITS_VBILUPtr lu)
 {
     int *bsz = lu->bsz;
     int nzcount, nnz = 0, i, j, col;

@@ -71,7 +71,7 @@ typedef struct VBILUfac
                    * opt =  1 -->> call luinv 
                    * opt == 2 -->> block inverted call dgemv    */
 
-} ITS_VBILUSpar, *ITS_VbiluPtr; 
+} ITS_VBILUSpar, *ITS_VBILUPtr; 
 
 typedef struct ILUfac
 {
@@ -209,7 +209,7 @@ typedef struct _SPre
 {
     int Ptype;           /*-- Ptype 1 = ILU, 2 = VBILU, 3 = Crout */
     ITS_IluPtr   ILU;        /* struct for an ILU type preconditioner */
-    ITS_VbiluPtr VBILU;      /* struct for a block preconditioner */
+    ITS_VBILUPtr VBILU;      /* struct for a block preconditioner */
     arms ARMS;           /* struct for a block preconditioner */
     int (*precon) (double *, double *, struct _SPre*); 
 
