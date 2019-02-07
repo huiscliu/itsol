@@ -85,7 +85,7 @@ int main(void)
         fprintf(flog, "MATRIX: %s...\n", io.MatNam);
 
         /*-------------------- Read  matrix */
-        lumat = (ITS_ILUPtr) itsol_malloc(sizeof(ITS_LDUmat), "main:lumat");
+        lumat = (ITS_ILUPtr) itsol_malloc(sizeof(ITS_ILUSpar), "main:lumat");
         csmat = (ITS_CsPtr) itsol_malloc(sizeof(ITS_SparMat), "main:csmat");
 
         /*-------------------- case: COO formats (0-indexing) */

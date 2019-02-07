@@ -81,7 +81,7 @@ typedef struct ITS_ILUSpar_
     ITS_CsPtr U;      /* U part elements                            */
     int *work;        /* working buffer */
 
-} ITS_ILUSpar, ITS_LDUmat, *ITS_ILUPtr;
+} ITS_ILUSpar, *ITS_ILUPtr;
 
 /*------------------------------------------------------------
   | struct for storing the block LU factorization 
