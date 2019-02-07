@@ -19,7 +19,7 @@ int main(void)
     /*-------------------- main structs and wraper structs.   */
     ITS_CsPtr csmat = NULL;         /* matrix in csr formt             */
     ITS_VBSPtr vbmat = NULL;
-    ITS_VBILUPtr lu = NULL;         /* vbilu preconditioner structure  */
+    ITS_VBILUSpar *lu = NULL;         /* vbilu preconditioner structure  */
     ITS_SMat *MAT;                /* Matrix structure for matvecs    */
     ITS_SPre *PRE;                /* general precond structure       */
     double *sol = NULL, *x = NULL, *prhs = NULL, *rhs = NULL;
@@ -224,7 +224,7 @@ int main(void)
         /* ----------------------- LOOP THROUGH PARAMETERS ------------- */
         for (iparam = 1; iparam <= io.nparam; iparam++) {
             fprintf(flog, "iparam = %d\n", iparam);
-            lu = (ITS_VBILUPtr) itsol_malloc(sizeof(ITS_VBILUSpar), "main");
+            lu = (ITS_VBILUSpar *) itsol_malloc(sizeof(ITS_VBILUSpar), "main");
             fprintf(flog, "begin vbilut\n");
 
             tm1 = itsol_get_time();
