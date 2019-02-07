@@ -282,8 +282,7 @@ typedef struct ITS_PARS_
     int restart;                /* Dim of Krylov subspace [fgmr]   */
     int maxits;                 /* maximum number of fgmres iters  */
     double tol;                 /* tolerance for stopping fgmres   */
-    double eps;                 /* for checking how close two rows of matrix are */
-    int nparam;                 /* number of tests for each preconditioner */
+
     int lfil0;                  /* initial lfil                    */
     int lfilInc;                /* increment for lfil              */
     double tol0;                /* initial drop tolerance          */

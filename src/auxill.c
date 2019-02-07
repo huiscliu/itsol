@@ -486,7 +486,7 @@ void itsol_output_result(int lfil, ITS_IOT * pio, int iparam)
 /* input ITS_IOT, Dscale                            */
 /* output ipar tolcoef, lfil                       */
 /*-------------------- trigger an error if not set */
-void itsol_set_arms_pars(ITS_IOT * io, int Dscale, int *ipar, double *dropcoef, int *lfil)
+void itsol_set_arms_pars(ITS_PARS * io, int Dscale, int *ipar, double *dropcoef, int *lfil)
 {
     int j;
 
