@@ -24,7 +24,7 @@ int main(void)
     ITS_CsPtr csmat = NULL;         /* matrix in csr formt             */
     ITS_ARMSPtr ArmsSt = NULL;         /* arms preconditioner structure   */
     ITS_SMatptr MAT = NULL;         /* Matrix structure for matvecs    */
-    ITS_SPreptr PRE = NULL;         /* general precond structure       */
+    ITS_SPre *PRE = NULL;         /* general precond structure       */
     double *sol = NULL, *x = NULL, *rhs = NULL;
     /*---------------- method for incrementing lfil is set here */
     int lfil_arr[7];
@@ -46,7 +46,7 @@ int main(void)
     char line[ITS_MAX_LINE];
 
     MAT = (ITS_SMatptr) itsol_malloc(sizeof(ITS_SMat), "main:MAT");
-    PRE = (ITS_SPreptr) itsol_malloc(sizeof(ITS_SPre), "main:PRE");
+    PRE = (ITS_SPre *) itsol_malloc(sizeof(ITS_SPre), "main:PRE");
 
     /*------------------ read and set parameters and other inputs */
     memset(&io, 0, sizeof(io));

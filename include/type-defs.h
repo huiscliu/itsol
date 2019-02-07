@@ -216,7 +216,7 @@ typedef struct ITS_SPre
     ITS_ARMSPtr ARMS;        /* struct for a block preconditioner */
     int (*precon) (double *, double *, struct ITS_SPre *); 
 
-} ITS_SPre, *ITS_SPreptr;
+} ITS_SPre;
 
 typedef struct ITS_IOT_
 {
@@ -266,5 +266,28 @@ typedef struct ITS_IOT_
     double rnorm;               /* final residual norm: ||Ax-Ax0|| */
 
 } ITS_IOT;
+
+typedef enum ITS_PC_TYPE_
+{
+    ITS_PC_ARMS,
+    ITS_PC_ILUK,
+    ITS_PC_ILUT,
+    ITS_PC_ILUC,
+    ITS_PC_VBILUK,
+    ITS_PC_VBILUT,
+
+} ITS_PC_TYPE;
+
+typedef struct ITS_SOLVER_
+{
+    ITS_SparMat A;
+    ITS_SMatptr MAT;                /* Matrix structure for matvecs    */
+    ITS_SPre    *PRE;               /* general precond structure       */
+    double *rhs;
+
+    ITS_PC_TYPE pc_type;
+    ITS_IOT pars;
+
+} ITS_SOLVER;
 
 #endif  /* __VBLOCK_HEADER_H__ */
