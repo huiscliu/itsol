@@ -83,8 +83,6 @@ typedef struct ITS_ILUSpar_
 
 } ITS_ILUSpar, ITS_LDUmat, *ITS_ILUPtr;
 
-typedef struct ITS_Per4Mat_ *ITS_P4Ptr;
-
 /*------------------------------------------------------------
   | struct for storing the block LU factorization 
   | contains all the block factors except the 
@@ -125,8 +123,8 @@ typedef struct ITS_Per4Mat_
     double *wk;       /* work array              */
 
     /* pointer to next and previous struct         */
-    ITS_P4Ptr prev; 
-    ITS_P4Ptr next;
+    struct ITS_Per4Mat_ *prev; 
+    struct ITS_Per4Mat_ *next;
 
 } ITS_Per4Mat; 
 
@@ -182,7 +180,7 @@ typedef struct ITS_ARMS_
     int n;                   /* dimension of matrix */
     int nlev;                /* number of levels    */
     ITS_ILUTSpar * ilus;     /* ILU for last level  */
-    ITS_P4Ptr levmat;        /* level structure     */
+    ITS_Per4Mat *levmat;        /* level structure     */
 
 } ITS_ARMS;
 

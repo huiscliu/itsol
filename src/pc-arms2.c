@@ -144,7 +144,7 @@ int itsol_pc_arms2(ITS_CsPtr Amat, int *ipar, double *droptol, int *lfil, double
 {
     /*-------------------- function  prototyping  done in LIB/itsol.h    */
     /*-------------------- move above to itsol.h */
-    ITS_P4Ptr levp, levc, levn, levmat = PreMat->levmat;
+    ITS_Per4Mat *levp, *levc, *levn, *levmat = PreMat->levmat;
     ITS_CsPtr schur, B, F, E, C = NULL;
     ITS_ILUTSpar *ilsch = PreMat->ilus;
     /*-------------------- local variables  (initialized)   */
@@ -258,14 +258,14 @@ int itsol_pc_arms2(ITS_CsPtr Amat, int *ipar, double *droptol, int *lfil, double
             itsol_cleanCS(C);
 
             /*-------------------- create the next level */
-            levn = (ITS_P4Ptr) itsol_malloc(sizeof(ITS_Per4Mat), "arms2:6");
+            levn = (ITS_Per4Mat *) itsol_malloc(sizeof(ITS_Per4Mat), "arms2:6");
             /* levc->prev = levp; */
             levc->next = levn;
             levp = levc;
             levc = levn;
             levc->prev = levp;
         }
-        /*-------------------- ITS_P4Ptr struct for current schur complement */
+        /*-------------------- ITS_Per4Mat struct for current schur complement */
         B = (ITS_CsPtr) itsol_malloc(sizeof(ITS_SparMat), "arms2:7");
         E = (ITS_CsPtr) itsol_malloc(sizeof(ITS_SparMat), "arms2:8");
         F = (ITS_CsPtr) itsol_malloc(sizeof(ITS_SparMat), "arms2:9");
