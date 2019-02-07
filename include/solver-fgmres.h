@@ -49,7 +49,7 @@ extern "C" {
 |     matvec and
 |     preconditionning operation 
 +---------------------------------------------------------------------*/
-int itsol_solver_fgmres(ITS_SMatptr Amat, ITS_SPre *lu, double *rhs, double *sol, 
+int itsol_solver_fgmres(ITS_SMat *Amat, ITS_SPre *lu, double *rhs, double *sol, 
          double tol, int im, int *itmax, FILE *fits);
 
 #ifdef __cplusplus

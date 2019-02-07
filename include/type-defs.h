@@ -205,7 +205,7 @@ typedef struct ITS_SMat
     ITS_VBSPtr VBCSR;    /* place holder for a block matrix        */
     void (*matvec)(struct ITS_SMat*, double *, double *);
 
-} ITS_SMat, *ITS_SMatptr;
+} ITS_SMat;
 
 /*-------------------- 3 types of matrices so far */
 typedef struct ITS_SPre
@@ -281,8 +281,8 @@ typedef enum ITS_PC_TYPE_
 typedef struct ITS_SOLVER_
 {
     ITS_SparMat A;
-    ITS_SMatptr MAT;                /* Matrix structure for matvecs    */
-    ITS_SPre    *PRE;               /* general precond structure       */
+    ITS_SMat *MAT;                /* Matrix structure for matvecs    */
+    ITS_SPre *PRE;               /* general precond structure       */
     double *rhs;
 
     ITS_PC_TYPE pc_type;

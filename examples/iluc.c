@@ -21,7 +21,7 @@ int main(void)
     FILE *fits = NULL;
     /*-------------------- main structs and wraper structs.     */
     ITS_CsPtr csmat = NULL;         /* matrix in csr formt             */
-    ITS_SMatptr MAT = NULL;         /* Matrix structure for matvecs    */
+    ITS_SMat *MAT = NULL;         /* Matrix structure for matvecs    */
     ITS_SPre *PRE = NULL;         /* General precond structure       */
     ITS_ILUPtr lumat = NULL;        /* ilu preconditioner structure    */
     ITS_ILUPtr lu = NULL;           /* a temporary lu matrix           */
@@ -42,7 +42,7 @@ int main(void)
     double terr;
     char line[ITS_MAX_LINE];
 
-    MAT = (ITS_SMatptr) itsol_malloc(sizeof(ITS_SMat), "main:MAT");
+    MAT = (ITS_SMat *) itsol_malloc(sizeof(ITS_SMat), "main:MAT");
     PRE = (ITS_SPre *) itsol_malloc(sizeof(ITS_SPre), "main:PRE");
 
     /*------------------ read and set parameters and other inputs  */
