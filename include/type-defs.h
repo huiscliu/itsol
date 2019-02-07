@@ -255,10 +255,12 @@ typedef struct ITS_SMat
 /*-------------------- 3 types of matrices so far */
 typedef struct ITS_PC
 {
-    int Ptype;               /*-- Ptype 1 = ILU, 2 = VBILU, 3 = Crout */
-    ITS_ILUSpar *  ILU;      /* struct for an ILU type preconditioner */
-    ITS_VBILUSpar *VBILU;    /* struct for a block preconditioner */
-    ITS_ARMSpar *ARMS;          /* struct for a block preconditioner */
+    int Ptype;             /*-- Ptype 1 = ILU, 2 = VBILU, 3 = Crout */
+
+    ITS_ILUSpar *ILU;      /* struct for an ILU type preconditioner */
+    ITS_VBILUSpar *VBILU;  /* struct for a block preconditioner */
+    ITS_ARMSpar *ARMS;     /* struct for a block preconditioner */
+
     int (*precon) (double *, double *, struct ITS_PC *); 
 
 } ITS_PC;
@@ -277,11 +279,12 @@ typedef enum ITS_PC_TYPE_
 typedef struct ITS_SOLVER_
 {
     ITS_SparMat A;
-    ITS_SMat *MAT;             /* Matrix structure for matvecs    */
-    ITS_PC *PRE;               /* general precond structure       */
+    ITS_SMat *smat;          /* Matrix structure for matvecs    */
     double *rhs;
 
     ITS_PC_TYPE pc_type;
+    ITS_PC pc;               /* general precond structure       */
+
     ITS_IOT pars;
 
 } ITS_SOLVER;
