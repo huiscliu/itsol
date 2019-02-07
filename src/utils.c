@@ -610,7 +610,7 @@ int itsol_cleanP4(ITS_P4Ptr amat)
   |             0   --> successful return.
   |             1   --> memory allocation error.
   |--------------------------------------------------------------------*/
-int itsol_setupILUT(ITS_ILUTPtr amat, int len)
+int itsol_setupILUT(ITS_ILUTSpar *amat, int len)
 {
     amat->n = len;
     amat->wk = (double *)itsol_malloc(2 * len * sizeof(double), "itsol_setupILUT:5");
@@ -631,7 +631,7 @@ int itsol_setupILUT(ITS_ILUTPtr amat, int len)
   | ( amat )  =  Pointer to a ITS_ILUTSpar struct.
   |  indic    = indicator for number of levels.  indic=0 -> zero level.
   |--------------------------------------------------------------------*/
-int itsol_cleanILUT(ITS_ILUTPtr amat, int indic)
+int itsol_cleanILUT(ITS_ILUTSpar *amat, int indic)
 {
     if (amat->wk) {
         free(amat->wk);
@@ -661,7 +661,7 @@ int itsol_cleanILUT(ITS_ILUTPtr amat, int indic)
 
 void itsol_setup_arms(ITS_ARMS *Levmat)
 {
-    Levmat->ilus = (ITS_ILUTPtr) itsol_malloc(sizeof(ITS_ILUTSpar), "setup_arms:ilus");
+    Levmat->ilus = (ITS_ILUTSpar *) itsol_malloc(sizeof(ITS_ILUTSpar), "setup_arms:ilus");
     Levmat->levmat = (ITS_P4Ptr) itsol_malloc(sizeof(ITS_Per4Mat), "setup_arms:levmat");
 }
 
@@ -676,7 +676,7 @@ void itsol_setup_arms(ITS_ARMS *Levmat)
 int itsol_cleanARMS(ITS_ARMS *ArmsPre)
 {
     ITS_P4Ptr amat = ArmsPre->levmat;
-    ITS_ILUTPtr cmat = ArmsPre->ilus;
+    ITS_ILUTSpar *cmat = ArmsPre->ilus;
     /* case when nlev == 0 */
     int indic = (amat->nB != 0);
 
@@ -1204,7 +1204,7 @@ int itsol_nnz_cs(ITS_CsPtr A)
 int itsol_nnz_arms(ITS_ARMS *PreSt, FILE * ft)
 {
     ITS_P4Ptr levmat = PreSt->levmat;
-    ITS_ILUTPtr ilschu = PreSt->ilus;
+    ITS_ILUTSpar *ilschu = PreSt->ilus;
     int nlev = PreSt->nlev;
     int ilev = 0, nnz_lev, nnz_sch, nnz_tot;
     nnz_lev = 0;
@@ -2093,7 +2093,7 @@ int itsol_dumpArmsMat(ITS_ARMS *PreSt, FILE * ft)
 {
     int lev, nnz, nglob = 0, old = 0;
     ITS_P4Ptr levmat = PreSt->levmat;
-    ITS_ILUTPtr ilus = PreSt->ilus;
+    ITS_ILUTSpar *ilus = PreSt->ilus;
     int n = levmat->n;
     int nlev = PreSt->nlev;
     FILE *dummy = NULL;

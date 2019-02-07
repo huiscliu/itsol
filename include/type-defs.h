@@ -152,7 +152,6 @@ typedef struct ITS_Per4Mat_
   | wk     = a work vector of length n needed for various tasks
   |            [reduces number of calls to malloc]           
   |-----------------------------------------------------------*/
-typedef struct ITS_ILUTSpar_ *ITS_ILUTPtr;
 typedef struct ITS_ILUTSpar_
 {
     int n;                  
@@ -182,7 +181,7 @@ typedef struct ITS_ARMS_
 {
     int n;                   /* dimension of matrix */
     int nlev;                /* number of levels    */
-    ITS_ILUTPtr ilus;        /* ILU for last level  */
+    ITS_ILUTSpar * ilus;     /* ILU for last level  */
     ITS_P4Ptr levmat;        /* level structure     */
 
 } ITS_ARMS;
