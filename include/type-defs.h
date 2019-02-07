@@ -191,29 +191,6 @@ typedef struct ITS_CompressType
 
 } ITS_CompressType;
 
-/*-------------------- 3 types of matrices so far */
-typedef struct ITS_SMat
-{
-    int n; 
-    int Mtype;             /*--  type 1 = CSR, 2 = VBCSR, 3 = LDU    */
-    ITS_SparMat *CS;       /* place holder for a CSR/CSC type matrix */
-    ITS_ILUSpar *LDU;      /* struct for an LDU type matrix          */
-    ITS_VBSparMat *VBCSR;  /* place holder for a block matrix        */
-    void (*matvec)(struct ITS_SMat*, double *, double *);
-
-} ITS_SMat;
-
-/*-------------------- 3 types of matrices so far */
-typedef struct ITS_PC
-{
-    int Ptype;               /*-- Ptype 1 = ILU, 2 = VBILU, 3 = Crout */
-    ITS_ILUSpar *  ILU;      /* struct for an ILU type preconditioner */
-    ITS_VBILUSpar *VBILU;    /* struct for a block preconditioner */
-    ITS_ARMS *ARMS;          /* struct for a block preconditioner */
-    int (*precon) (double *, double *, struct ITS_PC *); 
-
-} ITS_PC;
-
 typedef struct ITS_IOT_
 {
     FILE *fout;                     /* output file handle              */
@@ -262,6 +239,29 @@ typedef struct ITS_IOT_
     double rnorm;               /* final residual norm: ||Ax-Ax0|| */
 
 } ITS_IOT;
+
+/*-------------------- 3 types of matrices so far */
+typedef struct ITS_SMat
+{
+    int n; 
+    int Mtype;             /*--  type 1 = CSR, 2 = VBCSR, 3 = LDU    */
+    ITS_SparMat *CS;       /* place holder for a CSR/CSC type matrix */
+    ITS_ILUSpar *LDU;      /* struct for an LDU type matrix          */
+    ITS_VBSparMat *VBCSR;  /* place holder for a block matrix        */
+    void (*matvec)(struct ITS_SMat*, double *, double *);
+
+} ITS_SMat;
+
+/*-------------------- 3 types of matrices so far */
+typedef struct ITS_PC
+{
+    int Ptype;               /*-- Ptype 1 = ILU, 2 = VBILU, 3 = Crout */
+    ITS_ILUSpar *  ILU;      /* struct for an ILU type preconditioner */
+    ITS_VBILUSpar *VBILU;    /* struct for a block preconditioner */
+    ITS_ARMS *ARMS;          /* struct for a block preconditioner */
+    int (*precon) (double *, double *, struct ITS_PC *); 
+
+} ITS_PC;
 
 typedef enum ITS_PC_TYPE_
 {
