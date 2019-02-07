@@ -659,7 +659,7 @@ int itsol_cleanILUT(ITS_ILUTSpar *amat, int indic)
     return 0;
 }
 
-void itsol_setup_arms(ITS_ARMS *Levmat)
+void itsol_setup_arms(ITS_ARMSpar *Levmat)
 {
     Levmat->ilus = (ITS_ILUTSpar *) itsol_malloc(sizeof(ITS_ILUTSpar), "setup_arms:ilus");
     Levmat->levmat = (ITS_Per4Mat *) itsol_malloc(sizeof(ITS_Per4Mat), "setup_arms:levmat");
@@ -673,7 +673,7 @@ void itsol_setup_arms(ITS_ARMS *Levmat)
   | ( amat )  =  Pointer to a ITS_Per4Mat struct.
   | ( cmat )  =  Pointer to a ITS_ILUTSpar struct.
   |--------------------------------------------------------------------*/
-int itsol_cleanARMS(ITS_ARMS *ArmsPre)
+int itsol_cleanARMS(ITS_ARMSpar *ArmsPre)
 {
     ITS_Per4Mat *amat = ArmsPre->levmat;
     ITS_ILUTSpar *cmat = ArmsPre->ilus;
@@ -1201,7 +1201,7 @@ int itsol_nnz_cs(ITS_SparMat *A)
   | computes and prints out total number of nonzero elements
   | used in ARMS factorization 
   +--------------------------------------------------------*/
-int itsol_nnz_arms(ITS_ARMS *PreSt, FILE * ft)
+int itsol_nnz_arms(ITS_ARMSpar *PreSt, FILE * ft)
 {
     ITS_Per4Mat *levmat = PreSt->levmat;
     ITS_ILUTSpar *ilschu = PreSt->ilus;
@@ -2090,7 +2090,7 @@ void itsol_qsort3i(int *wa, int *cor1, int *cor2, int left, int right)
     itsol_qsort3i(wa, cor1, cor2, last + 1, right);
 }
 
-int itsol_dumpArmsMat(ITS_ARMS *PreSt, FILE * ft)
+int itsol_dumpArmsMat(ITS_ARMSpar *PreSt, FILE * ft)
 {
     int lev, nnz, nglob = 0, old = 0;
     ITS_Per4Mat *levmat = PreSt->levmat;

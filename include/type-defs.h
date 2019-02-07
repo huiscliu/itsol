@@ -175,14 +175,14 @@ typedef struct ITS_ILUTSpar_
    | and the ILUt factorization (in the  form of an 
    | ITS_ILUTSpar struct  
    |---------------------------------------------- */
-typedef struct ITS_ARMS_
+typedef struct ITS_ARMSpar_
 {
     int n;                   /* dimension of matrix */
     int nlev;                /* number of levels    */
     ITS_ILUTSpar * ilus;     /* ILU for last level  */
-    ITS_Per4Mat *levmat;        /* level structure     */
+    ITS_Per4Mat *levmat;     /* level structure     */
 
-} ITS_ARMS;
+} ITS_ARMSpar;
 
 typedef struct ITS_CompressType
 {
@@ -258,7 +258,7 @@ typedef struct ITS_PC
     int Ptype;               /*-- Ptype 1 = ILU, 2 = VBILU, 3 = Crout */
     ITS_ILUSpar *  ILU;      /* struct for an ILU type preconditioner */
     ITS_VBILUSpar *VBILU;    /* struct for a block preconditioner */
-    ITS_ARMS *ARMS;          /* struct for a block preconditioner */
+    ITS_ARMSpar *ARMS;          /* struct for a block preconditioner */
     int (*precon) (double *, double *, struct ITS_PC *); 
 
 } ITS_PC;

@@ -22,7 +22,7 @@ int main(void)
     int j, nnz = 0, lfil;
     /*-------------------- main structs and wraper structs.     */
     ITS_SparMat *csmat = NULL;         /* matrix in csr formt             */
-    ITS_ARMS *ArmsSt = NULL;         /* arms preconditioner structure   */
+    ITS_ARMSpar *ArmsSt = NULL;         /* arms preconditioner structure   */
     ITS_SMat *MAT = NULL;         /* Matrix structure for matvecs    */
     ITS_PC *PRE = NULL;         /* general precond structure       */
     double *sol = NULL, *x = NULL, *rhs = NULL;
@@ -155,7 +155,7 @@ int main(void)
                 droptol[j] = tol * dropcoef[j];
             }
 
-            ArmsSt = (ITS_ARMS *) itsol_malloc(sizeof(ITS_ARMS), "main:ArmsSt");
+            ArmsSt = (ITS_ARMSpar *) itsol_malloc(sizeof(ITS_ARMSpar), "main:ArmsSt");
             itsol_setup_arms(ArmsSt);
             fprintf(flog, "begin arms\n");
             tm1 = itsol_get_time();
