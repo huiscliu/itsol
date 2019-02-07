@@ -9,7 +9,7 @@
 #include <assert.h> 
 
 #include "config.h"
-#include "ext-protos.h"
+#include "protos-deps.h"
 
 #define ITS_MAX_BLOCK_SIZE   100
 
