@@ -37,14 +37,14 @@
  * ======
  * All the diagonal blocks of the input block matrix must not be singular
  *--------------------------------------------------------------------------*/
-int itsol_pc_vbilukC(int lofM, ITS_VBSPtr vbmat, ITS_VBILUSpar *lu, FILE * fp)
+int itsol_pc_vbilukC(int lofM, ITS_VBSparMat *vbmat, ITS_VBILUSpar *lu, FILE * fp)
 {
     int ierr;
     int n = vbmat->n, *bsz = vbmat->bsz;
     int *jw, i, j, k, col, jpos, jrow, dim, sz;
     int mm, nn, kk;
     double alpha1 = 1.0, beta1 = 0.0, alpha2 = -1.0, beta2 = 1.0;
-    ITS_VBSPtr L, U;
+    ITS_VBSparMat *L, *U;
 
     itsol_setupVBILU(lu, n, bsz);
     L = lu->L;
@@ -184,13 +184,13 @@ int itsol_pc_vbilukC(int lofM, ITS_VBSPtr vbmat, ITS_VBILUSpar *lu, FILE * fp)
  *   ->L    = L part -- stored in BSpaFmt format, patterns only in lofC
  *   ->U    = U part -- stored in BSpaFmt format, patterns only in lofC
  *------------------------------------------------------------------*/
-int itsol_pc_vblofC(int lofM, ITS_VBSPtr vbmat, ITS_VBILUSpar *lu, FILE * fp)
+int itsol_pc_vblofC(int lofM, ITS_VBSparMat *vbmat, ITS_VBILUSpar *lu, FILE * fp)
 {
     int n = vbmat->n;
     int *levls = NULL, *jbuf = NULL, *iw = lu->work;
     int **ulvl;                 /*  stores lev-fils for U part of ILU factorization */
 
-    ITS_VBSPtr L = lu->L, U = lu->U;
+    ITS_VBSparMat *L = lu->L, *U = lu->U;
     /*--------------------------------------------------------------------
      * n        = number of rows or columns in matrix
      * inc      = integer, count of nonzero(fillin) element of each row

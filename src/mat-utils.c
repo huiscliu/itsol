@@ -155,7 +155,7 @@ int itsol_invSVD(int nn, double *A)
  * ==========
  * vbmat    = inv(D)*vbmat
  *--------------------------------------------------------------------------*/
-int itsol_diag_scal(ITS_VBSPtr vbmat)
+int itsol_diag_scal(ITS_VBSparMat *vbmat)
 {
     int i, j, k, dim, sz, size, ierr = 0, col;
     double one = 1.0, zero = 0.0;
@@ -219,7 +219,7 @@ int itsol_diag_scal(ITS_VBSPtr vbmat)
   | on return
   | y     = the product inv(D) * x
   |--------------------------------------------------------------------*/
-int itsol_diagvec(ITS_VBSPtr vbmat, ITS_BData x, ITS_BData y)
+int itsol_diagvec(ITS_VBSparMat *vbmat, ITS_BData x, ITS_BData y)
 {
     int i, n = vbmat->n, *bsz = vbmat->bsz, dim, sz = 1;
     double zero = 0.0, one = 1.0;
@@ -257,7 +257,7 @@ void itsol_matvec(ITS_CsPtr mata, double *x, double *y)
     }
 }
 
-void itsol_vbmatvec(ITS_VBSPtr vbmat, double *x, double *y)
+void itsol_vbmatvec(ITS_VBSparMat *vbmat, double *x, double *y)
 {
     int i, j, nzcount, col, inc = 1, dim, sz, nBs, nBsj;
     int n = vbmat->n, *ja, *bsz = vbmat->bsz;
@@ -737,7 +737,7 @@ int itsol_vblusolC(double *y, double *x, ITS_VBILUSpar *lu)
     int n = lu->n, *bsz = lu->bsz, i, j, bi, icol, dim, sz;
     int nzcount, nBs, nID, *ja, inc = 1, OPT;
     double *data, alpha = -1.0, beta = 1.0, alpha2 = 1.0, beta2 = 0.0;
-    ITS_VBSPtr L, U;
+    ITS_VBSparMat *L, *U;
     ITS_BData *D, *ba;
 
     L = lu->L;
