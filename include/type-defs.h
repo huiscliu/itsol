@@ -276,6 +276,29 @@ typedef enum ITS_PC_TYPE_
 
 } ITS_PC_TYPE;
 
+typedef struct ITS_PARS_
+{
+    /* parameters from inputs -----------------------------------------*/
+    int restart;                /* Dim of Krylov subspace [fgmr]   */
+    int maxits;                 /* maximum number of fgmres iters  */
+    double tol;                 /* tolerance for stopping fgmres   */
+    double eps;                 /* for checking how close two rows of matrix are */
+    int nparam;                 /* number of tests for each preconditioner */
+    int lfil0;                  /* initial lfil                    */
+    int lfilInc;                /* increment for lfil              */
+    double tol0;                /* initial drop tolerance          */
+    double tolMul;              /* multiplier for tol              */
+    int fill_lev;               /* initial level of fill for ILUK  */
+    int fill_lev_inc;           /* increment for level of fill for ILUK */
+
+    /* value always set to 1           */
+    int perm_type;               /* indset perms (0) or PQ perms (1)*/
+
+    /*                  or coarsen (2) */
+    int Bsize;                   /* block size - dual role. see input file */
+
+} ITS_PARS;
+
 typedef struct ITS_SOLVER_
 {
     ITS_SparMat *A;
@@ -284,7 +307,7 @@ typedef struct ITS_SOLVER_
     ITS_PC_TYPE pc_type;
     ITS_PC pc;               /* general precond structure       */
 
-    ITS_IOT pars;
+    ITS_PARS pars;
     int assembled;
 
 } ITS_SOLVER;
