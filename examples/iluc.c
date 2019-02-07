@@ -22,7 +22,7 @@ int main(void)
     /*-------------------- main structs and wraper structs.     */
     ITS_SparMat *csmat = NULL;         /* matrix in csr formt             */
     ITS_SMat *MAT = NULL;         /* Matrix structure for matvecs    */
-    ITS_SPre *PRE = NULL;         /* General precond structure       */
+    ITS_PC *PRE = NULL;         /* General precond structure       */
     ITS_ILUSpar *lumat = NULL;        /* ilu preconditioner structure    */
     ITS_ILUSpar *lu = NULL;           /* a temporary lu matrix           */
     double *sol = NULL, *x = NULL, *rhs = NULL;
@@ -43,7 +43,7 @@ int main(void)
     char line[ITS_MAX_LINE];
 
     MAT = (ITS_SMat *) itsol_malloc(sizeof(ITS_SMat), "main:MAT");
-    PRE = (ITS_SPre *) itsol_malloc(sizeof(ITS_SPre), "main:PRE");
+    PRE = (ITS_PC *) itsol_malloc(sizeof(ITS_PC), "main:PRE");
 
     /*------------------ read and set parameters and other inputs  */
     memset(&io, 0, sizeof(io));

@@ -195,24 +195,24 @@ typedef struct ITS_CompressType
 typedef struct ITS_SMat
 {
     int n; 
-    int Mtype;           /*--  type 1 = CSR, 2 = VBCSR, 3 = LDU    */
-    ITS_SparMat *CS;        /* place holder for a CSR/CSC type matrix */
+    int Mtype;             /*--  type 1 = CSR, 2 = VBCSR, 3 = LDU    */
+    ITS_SparMat *CS;       /* place holder for a CSR/CSC type matrix */
     ITS_ILUSpar *LDU;      /* struct for an LDU type matrix          */
-    ITS_VBSparMat *VBCSR;    /* place holder for a block matrix        */
+    ITS_VBSparMat *VBCSR;  /* place holder for a block matrix        */
     void (*matvec)(struct ITS_SMat*, double *, double *);
 
 } ITS_SMat;
 
 /*-------------------- 3 types of matrices so far */
-typedef struct ITS_SPre
+typedef struct ITS_PC
 {
     int Ptype;               /*-- Ptype 1 = ILU, 2 = VBILU, 3 = Crout */
-    ITS_ILUSpar *  ILU;        /* struct for an ILU type preconditioner */
-    ITS_VBILUSpar *VBILU;      /* struct for a block preconditioner */
-    ITS_ARMS *ARMS;        /* struct for a block preconditioner */
-    int (*precon) (double *, double *, struct ITS_SPre *); 
+    ITS_ILUSpar *  ILU;      /* struct for an ILU type preconditioner */
+    ITS_VBILUSpar *VBILU;    /* struct for a block preconditioner */
+    ITS_ARMS *ARMS;          /* struct for a block preconditioner */
+    int (*precon) (double *, double *, struct ITS_PC *); 
 
-} ITS_SPre;
+} ITS_PC;
 
 typedef struct ITS_IOT_
 {
@@ -277,8 +277,8 @@ typedef enum ITS_PC_TYPE_
 typedef struct ITS_SOLVER_
 {
     ITS_SparMat A;
-    ITS_SMat *MAT;                /* Matrix structure for matvecs    */
-    ITS_SPre *PRE;               /* general precond structure       */
+    ITS_SMat *MAT;             /* Matrix structure for matvecs    */
+    ITS_PC *PRE;               /* general precond structure       */
     double *rhs;
 
     ITS_PC_TYPE pc_type;

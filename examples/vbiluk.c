@@ -22,7 +22,7 @@ int main(void)
     ITS_VBSparMat *vbmat = NULL;
     ITS_VBILUSpar *lu = NULL;         /* vbilu preconditioner structure  */
     ITS_SMat *MAT;                /* Matrix structure for matvecs    */
-    ITS_SPre *PRE;                /* general precond structure       */
+    ITS_PC *PRE;                /* general precond structure       */
     double *sol = NULL, *x = NULL, *prhs = NULL, *rhs = NULL;
     /*-------------------- temp COO/HB arrays - fortran style */
     int *IA, *JA;
@@ -37,7 +37,7 @@ int main(void)
     char line[ITS_MAX_LINE];
 
     MAT = (ITS_SMat *) itsol_malloc(sizeof(ITS_SMat), "main:MAT");
-    PRE = (ITS_SPre *) itsol_malloc(sizeof(ITS_SPre), "main:PRE");
+    PRE = (ITS_PC *) itsol_malloc(sizeof(ITS_PC), "main:PRE");
 
     /*------------------ read and set parameters and other inputs  */
     memset(&io, 0, sizeof(io));
