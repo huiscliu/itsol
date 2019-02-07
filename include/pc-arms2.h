@@ -148,7 +148,7 @@ extern "C" {
 |
 +---------------------------------------------------------------------*/
 int itsol_pc_arms2(ITS_CsPtr Amat, int *ipar, double *droptol, int *lfil, 
-	  double tolind, ITS_ARMSPtr PreMat, FILE *ft);
+	  double tolind, ITS_ARMS *PreMat, FILE *ft);
 
 #ifdef __cplusplus
 }
