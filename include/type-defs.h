@@ -280,7 +280,6 @@ typedef struct ITS_SOLVER_
 {
     ITS_SparMat *A;
     ITS_SMat smat;           /* Matrix structure for matvecs    */
-    double *rhs;
 
     ITS_PC_TYPE pc_type;
     ITS_PC pc;               /* general precond structure       */
