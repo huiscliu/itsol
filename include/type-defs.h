@@ -39,7 +39,7 @@ typedef struct ITS_SparMat_
     int **ja;      /* pointer-to-pointer to store column indices  */
     double **ma;   /* pointer-to-pointer to store nonzero entries */
 
-} ITS_SparMat, *ITS_CsPtr;
+} ITS_SparMat;
 
 typedef double *ITS_BData;
 
@@ -76,9 +76,9 @@ typedef struct ITS_VBILUSpar_
 typedef struct ITS_ILUSpar_
 {
     int n;
-    ITS_CsPtr L;      /* L part elements                            */
+    ITS_SparMat *L;      /* L part elements                            */
     double *D;        /* diagonal elements                          */
-    ITS_CsPtr U;      /* U part elements                            */
+    ITS_SparMat *U;      /* U part elements                            */
     int *work;        /* working buffer */
 
 } ITS_ILUSpar;
@@ -196,7 +196,7 @@ typedef struct ITS_SMat
 {
     int n; 
     int Mtype;           /*--  type 1 = CSR, 2 = VBCSR, 3 = LDU    */
-    ITS_CsPtr CS;        /* place holder for a CSR/CSC type matrix */
+    ITS_SparMat *CS;        /* place holder for a CSR/CSC type matrix */
     ITS_ILUSpar *LDU;      /* struct for an LDU type matrix          */
     ITS_VBSparMat *VBCSR;    /* place holder for a block matrix        */
     void (*matvec)(struct ITS_SMat*, double *, double *);

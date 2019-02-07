@@ -31,25 +31,25 @@ int itsol_invGauss(int nn, double *A);
  */
 int itsol_invSVD(int nn, double *A);
 
-void itsol_matvecC(ITS_CsPtr mat, double *x, double *y);
+void itsol_matvecC(ITS_SparMat *mat, double *x, double *y);
 void itsol_matvecCSC(ITS_SMat *mat, double *x, double *y);
 int itsol_CondestC(ITS_ILUSpar *lu, FILE * fp);
 int itsol_diag_scal(ITS_VBSparMat *vbmat);
 int itsol_diagvec(ITS_VBSparMat *vbmat, ITS_BData x, ITS_BData y);
-void itsol_matvec(ITS_CsPtr mata, double *x, double *y); 
+void itsol_matvec(ITS_SparMat *mata, double *x, double *y); 
 void itsol_matvecCSR(ITS_SMat *mat, double *x, double *y);
-void itsol_matvecz(ITS_CsPtr mata, double *x, double *y, double *z);
+void itsol_matvecz(ITS_SparMat *mata, double *x, double *y, double *z);
 void itsol_vbmatvec(ITS_VBSparMat *vbmat, double *x, double *y);
 void itsol_luinv(int n, double *a, double *x, double *y); 
 int itsol_vblusolC(double *y, double *x, ITS_VBILUSpar *lu); 
 int itsol_lusolC(double *y, double *x, ITS_ILUSpar *lu); 
-int itsol_rpermC(ITS_CsPtr mat, int *perm); 
-int itsol_cpermC(ITS_CsPtr mat, int *perm) ; 
-int itsol_dpermC(ITS_CsPtr mat, int *perm) ; 
-int itsol_CSparTran(ITS_CsPtr amat, ITS_CsPtr bmat, ITS_CompressType *compress);
+int itsol_rpermC(ITS_SparMat *mat, int *perm); 
+int itsol_cpermC(ITS_SparMat *mat, int *perm) ; 
+int itsol_dpermC(ITS_SparMat *mat, int *perm) ; 
+int itsol_CSparTran(ITS_SparMat *amat, ITS_SparMat *bmat, ITS_CompressType *compress);
 double itsol_vbnorm2(int sz, double *a);
-void itsol_Lsol(ITS_CsPtr mata, double *b, double *x);
-void itsol_Usol(ITS_CsPtr mata, double *b, double *x);
+void itsol_Lsol(ITS_SparMat *mata, double *b, double *x);
+void itsol_Usol(ITS_SparMat *mata, double *b, double *x);
 int itsol_ascend (ITS_Per4Mat *levmat, double *x, double *wk);
 int itsol_descend(ITS_Per4Mat *levmat, double *x, double *wk);
 int itsol_armsol2(double *x, ITS_ARMS *Prec);
@@ -105,7 +105,7 @@ int itsol_invGauss(int nn, double *A);
  *        we merge row_i and row_j by resetting
  *        group[j] = i and size[i] = size[i]+size[j]
  *--------------------------------------------------------------------------*/
-int itsol_init_blocks(ITS_CsPtr csmat, int *pnBlock, int **pnB, int **pperm,
+int itsol_init_blocks(ITS_SparMat *csmat, int *pnBlock, int **pnB, int **pperm,
         double eps, double *t_hash, double *t_angle);
 
 #ifdef __cplusplus

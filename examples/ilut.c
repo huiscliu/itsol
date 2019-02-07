@@ -20,7 +20,7 @@ int main(void)
     int lfil;
     double tol;
     /*-------------------- main structs and wraper structs.   */
-    ITS_CsPtr csmat = NULL;         /* matrix in csr formt             */
+    ITS_SparMat *csmat = NULL;         /* matrix in csr formt             */
     ITS_SMat *MAT;                /* Matrix structure for matvecs    */
     ITS_SPre *PRE;                /* General precond structure       */
     ITS_ILUSpar *lu = NULL;           /* ilu preconditioner structure    */
@@ -83,7 +83,7 @@ int main(void)
         fprintf(flog, "MATRIX: %s...\n", io.MatNam);
 
         /*-------------------- Read matrix */
-        csmat = (ITS_CsPtr) itsol_malloc(sizeof(ITS_SparMat), "main");
+        csmat = (ITS_SparMat *) itsol_malloc(sizeof(ITS_SparMat), "main");
 
         /*-------------------- case: COO formats */
         if (io.Fmt > ITS_HB) {

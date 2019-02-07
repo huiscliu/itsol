@@ -21,7 +21,7 @@ int main(void)
     double tol, tolind = TOL_DD;
     int j, nnz = 0, lfil;
     /*-------------------- main structs and wraper structs.     */
-    ITS_CsPtr csmat = NULL;         /* matrix in csr formt             */
+    ITS_SparMat *csmat = NULL;         /* matrix in csr formt             */
     ITS_ARMS *ArmsSt = NULL;         /* arms preconditioner structure   */
     ITS_SMat *MAT = NULL;         /* Matrix structure for matvecs    */
     ITS_SPre *PRE = NULL;         /* general precond structure       */
@@ -94,7 +94,7 @@ int main(void)
         fprintf(flog, "MATRIX: %s...\n", io.MatNam);
 
         /*-------------------- Read matrix - case: COO formats */
-        csmat = (ITS_CsPtr) itsol_malloc(sizeof(ITS_SparMat), "main:csmat");
+        csmat = (ITS_SparMat *) itsol_malloc(sizeof(ITS_SparMat), "main:csmat");
 
         if (io.Fmt > ITS_HB) {
             ierr = itsol_read_coo(&AA, &JA, &IA, &io, &rhs, &sol, 0);

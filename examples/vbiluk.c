@@ -18,7 +18,7 @@ int main(void)
     FILE *fits = NULL;
     int lfil, nBlock, *nB = NULL, *perm = NULL;
     /*-------------------- main structs and wraper structs.   */
-    ITS_CsPtr csmat = NULL;         /* matrix in csr formt             */
+    ITS_SparMat *csmat = NULL;         /* matrix in csr formt             */
     ITS_VBSparMat *vbmat = NULL;
     ITS_VBILUSpar *lu = NULL;         /* vbilu preconditioner structure  */
     ITS_SMat *MAT;                /* Matrix structure for matvecs    */
@@ -85,7 +85,7 @@ int main(void)
         fprintf(flog, "MATRIX: %s...\n", io.MatNam);
 
         /* ------------------- Read in matrix and allocate memory */
-        csmat = (ITS_CsPtr) itsol_malloc(sizeof(ITS_SparMat), "main");
+        csmat = (ITS_SparMat *) itsol_malloc(sizeof(ITS_SparMat), "main");
 
         /*-------------------- case: COO formats */
         if (io.Fmt > ITS_HB) {

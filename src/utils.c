@@ -64,7 +64,7 @@ void * itsol_malloc(int nbytes, char *msg)
   |             0   --> successful return.
   |             1   --> memory allocation error.
   |--------------------------------------------------------------------*/
-int itsol_setupCS(ITS_CsPtr amat, int len, int job)
+int itsol_setupCS(ITS_SparMat *amat, int len, int job)
 {
     amat->n = len;
     amat->nzcount = (int *)itsol_malloc(len * sizeof(int), "itsol_setupCS");
@@ -83,7 +83,7 @@ int itsol_setupCS(ITS_CsPtr amat, int len, int job)
   |==========
   | ( amat )  =  Pointer to a SpaFmt struct.
   |--------------------------------------------------------------------*/
-int itsol_cleanCS(ITS_CsPtr amat)
+int itsol_cleanCS(ITS_SparMat *amat)
 {
     int i;
     if (amat == NULL)
@@ -123,7 +123,7 @@ int itsol_cleanCS(ITS_CsPtr amat)
   |             0   --> successful return.
   |             1   --> memory allocation error.
   |--------------------------------------------------------------------*/
-int itsol_cscpy(ITS_CsPtr amat, ITS_CsPtr bmat)
+int itsol_cscpy(ITS_SparMat *amat, ITS_SparMat *bmat)
 {
     int j, len, size = amat->n;
     double *bma;
@@ -169,11 +169,11 @@ int itsol_setupILU(ITS_ILUSpar *lu, int n)
 {
     lu->n = n;
     lu->D = (double *)itsol_malloc(sizeof(double) * n, "itsol_setupILU");
-    lu->L = (ITS_CsPtr) itsol_malloc(sizeof(ITS_SparMat), "itsol_setupILU");
+    lu->L = (ITS_SparMat *) itsol_malloc(sizeof(ITS_SparMat), "itsol_setupILU");
 
     itsol_setupCS(lu->L, n, 1);
 
-    lu->U = (ITS_CsPtr) itsol_malloc(sizeof(ITS_SparMat), "itsol_setupILU");
+    lu->U = (ITS_SparMat *) itsol_malloc(sizeof(ITS_SparMat), "itsol_setupILU");
 
     itsol_setupCS(lu->U, n, 1);
     lu->work = (int *)itsol_malloc(sizeof(int) * n, "itsol_setupILU");
@@ -507,7 +507,7 @@ void itsol_copyBData(int m, int n, ITS_BData dst, ITS_BData src, int isig)
   |             0   --> successful return.
   |             1   --> memory allocation error.
   |--------------------------------------------------------------------*/
-int itsol_setupP4(ITS_Per4Mat *amat, int Bn, int Cn, ITS_CsPtr F, ITS_CsPtr E)
+int itsol_setupP4(ITS_Per4Mat *amat, int Bn, int Cn, ITS_SparMat *F, ITS_SparMat *E)
 {
     int n;
     /* size n */
@@ -522,11 +522,11 @@ int itsol_setupP4(ITS_Per4Mat *amat, int Bn, int Cn, ITS_CsPtr F, ITS_CsPtr E)
         amat->wk = (amat->prev)->wk;
 
     /*-------------------- L and U */
-    amat->L = (ITS_CsPtr) itsol_malloc(sizeof(ITS_SparMat), "setupP4:3");
+    amat->L = (ITS_SparMat *) itsol_malloc(sizeof(ITS_SparMat), "setupP4:3");
     if (itsol_setupCS(amat->L, Bn, 1))
         return 1;
     /*    fprintf(stdout,"  -- BN %d   Cn   %d \n", Bn,Cn);  */
-    amat->U = (ITS_CsPtr) itsol_malloc(sizeof(ITS_SparMat), "setupP4:4");
+    amat->U = (ITS_SparMat *) itsol_malloc(sizeof(ITS_SparMat), "setupP4:4");
     if (itsol_setupCS(amat->U, Bn, 1))
         return 1;
 
@@ -614,10 +614,10 @@ int itsol_setupILUT(ITS_ILUTSpar *amat, int len)
 {
     amat->n = len;
     amat->wk = (double *)itsol_malloc(2 * len * sizeof(double), "itsol_setupILUT:5");
-    amat->L = (ITS_CsPtr) itsol_malloc(sizeof(ITS_SparMat), "itsol_setupILUT:6");
+    amat->L = (ITS_SparMat *) itsol_malloc(sizeof(ITS_SparMat), "itsol_setupILUT:6");
     if (itsol_setupCS(amat->L, len, 1))
         return 1;
-    amat->U = (ITS_CsPtr) itsol_malloc(sizeof(ITS_SparMat), "itsol_setupILUT:7");
+    amat->U = (ITS_SparMat *) itsol_malloc(sizeof(ITS_SparMat), "itsol_setupILUT:7");
     if (itsol_setupCS(amat->U, len, 1))
         return 1;
     return 0;
@@ -732,7 +732,7 @@ int itsol_cleanARMS(ITS_ARMS *ArmsPre)
   |             0   --> successful return.
   |             1   --> memory allocation error.
   |--------------------------------------------------------------------*/
-int itsol_csSplit4(ITS_CsPtr amat, int bsize, int csize, ITS_CsPtr B, ITS_CsPtr F, ITS_CsPtr E, ITS_CsPtr C)
+int itsol_csSplit4(ITS_SparMat *amat, int bsize, int csize, ITS_SparMat *B, ITS_SparMat *F, ITS_SparMat *E, ITS_SparMat *C)
 {
     int j, j1, numr, numl, ind, newj, rowz, *rowj, *new1j, *new2j;
     double *rowm, *new1m, *new2m;
@@ -860,7 +860,7 @@ label111:
   |             0   --> successful return.
   |             1   --> memory allocation error.
   |--------------------------------------------------------------------*/
-int itsol_CSRcs(int n, double *a, int *ja, int *ia, ITS_CsPtr mat, int rsa)
+int itsol_CSRcs(int n, double *a, int *ja, int *ia, ITS_SparMat *mat, int rsa)
 {
     int i, j, j1, len, col, nnz;
     double *bra;
@@ -938,11 +938,11 @@ int itsol_CSRcs(int n, double *a, int *ja, int *ia, ITS_CsPtr mat, int rsa)
   |             0   --> successful return.
   |             1   --> memory allocation error.
   |--------------------------------------------------------------------*/
-int itsol_COOcs(int n, int nnz, double *a, int *ja, int *ia, ITS_CsPtr bmat)
+int itsol_COOcs(int n, int nnz, double *a, int *ja, int *ia, ITS_SparMat *bmat)
 {
     int i, k, k1, l, job = 1;
     int *len;
-    /*-------------------- setup data structure for bmat (ITS_CsPtr) struct */
+    /*-------------------- setup data structure for bmat (ITS_SparMat *) struct */
     if (itsol_setupCS(bmat, n, job)) {
         printf(" ERROR SETTING UP bmat IN SETUPCS \n");
         exit(0);
@@ -1035,7 +1035,7 @@ void itsol_coocsc(int n, int nnz, double *val, int *col, int *row, double **a, i
  *             -1  -- error occur
  *
  *---------------------------------------------------------------------*/
-int itsol_csrvbsrC(int job, int nBlk, int *nB, ITS_CsPtr csmat, ITS_VBSparMat *vbmat)
+int itsol_csrvbsrC(int job, int nBlk, int *nB, ITS_SparMat *csmat, ITS_VBSparMat *vbmat)
 {
     int n, i, j, k;
     int nnz, szofBlock, ipos, b_row, b_col, br, bc;
@@ -1189,7 +1189,7 @@ int itsol_nnz_lev4(ITS_Per4Mat *levmat, int *lev, FILE * ft)
     return (nnzT + nnzDown);
 }
 
-int itsol_nnz_cs(ITS_CsPtr A)
+int itsol_nnz_cs(ITS_SparMat *A)
 {
     int i, n = A->n, nnz = 0;
     for (i = 0; i < n; i++)
@@ -1246,7 +1246,7 @@ int itsol_CSClum(int n, double *a, int *ja, int *ia, ITS_ILUSpar *mat, int rsa)
 {
     int row, col, i, k, j1, j2, nnz, id;
     double val, *D;
-    ITS_CsPtr L, U;
+    ITS_SparMat *L, *U;
 
     itsol_setupILU(mat, n);
 
@@ -1411,11 +1411,12 @@ int itsol_CSClum(int n, double *a, int *ja, int *ia, ITS_ILUSpar *mat, int rsa)
   |             0   --> successful return.
   |             1   --> memory allocation error.
   |--------------------------------------------------------------------*/
-int itsol_CSClumC(ITS_CsPtr amat, ITS_ILUSpar *mat, int rsa)
+int itsol_CSClumC(ITS_SparMat *amat, ITS_ILUSpar *mat, int rsa)
 {
     int row, col, i, k, n, nz, nnz, id, *ja;
     double val, *D, *ma;
-    ITS_CsPtr L, U;
+    ITS_SparMat *L, *U;
+
     /*-------------------- begin */
     n = amat->n;
     itsol_setupILU(mat, n);
@@ -1584,7 +1585,7 @@ double itsol_get_time(void)
     return t;
 }
 
-int itsol_dumpCooMat(ITS_CsPtr A, int nglob, int, FILE * ft);
+int itsol_dumpCooMat(ITS_SparMat *A, int nglob, int, FILE * ft);
 
 /*----------------------------------------------------------------------
   |     does a quick-sort split of a real array.
@@ -1663,7 +1664,7 @@ int itsol_qsplitC(double *a, int *ind, int n, int Ncut)
   |             0   --> successful return.
   |             1   --> memory allocation error.
   |---------------------------------------------------------------------*/
-int itsol_SparTran(ITS_CsPtr amat, ITS_CsPtr bmat, int job, int flag)
+int itsol_SparTran(ITS_SparMat *amat, ITS_SparMat *bmat, int job, int flag)
 {
     int i, j, *ind, pos, size = amat->n, *aja;
     double *ama = NULL;
@@ -1736,7 +1737,7 @@ void itsol_swapm(double v[], int i, int j)
   |     0 --> normal return
   |     j --> row j is a zero row
   |--------------------------------------------------------------------*/
-int itsol_roscalC(ITS_CsPtr mata, double *diag, int nrm)
+int itsol_roscalC(ITS_SparMat *mata, double *diag, int nrm)
 {
     int i, k;
     double *kr, scal;
@@ -1787,7 +1788,7 @@ int itsol_roscalC(ITS_CsPtr mata, double *diag, int nrm)
   |     0 --> normal return
   |     j --> column j is a zero column
   |--------------------------------------------------------------------*/
-int itsol_coscalC(ITS_CsPtr mata, double *diag, int nrm)
+int itsol_coscalC(ITS_SparMat *mata, double *diag, int nrm)
 {
     int i, j, k;
     double *kr;
@@ -1901,7 +1902,7 @@ void itsol_qsortC(int *ja, double *ma, int left, int right, int abval)
 /*-------------------------------------------------------------+
   | to dump rows i0 to i1 of matrix for debugging purposes       |
   |--------------------------------------------------------------*/
-void itsol_printmat(FILE * ft, ITS_CsPtr A, int i0, int i1)
+void itsol_printmat(FILE * ft, ITS_SparMat *A, int i0, int i1)
 {
     int i, k, nzi;
     int *row;
@@ -2043,7 +2044,7 @@ void itsol_qqsort(int *ja, double *ma, int left, int right)
   | (mat) = (mat) where each row is sorted.
   |
   |---------------------------------------------------------------------*/
-void itsol_hilosort(ITS_CsPtr mat, int abval, int hilo)
+void itsol_hilosort(ITS_SparMat *mat, int abval, int hilo)
 {
     int j, n = mat->n, *nnz = mat->nzcount;
 
@@ -2119,7 +2120,7 @@ int itsol_dumpArmsMat(ITS_ARMS *PreSt, FILE * ft)
     return (0);
 }
 
-int itsol_dumpCooMat(ITS_CsPtr A, int shiftR, int shiftC, FILE * ft)
+int itsol_dumpCooMat(ITS_SparMat *A, int shiftR, int shiftC, FILE * ft)
 {
     int n, i, k, nzi;
     int *row;
@@ -2146,7 +2147,7 @@ int itsol_outputLU(ITS_ILUSpar *lu, char *filename)
 {
     FILE *fmatlab = fopen(filename, "w");
     int n = lu->n, i, j, nzcount;
-    ITS_CsPtr L = lu->L, U = lu->U;
+    ITS_SparMat *L = lu->L, *U = lu->U;
 
     if (!fmatlab)
         return -1;

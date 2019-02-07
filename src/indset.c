@@ -28,7 +28,7 @@ int itsol_add2com(int *nback, int nod, int *iord, int *riord)
 /*---------------------------------------------------------------------
   |     defines weights based on diagonal dominance ratios
   |--------------------------------------------------------------------*/
-int itsol_weightsC(ITS_CsPtr mat, double *w)
+int itsol_weightsC(ITS_SparMat *mat, double *w)
 {
     int irow, k, n = mat->n, *kj, kz;
     double tdia, wmax = 0.0, tnorm, *kr;
@@ -76,7 +76,7 @@ int itsol_weightsC(ITS_CsPtr mat, double *w)
   |     nnod   = number of elements in the B-block 
   |     
   |---------------------------------------------------------------------*/
-int itsol_PQperm(ITS_CsPtr mat, int bsize, int *Pord, int *Qord, int *nnod, double tol)
+int itsol_PQperm(ITS_SparMat *mat, int bsize, int *Pord, int *Qord, int *nnod, double tol)
 {
     /*--------------------   local variables   */
     int *icor, *jcor, *row;
@@ -200,19 +200,19 @@ int itsol_PQperm(ITS_CsPtr mat, int bsize, int *Pord, int *Qord, int *nnod, doub
   |     the (BSIZE-1) nearest nodes of the current to form a block of
   |     size BSIZE. The current algorithm does not use values of the matrix.
   |---------------------------------------------------------------------*/
-int itsol_indsetC(ITS_CsPtr mat, int bsize, int *iord, int *nnod, double tol)
+int itsol_indsetC(ITS_SparMat *mat, int bsize, int *iord, int *nnod, double tol)
 {
     /*   local variables   */
     int nod, jcount, lastlev, begin, last0, last, nback, mid,
         j1, j2, jcol, inod, jnod, j, k, jcount0, begin0, *rowj;
     int prog, n = mat->n, *riord;
     double *w;
-    ITS_CsPtr matT, gmat;
+    ITS_SparMat *matT, *gmat;
 
     /*-----------------------------------------------------------------------*/
     riord = (int *)itsol_malloc(n * sizeof(int), "indsetC:1");
     w = (double *)itsol_malloc(n * sizeof(double), "indsetC:2");
-    matT = (ITS_CsPtr) itsol_malloc(sizeof(ITS_SparMat), "indsetC:3");
+    matT = (ITS_SparMat *) itsol_malloc(sizeof(ITS_SparMat), "indsetC:3");
     /*  	 call weights to compute the weights for  input matrix.. */
     itsol_setupCS(matT, mat->n, 1);
     itsol_SparTran(mat, matT, 1, 0);
@@ -331,7 +331,7 @@ label50:
   | to worst). The list is in the form (icor(ii), jcor(ii)) 
   |
   |      ON ENTRY: 
-  |       mat   = matrix in ITS_CsPtr format 
+  |       mat   = matrix in ITS_SparMat *format 
   |       tol   = tolerance used for selecting best rows -|
   |       job   = indicates whether or not to permute the max entry in 
   |               each row to first position 
@@ -343,7 +343,7 @@ label50:
   |       jcor  = list of column indices of entries selected 
   |       count = number of entries selected (size of B block) 
   |--------------------------------------------------------------------*/
-int itsol_preSel(ITS_CsPtr mat, int *icor, int *jcor, int job, double tol, int *count)
+int itsol_preSel(ITS_SparMat *mat, int *icor, int *jcor, int job, double tol, int *count)
 {
     int i, k, kmax, n = mat->n, col, jmax, countL;
     int *nz, *jcol;
