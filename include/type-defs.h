@@ -81,7 +81,7 @@ typedef struct ITS_ILUSpar_
     ITS_CsPtr U;      /* U part elements                            */
     int *work;        /* working buffer */
 
-} ITS_ILUSpar, *ITS_ILUPtr;
+} ITS_ILUSpar;
 
 /*------------------------------------------------------------
   | struct for storing the block LU factorization 
@@ -197,7 +197,7 @@ typedef struct ITS_SMat
     int n; 
     int Mtype;           /*--  type 1 = CSR, 2 = VBCSR, 3 = LDU    */
     ITS_CsPtr CS;        /* place holder for a CSR/CSC type matrix */
-    ITS_ILUPtr LDU;      /* struct for an LDU type matrix          */
+    ITS_ILUSpar *LDU;      /* struct for an LDU type matrix          */
     ITS_VBSPtr VBCSR;    /* place holder for a block matrix        */
     void (*matvec)(struct ITS_SMat*, double *, double *);
 
@@ -207,7 +207,7 @@ typedef struct ITS_SMat
 typedef struct ITS_SPre
 {
     int Ptype;               /*-- Ptype 1 = ILU, 2 = VBILU, 3 = Crout */
-    ITS_ILUPtr   ILU;        /* struct for an ILU type preconditioner */
+    ITS_ILUSpar *  ILU;        /* struct for an ILU type preconditioner */
     ITS_VBILUPtr VBILU;      /* struct for a block preconditioner */
     ITS_ARMS *ARMS;        /* struct for a block preconditioner */
     int (*precon) (double *, double *, struct ITS_SPre *); 

@@ -165,7 +165,7 @@ int itsol_cscpy(ITS_CsPtr amat, ITS_CsPtr bmat)
   |             0   --> successful return.
   |            -1   --> memory allocation error.
   |--------------------------------------------------------------------*/
-int itsol_setupILU(ITS_ILUPtr lu, int n)
+int itsol_setupILU(ITS_ILUSpar *lu, int n)
 {
     lu->n = n;
     lu->D = (double *)itsol_malloc(sizeof(double) * n, "itsol_setupILU");
@@ -188,7 +188,7 @@ int itsol_setupILU(ITS_ILUPtr lu, int n)
   |==========
   |   ( lu )  =  Pointer to a ILUSpar struct.
   |--------------------------------------------------------------------*/
-int itsol_cleanILU(ITS_ILUPtr lu)
+int itsol_cleanILU(ITS_ILUSpar *lu)
 {
     if (NULL == lu) return 0;
 
@@ -407,7 +407,7 @@ int itsol_cleanVBILU(ITS_VBILUPtr lu)
   |             0   --> successful return.
   |            -1   --> memory allocation error.
   |--------------------------------------------------------------------*/
-int itsol_mallocRow(ITS_ILUPtr lu, int nrow)
+int itsol_mallocRow(ITS_ILUSpar *lu, int nrow)
 {
     int nzcount = lu->L->nzcount[nrow];
     lu->L->ma[nrow] = (double *)itsol_malloc(sizeof(double) * nzcount, "mallocRow");
@@ -1154,7 +1154,7 @@ int itsol_nnz_vbilu(ITS_VBILUPtr lu)
     return nnz;
 }
 
-int itsol_nnz_ilu(ITS_ILUPtr lu)
+int itsol_nnz_ilu(ITS_ILUSpar *lu)
 {
     int nnz = 0, i;
     for (i = 0; i < lu->n; i++) {
@@ -1242,7 +1242,7 @@ int itsol_nnz_arms(ITS_ARMS *PreSt, FILE * ft)
   |             0   --> successful return.
   |             1   --> memory allocation error.
   |--------------------------------------------------------------------*/
-int itsol_CSClum(int n, double *a, int *ja, int *ia, ITS_ILUPtr mat, int rsa)
+int itsol_CSClum(int n, double *a, int *ja, int *ia, ITS_ILUSpar *mat, int rsa)
 {
     int row, col, i, k, j1, j2, nnz, id;
     double val, *D;
@@ -1411,7 +1411,7 @@ int itsol_CSClum(int n, double *a, int *ja, int *ia, ITS_ILUPtr mat, int rsa)
   |             0   --> successful return.
   |             1   --> memory allocation error.
   |--------------------------------------------------------------------*/
-int itsol_CSClumC(ITS_CsPtr amat, ITS_ILUPtr mat, int rsa)
+int itsol_CSClumC(ITS_CsPtr amat, ITS_ILUSpar *mat, int rsa)
 {
     int row, col, i, k, n, nz, nnz, id, *ja;
     double val, *D, *ma;
@@ -2142,7 +2142,7 @@ int itsol_dumpCooMat(ITS_CsPtr A, int shiftR, int shiftC, FILE * ft)
 /*----------------------------------------------------------------------
   | Output the pattern of L\U, which can be loaded by matlab
   ----------------------------------------------------------------------*/
-int itsol_outputLU(ITS_ILUPtr lu, char *filename)
+int itsol_outputLU(ITS_ILUSpar *lu, char *filename)
 {
     FILE *fmatlab = fopen(filename, "w");
     int n = lu->n, i, j, nzcount;

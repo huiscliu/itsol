@@ -3,7 +3,7 @@
 
 #define TOL 1.e-17
 
-int itsol_CondestC(ITS_ILUPtr lu, FILE * fp)
+int itsol_CondestC(ITS_ILUSpar *lu, FILE * fp)
 {
     int n = lu->n, i;
     double norm = 0.0;
@@ -653,7 +653,7 @@ void itsol_luinv(int n, double *a, double *x, double *y)
  *    x  = solution on return 
  *    lu = LU matrix as produced by iluk. 
  *--------------------------------------------------------------------*/
-int itsol_lusolC(double *y, double *x, ITS_ILUPtr lu)
+int itsol_lusolC(double *y, double *x, ITS_ILUSpar *lu)
 {
     int n = lu->n, i, j, nzcount, *ja;
     double *D;
@@ -691,7 +691,7 @@ int itsol_lusolC(double *y, double *x, ITS_ILUPtr lu)
  *    x  = solution on return
  *    lu = LU matrix as produced by iluc.
  *--------------------------------------------------------------------*/
-int itsol_lumsolC(double *y, double *x, ITS_ILUPtr lu)
+int itsol_lumsolC(double *y, double *x, ITS_ILUSpar *lu)
 {
     int n = lu->n, i, j, nzcount, nnzL, *ia, *ja;
     double *D = lu->D, *ma;
@@ -976,7 +976,7 @@ double itsol_vbnorm2(int sz, double *a)
 }
 
 /*-----------------------------------------------------------*/
-int itsol_condestLU(ITS_ILUPtr lu, FILE * fp)
+int itsol_condestLU(ITS_ILUSpar *lu, FILE * fp)
 {
     int n = lu->n, i;
     double norm = 0.0;

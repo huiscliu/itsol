@@ -33,7 +33,7 @@ int itsol_invSVD(int nn, double *A);
 
 void itsol_matvecC(ITS_CsPtr mat, double *x, double *y);
 void itsol_matvecCSC(ITS_SMat *mat, double *x, double *y);
-int itsol_CondestC(ITS_ILUPtr lu, FILE * fp);
+int itsol_CondestC(ITS_ILUSpar *lu, FILE * fp);
 int itsol_diag_scal(ITS_VBSPtr vbmat);
 int itsol_diagvec(ITS_VBSPtr vbmat, ITS_BData x, ITS_BData y);
 void itsol_matvec(ITS_CsPtr mata, double *x, double *y); 
@@ -42,7 +42,7 @@ void itsol_matvecz(ITS_CsPtr mata, double *x, double *y, double *z);
 void itsol_vbmatvec(ITS_VBSPtr vbmat, double *x, double *y);
 void itsol_luinv(int n, double *a, double *x, double *y); 
 int itsol_vblusolC(double *y, double *x, ITS_VBILUPtr lu); 
-int itsol_lusolC(double *y, double *x, ITS_ILUPtr lu); 
+int itsol_lusolC(double *y, double *x, ITS_ILUSpar *lu); 
 int itsol_rpermC(ITS_CsPtr mat, int *perm); 
 int itsol_cpermC(ITS_CsPtr mat, int *perm) ; 
 int itsol_dpermC(ITS_CsPtr mat, int *perm) ; 
@@ -55,7 +55,7 @@ int itsol_descend(ITS_Per4Mat *levmat, double *x, double *wk);
 int itsol_armsol2(double *x, ITS_ARMS *Prec);
 int itsol_condestArms(ITS_ARMS *armspre, double *y, FILE *fp);
 int itsol_VBcondestC(ITS_VBILUPtr, FILE *fp); 
-int itsol_CondestLUM(ITS_ILUPtr lu, double *y, double *x, FILE *fp);
+int itsol_CondestLUM(ITS_ILUSpar *lu, double *y, double *x, FILE *fp);
 void itsol_matvecVBR(ITS_SMat *mat, double *x, double *y);
 void itsol_matvecLDU(ITS_SMat *mat, double *x, double *y);
 int itsol_preconILU(double *x, double *y, ITS_SPre *mat);
@@ -66,8 +66,8 @@ ITS_Per4Mat *itsol_Lvsol2(double *x, int nlev, ITS_Per4Mat *levmat, ITS_ILUTSpar
 int itsol_Uvsol2(double *x, int nlev, int n, ITS_Per4Mat *levmat, ITS_ILUTSpar * ilusch); 
 void itsol_SchLsol(ITS_ILUTSpar * ilusch, double *y) ;
 void itsol_SchUsol(ITS_ILUTSpar * ilusch, double *y) ;
-int itsol_lumsolC(double *y, double *x, ITS_ILUPtr lu);
-int itsol_condestLU(ITS_ILUPtr lu, FILE *fp);
+int itsol_lumsolC(double *y, double *x, ITS_ILUSpar *lu);
+int itsol_condestLU(ITS_ILUSpar *lu, FILE *fp);
 int itsol_invGauss(int nn, double *A); 
 
 /*----------------------------------------------------------------------------
