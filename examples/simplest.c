@@ -23,7 +23,7 @@ int main(void)
     /* init */
     itsol_solver_initialize(&s, ITS_PC_ARMS, &A);
 
-    /* call itsol_solver_fgmres */
+    /* call solver */
     itsol_solver_solve(&s, x, rhs);
 
     /* get results */
