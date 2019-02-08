@@ -19,7 +19,6 @@ int main(void)
     double *sol = NULL, *x = NULL, *rhs = NULL;
 
     int n, nnz, lfil;
-    /*-------------------- IO */
     int i;
     double terr, norm;
     ITS_PARS io;
