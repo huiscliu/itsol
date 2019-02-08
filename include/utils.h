@@ -14,6 +14,7 @@ void itsol_errexit(char *f_str, ...);
 void * itsol_malloc(int nbytes, char *msg); 
 int itsol_setupCS(ITS_SparMat *amat, int len, int job); 
 int itsol_cleanCS(ITS_SparMat *amat);
+int itsol_cleanCOO(ITS_CooMat *amat);
 int itsol_nnz_cs (ITS_SparMat *A) ;
 int itsol_cscpy(ITS_SparMat *amat, ITS_SparMat *bmat);
 int itsol_setupP4 (ITS_Per4Mat *amat, int Bn, int Cn,  ITS_SparMat *F,  ITS_SparMat *E);

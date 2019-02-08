@@ -86,10 +86,10 @@ int itsol_setupCS(ITS_SparMat *amat, int len, int job)
 int itsol_cleanCS(ITS_SparMat *amat)
 {
     int i;
-    if (amat == NULL)
-        return 0;
-    if (amat->n < 1)
-        return 0;
+
+    if (amat == NULL) return 0;
+    if (amat->n < 1) return 0;
+
     for (i = 0; i < amat->n; i++) {
         if (amat->nzcount[i] > 0) {
             if (amat->ma)
@@ -97,11 +97,25 @@ int itsol_cleanCS(ITS_SparMat *amat)
             free(amat->ja[i]);
         }
     }
-    if (amat->ma)
-        free(amat->ma);
+
+    if (amat->ma) free(amat->ma);
+
     free(amat->ja);
     free(amat->nzcount);
     free(amat);
+
+    return 0;
+}
+
+int itsol_cleanCOO(ITS_CooMat *amat)
+{
+    if (amat == NULL) return 0;
+    if (amat->n < 1) return 0;
+
+    free(amat->ja);
+    free(amat->ia);
+    free(amat->ma);
+
     return 0;
 }
 
