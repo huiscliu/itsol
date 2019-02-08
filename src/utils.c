@@ -1238,7 +1238,7 @@ int itsol_nnz_arms(ITS_ARMSpar *PreSt, FILE * ft)
 }
 
 /*----------------------------------------------------------------------
-  | Convert CSC matrix to LUITS_SparMat struct
+  | Convert CSC matrix to ITS_SparMat struct
   |----------------------------------------------------------------------
   | on entry:
   |==========
@@ -1410,7 +1410,7 @@ int itsol_CSClum(int n, double *a, int *ja, int *ia, ITS_ILUSpar *mat, int rsa)
 }
 
 /*----------------------------------------------------------------------
-  | Convert cs matrix to LUITS_SparMat struct
+  | Convert cs matrix to ITS_SparMat struct
   |----------------------------------------------------------------------
   | on entry:  
   |==========

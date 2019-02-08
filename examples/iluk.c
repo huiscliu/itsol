@@ -12,10 +12,10 @@ int main(void)
     int ierr = 0;
 
     /*-------------------- main structs and wraper structs.   */
-    ITS_SparMat *csmat = NULL;         /* matrix in csr formt             */
-    ITS_SMat *MAT;                /* Matrix structure for matvecs    */
+    ITS_SparMat *csmat = NULL;  /* matrix in csr formt             */
+    ITS_SMat *MAT;              /* Matrix structure for matvecs    */
     ITS_PC *PRE;                /* general precond structure       */
-    ITS_ILUSpar *lu = NULL;           /* ilu preconditioner structure    */
+    ITS_ILUSpar *lu = NULL;     /* ilu preconditioner structure    */
     double *sol = NULL, *x = NULL, *rhs = NULL;
 
     int n, nnz, lfil;

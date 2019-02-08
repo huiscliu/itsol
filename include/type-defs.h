@@ -261,7 +261,7 @@ typedef struct ITS_PARS_
 
 typedef struct ITS_SOLVER_
 {
-    ITS_SparMat *A;
+    ITS_CooMat *A;
     ITS_SMat smat;           /* Matrix structure for matvecs    */
 
     ITS_PC_TYPE pc_type;

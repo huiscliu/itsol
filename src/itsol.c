@@ -1,13 +1,46 @@
 
 #include "itsol.h"
 
-void itsol_solver_initialize(ITS_SOLVER *s, ITS_PC_TYPE pctype, ITS_SparMat *A);
-void itsol_solver_finalize(ITS_SOLVER *s);
+void itsol_solver_initialize(ITS_SOLVER *s, ITS_PC_TYPE pctype, ITS_CooMat *A)
+{
+    assert(s != NULL);
+    assert(A != NULL);
+
+    /* init */
+    bzero(s, sizeof(*s));
+
+    s->A = A;
+    
+    /* pc */
+    s->pc_type = pctype;
+    itsol_pc_initialize(&s->pc, pctype);
+
+    /* init parameters */
+    itsol_solver_init_pars(&s->pars);
+}
+
+void itsol_solver_finalize(ITS_SOLVER *s)
+{
+    if (s == NULL) return;
+}
 
 void itsol_solver_assemble(ITS_SOLVER *s);
 void itsol_solver_solve(ITS_SOLVER *s, double *x, double *rhs);
 
-void itsol_pc_initialize(ITS_PC *pc, ITS_PC_TYPE pctype);
+void itsol_pc_initialize(ITS_PC *pc, ITS_PC_TYPE pctype)
+{
+    assert(pc != NULL);
+
+    if (pctype == ITS_PC_ILUC || pctype == ITS_PC_ILUK || pctype == ITS_PC_ILUT) {
+    }
+    else if (pctype == ITS_PC_VBILUK || pctype == ITS_PC_VBILUT) {
+    }
+    else if (pctype == ITS_PC_ARMS) {
+    }
+    else {
+    }
+}
+
 void itsol_pc_finalize(ITS_PC *pc);
 void itsol_pc_assemble(ITS_PC *pc);
 
