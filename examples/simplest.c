@@ -2,7 +2,6 @@
 
 int main(void)
 {
-
     double *x = NULL, *rhs = NULL;
     int n, i;
     ITS_CooMat A;
