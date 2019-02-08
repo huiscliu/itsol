@@ -168,8 +168,7 @@ int itsol_solver_fgmres(ITS_SMat *Amat, ITS_PC *lu, double *rhs, double *sol, do
             if (res != NULL) *res = beta;
         }
 
-        /*-------------------- now compute solution. 1st, solve upper 
-          triangular system*/
+        /*-------------------- now compute solution. 1st, solve upper triangular system*/
         rs[i] = rs[i] / hh[ptih + i];
         for (ii = i - 1; ii >= 0; ii--) {
             t = rs[ii];
@@ -193,5 +192,5 @@ int itsol_solver_fgmres(ITS_SMat *Amat, ITS_PC *lu, double *rhs, double *sol, do
     free(z);
     free(hh);
 
-    return (retval);
+    return retval;
 }
