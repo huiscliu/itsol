@@ -259,8 +259,8 @@ typedef struct ITS_PARS_
                                    the same block. */
 
     int ilut_p;                 /* ilut fill                    */
-    double tol0;                /* ilut drop tolerance          */
-    int fill_lev;               /* level of fill for ILUK  */
+    double ilut_tol;            /* ilut drop tolerance          */
+    int iluk_level;             /* level of fill for ILUK  */
 
     /* vbilu value always set to 1           */
     int perm_type;               /* indset perms (0) or PQ perms (1)*/

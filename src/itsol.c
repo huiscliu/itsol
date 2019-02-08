@@ -224,7 +224,7 @@ int itsol_pc_assemble(ITS_SOLVER *s)
         pc->precon = itsol_preconLDU;
     }
     else if (pctype == ITS_PC_ILUK) {
-        ierr = itsol_pc_ilukC(p.fill_lev, s->csmat, pc->ILU, pc->log);
+        ierr = itsol_pc_ilukC(p.iluk_level, s->csmat, pc->ILU, pc->log);
 
         if (ierr != 0) {
             fprintf(pc->log, "pc assemble, ILUK error\n");
@@ -234,7 +234,7 @@ int itsol_pc_assemble(ITS_SOLVER *s)
         pc->precon = itsol_preconILU;
     }
     else if (pctype == ITS_PC_ILUT) {
-        ierr = itsol_pc_ilut(s->csmat, pc->ILU, p.ilut_p, p.tol0, pc->log);
+        ierr = itsol_pc_ilut(s->csmat, pc->ILU, p.ilut_p, p.ilut_tol, pc->log);
 
         if (ierr != 0) {
             fprintf(pc->log, "pc assemble, ILUK error\n");
@@ -269,7 +269,7 @@ int itsol_pc_assemble(ITS_SOLVER *s)
         }
 
         /* fac */
-        ierr = itsol_pc_vbilukC(p.fill_lev, vbmat, pc->VBILU, pc->log);
+        ierr = itsol_pc_vbilukC(p.iluk_level, vbmat, pc->VBILU, pc->log);
         if (ierr != 0) {
             fprintf(pc->log, "pc assemble in vbilukC ierr != 0 ***\n");
             exit(10);
@@ -311,7 +311,7 @@ int itsol_pc_assemble(ITS_SOLVER *s)
 
         /* fac */
         lfil = p.ilut_p;
-        tol = p.tol0;
+        tol = p.ilut_tol;
         w = (ITS_BData *) itsol_malloc(vbmat->n * sizeof(ITS_BData), "main");
 
         for (i = 0; i < vbmat->n; i++) {
@@ -380,8 +380,8 @@ void itsol_solver_init_pars(ITS_PARS *p)
 
     p->eps = 0.8;
     p->ilut_p = 50;                /* initial lfil                    */
-    p->tol0 = 1e-3;                /* initial drop tolerance          */
-    p->fill_lev = 1;               /* initial level of fill for ILUK  */
+    p->ilut_tol = 1e-3;            /* initial drop tolerance          */
+    p->iluk_level = 1;             /* initial level of fill for ILUK  */
 
     /* value always set to 1           */
     p->perm_type = 0;              /* indset perms (0) or PQ perms (1)*/

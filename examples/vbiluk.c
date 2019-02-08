@@ -84,7 +84,7 @@ int main(void)
     }
 
     /*---------------------------*/
-    lfil = io.fill_lev;
+    lfil = io.iluk_level;
 
     lu = (ITS_VBILUSpar *) itsol_malloc(sizeof(ITS_VBILUSpar), "main");
     printf("begin vbiluk\n");

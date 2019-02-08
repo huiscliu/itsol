@@ -72,7 +72,7 @@ int main(void)
 
     /*-------------------- set initial lfil and tol */
     lfil = io.ilut_p;
-    tol = io.tol0;
+    tol = io.ilut_tol;
 
     lu = (ITS_ILUSpar *) itsol_malloc(sizeof(ITS_ILUSpar), "main");
 

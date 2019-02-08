@@ -86,7 +86,7 @@ int main(void)
 
     /*---------------------------*/
     lfil = io.ilut_p;
-    tol = io.tol0;
+    tol = io.ilut_tol;
     w = (ITS_BData *) itsol_malloc(vbmat->n * sizeof(ITS_BData), "main");
 
     for (i = 0; i < vbmat->n; i++) {
