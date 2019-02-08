@@ -245,11 +245,8 @@ typedef struct ITS_PARS_
     double tol;                 /* tolerance for stopping fgmres   */
 
     int lfil0;                  /* initial lfil                    */
-    int lfilInc;                /* increment for lfil              */
     double tol0;                /* initial drop tolerance          */
-    double tolMul;              /* multiplier for tol              */
     int fill_lev;               /* initial level of fill for ILUK  */
-    int fill_lev_inc;           /* increment for level of fill for ILUK */
 
     /* value always set to 1           */
     int perm_type;               /* indset perms (0) or PQ perms (1)*/
