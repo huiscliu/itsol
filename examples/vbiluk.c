@@ -13,10 +13,8 @@ int main(void)
     /*-------------------------------------------------------------------
      * options
      *-----------------------------------------------------------------*/
-    int plotting = 0, output_mat = 0, diagscal = 0;
-    char pltfile[256];
-    FILE *fits = NULL;
     int lfil, nBlock, *nB = NULL, *perm = NULL;
+
     /*-------------------- main structs and wraper structs.   */
     ITS_SparMat *csmat = NULL;         /* matrix in csr formt             */
     ITS_VBSparMat *vbmat = NULL;
@@ -24,304 +22,126 @@ int main(void)
     ITS_SMat *MAT;                /* Matrix structure for matvecs    */
     ITS_PC *PRE;                /* general precond structure       */
     double *sol = NULL, *x = NULL, *prhs = NULL, *rhs = NULL;
-    /*-------------------- temp COO/HB arrays - fortran style */
-    int *IA, *JA;
-    double *AA;
-    int rsa, n, nnz;
+
+    int n, nnz;
+
     /*-------------------- IO */
-    FILE *flog = stdout, *fmat = NULL;
     ITS_PARS io;
-    double tm1, tm2;
-    int mat, numat, iparam, i;
-    double terr;
-    char line[ITS_MAX_LINE];
+    int i;
+    double terr, norm;
+    ITS_CooMat A;
+    int its;
 
     MAT = (ITS_SMat *) itsol_malloc(sizeof(ITS_SMat), "main:MAT");
     PRE = (ITS_PC *) itsol_malloc(sizeof(ITS_PC), "main:PRE");
 
-    /*------------------ read and set parameters and other inputs  */
-    memset(&io, 0, sizeof(io));
-    if (itsol_read_inputs("inputs", &io) != 0) {
-        fprintf(flog, "Invalid inputs file...\n");
-        exit(1);
-    }
+
+    /*------------------ set parameters and other inputs  */
+    itsol_solver_init_pars(&io);
 
     /*------------------ set any parameters manually */
     /* io.eps is the angle tolerance for grouping two columns in same
        supernode. This is a cosine and should be <= 1.  */
     io.eps = 0.8;
 
-    /*------------------ file "matfile" contains paths to matrices */
-    if (NULL == (fmat = fopen("matfile", "r"))) {
-        fprintf(flog, "Can't open matfile...\n");
-        exit(2);
+    /* ------------------- Read in matrix and allocate memory */
+    csmat = (ITS_SparMat *) itsol_malloc(sizeof(ITS_SparMat), "main");
+
+    /*-------------------- case: COO formats */
+    A = itsol_read_coo("pores3.coo");
+    n = A.n;
+    nnz = A.nnz;
+
+    /*-------------------- conversion from COO to CSR format */
+    if ((ierr = itsol_COOcs(n, nnz, A.ma, A.ja, A.ia, csmat)) != 0) {
+        printf("mainARMS: COOcs error\n");
+        return ierr;
     }
 
-    memset(line, 0, ITS_MAX_LINE);
-    fgets(line, ITS_MAX_LINE, fmat);
-    if ((numat = atoi(line)) <= 0) {
-        fprintf(flog, "Invalid count of matrices...\n");
-        exit(3);
+    /*------------------------------------------------------------*/
+    x = (double *)itsol_malloc(n * sizeof(double), "main");
+    rhs = (double *)itsol_malloc(n * sizeof(double), "main");
+    sol = (double *)itsol_malloc(n * sizeof(double), "main");
+    prhs = (double *)itsol_malloc(n * sizeof(double), "main");
+
+    ierr = itsol_init_blocks(csmat, &nBlock, &nB, &perm, io.eps);
+
+    /*--------------- permutes the rows and columns of the matrix */
+    if (itsol_dpermC(csmat, perm) != 0) {
+        printf("*** dpermC error ***\n");
+        exit(9);
     }
 
-    /*-------------------- open file VBILUK.out for all performance
-      results of this run (all matrices and params) 
-      also set io->PrecMeth */
-    strcpy(io.outfile, "VBILUK.out");
-    strcpy(io.PrecMeth, "Variable Block ILUK (VBILUK)");
-
-    if (NULL == (io.fout = fopen(io.outfile, "w"))) {
-        fprintf(flog, "Can't open output file %s...\n", io.outfile);
-        exit(4);
+    for( i = 0; i < n; i++ ) {
+        rhs[i] = i;
     }
 
-    /*-------------------- LOOP through MATRICES */
-    for (mat = 1; mat <= numat; mat++) {
-        if (itsol_get_matrix_info(fmat, &io) != 0) {
-            fprintf(flog, "Invalid format in matfile_hb...\n");
-            exit(5);
-        }
+    /*-------------------- permute the right-hand-side  */
+    for (i = 0; i < n; i++)
+        prhs[perm[i]] = rhs[i];
 
-        fprintf(flog, "MATRIX: %s...\n", io.MatNam);
+    /*-------------------- convert to block matrix. */
+    vbmat = (ITS_VBSparMat *) itsol_malloc(sizeof(ITS_VBSparMat), "main");
+    ierr = itsol_csrvbsrC(1, nBlock, nB, csmat, vbmat);
 
-        /* ------------------- Read in matrix and allocate memory */
-        csmat = (ITS_SparMat *) itsol_malloc(sizeof(ITS_SparMat), "main");
-
-        /*-------------------- case: COO formats */
-        if (io.Fmt > ITS_HB) {
-            ierr = itsol_read_coo(&AA, &JA, &IA, &io, &rhs, &sol, 0);
-
-            if (ierr == 0)
-                fprintf(flog, "matrix read successfully\n");
-            else {
-                fprintf(flog, "read_coo error = %d\n", ierr);
-                exit(6);
-            }
-
-            n = io.ndim;
-            nnz = io.nnz;
-
-            /*-------------------- conversion from COO to CSR format */
-            if ((ierr = itsol_COOcs(n, nnz, AA, JA, IA, csmat)) != 0) {
-                fprintf(stderr, "mainARMS: COOcs error\n");
-                return ierr;
-            }
-        }
-        else if (io.Fmt == ITS_HB) {
-            /*-------------------- NOTE: (AA,JA,IA) is in CSR format */
-            ierr = itsol_readhb_c(&n, &AA, &JA, &IA, &io, &rhs, &sol, &rsa);
-
-            if (ierr != 0) {
-                fprintf(flog, "readhb_c error = %d\n", ierr);
-                exit(7);
-            }
-
-            nnz = io.nnz;
-
-            if ((ierr = itsol_CSRcs(n, AA, JA, IA, csmat, rsa)) != 0) {
-                fprintf(flog, "readhb_c: CSRcs error\n");
-                return ierr;
-            }
-        }
-
-        /*-------------- Free memory */
-        free(AA);
-        AA = NULL;
-        free(JA);
-        JA = NULL;
-        free(IA);
-        IA = NULL;
-
-        /*-------------------- diag scaling */
-        if (diagscal == 1) {
-            int nrm = 1;
-            double *diag;
-
-            diag = (double *)itsol_malloc(sizeof(double) * n, "mainILUC:diag");
-            ierr = itsol_roscalC(csmat, diag, nrm);
-
-            if (ierr != 0) {
-                fprintf(stderr, "main-vbiluk: roscal: a zero row...\n");
-                return ierr;
-            }
-
-            ierr = itsol_coscalC(csmat, diag, nrm);
-            if (ierr != 0) {
-                fprintf(stderr, "main-vbiluk: roscal: a zero col...\n");
-                return ierr;
-            }
-
-            free(diag);
-        }
-
-        /*------------------------------------------------------------*/
-        x = (double *)itsol_malloc(io.ndim * sizeof(double), "main");
-        ierr = itsol_init_blocks(csmat, &nBlock, &nB, &perm, io.eps, &io.tm_h, &io.tm_a);
-        io.tm_b = io.tm_h + io.tm_a;
-
-        if (ierr != 0) {
-            fprintf(flog, "*** in init_blocks ierr != 0 ***\n");
-            exit(8);
-        }
-
-        /*--------------- permutes the rows and columns of the matrix */
-        if (itsol_dpermC(csmat, perm) != 0) {
-            fprintf(flog, "*** dpermC error ***\n");
-            exit(9);
-        }
-
-        /*-------------------- permute the right-hand-side  */
-        prhs = (double *)itsol_malloc(n * sizeof(double), "main");
-        for (i = 0; i < n; i++)
-            prhs[perm[i]] = rhs[i];
-
-        /*-------------------- convert to block matrix. */
-        vbmat = (ITS_VBSparMat *) itsol_malloc(sizeof(ITS_VBSparMat), "main");
-        ierr = itsol_csrvbsrC(1, nBlock, nB, csmat, vbmat);
-
-        if (ierr != 0) {
-            fprintf(flog, "*** in csrvbsr ierr != 0 ***\n");
-            exit(10);
-        }
-
-        /*------------------ OUTPUT MATRIX */
-        if (output_mat) {
-            char matdata[ITS_MAX_LINE];
-            FILE *fmatlab;
-            int ii, jj;
-
-            sprintf(matdata, "%s.dat", io.MatNam);
-            if (NULL != (fmatlab = fopen(matdata, "w"))) {
-                fprintf(fmatlab, "%d %d 0\n", csmat->n, csmat->n);
-                for (ii = 0; ii < csmat->n; ii++)
-                    for (jj = 0; jj < csmat->nzcount[ii]; jj++)
-                        fprintf(fmatlab, "%d %d 1\n", ii + 1, csmat->ja[ii][jj] + 1);
-                fclose(fmatlab);
-            }
-        }
-
-        /*------------- info of Block matrix */
-        io.rt_v = (double)csmat->n / (double)vbmat->n;
-        io.rt_e = itsol_nnz_cs(csmat) / 1. / itsol_nnzVBMat(vbmat);
-        io.ceff = itsol_nnz_cs(csmat) / 1. / itsol_memVBMat(vbmat) * 100;
-
-        /*---------------------------*/
-        itsol_output_header_vb(&io);
-        lfil = io.fill_lev;
-        io.tol0 = 0.0;          /* make sure this is set to zero */
-
-        /*---------------------- LOOP through parameters */
-        for (iparam = 1; iparam <= io.nparam; iparam++) {
-            fprintf(flog, "iparam = %d\n", iparam);
-            lu = (ITS_VBILUSpar *) itsol_malloc(sizeof(ITS_VBILUSpar), "main");
-            fprintf(flog, "begin vbiluk\n");
-
-            tm1 = itsol_get_time();
-
-            /*-------------------- call VBILUK preconditioner set-up  */
-            ierr = itsol_pc_vbilukC(lfil, vbmat, lu, flog);
-
-            /*----------------------------------------------------- */
-            tm2 = itsol_get_time();
-
-            if (ierr == -2) {
-                fprintf(io.fout, "Singular diagonal block...\n");
-                itsol_cleanVBILU(lu);
-                goto NEXT_MAT;
-            }
-            else if (ierr != 0) {
-                fprintf(flog, "*** vbilu error, ierr != 0 ***\n");
-                exit(11);
-            }
-
-            io.tm_p = tm2 - tm1;
-            io.fillfact = itsol_nnz_vbilu(lu) / (double)(io.nnz + 1);
-            fprintf(flog, "vbiluk ends, fill factor (mem used) = %f\n", io.fillfact);
-
-            /*------------- get rough idea of cond number - exit if too big */
-            if (itsol_VBcondestC(lu, flog) != 0) {
-                fprintf(flog, "Not attempting iterative solution.\n");
-                fprintf(io.fout, "Not attempting iterative solution.\n");
-                io.its = -1;
-                io.tm_i = -1;
-                io.enorm = -1;
-                io.rnorm = -1;
-                goto NEXT_PARA;
-            }
-
-            /*-------------------- initial guess */
-            /* for( i = 0; i < io.ndim; i++ ) x[i] = 0.0; */
-            itsol_randvec(x, n);
-
-            /*-------------------- create a file for printing
-              'its -- time -- res' info from fgmres */
-            if (plotting) {
-                sprintf(pltfile, "%s_VBILUK_F%05d", io.MatNam, lfil);
-                if (NULL == (fits = fopen(pltfile, "w"))) {
-                    fprintf(flog, "Can't open output file %s...\n", pltfile);
-                    exit(12);
-                }
-            }
-            else
-                fits = NULL;
-
-            /*-------------------- set up the structs before calling itsol_solver_fgmres */
-            MAT->n = n;
-            MAT->CS = csmat;
-            MAT->matvec = itsol_matvecCSR;
-            PRE->VBILU = lu;
-            PRE->precon = itsol_preconVBR;
-
-            /*-------------------- call itsol_solver_fgmres */
-            io.its = io.maxits;
-            tm1 = itsol_get_time();
-            itsol_solver_fgmres(MAT, PRE, prhs, x, io.tol, io.im, &io.its, fits);
-            tm2 = itsol_get_time();
-            io.tm_i = tm2 - tm1;
-            if (io.its < io.maxits)
-                fprintf(flog, "param %03d OK: converged in %d steps...\n\n", iparam, io.its);
-            else
-                fprintf(flog, "not converged in %d steps...\n\n", io.maxits);
-
-            if (fits) fclose(fits);
-
-            /*-------------------- calculate the error norm */
-            /*-------------------- P*sol ?= x */
-            terr = 0.0;
-            for (i = 0; i < io.ndim; i++) terr += (sol[i] - x[perm[i]]) * (sol[i] - x[perm[i]]);
-
-            io.enorm = sqrt(terr);
-
-            /*-------------------- calculate the residual norm */
-            itsol_vbmatvec(vbmat, x, sol);
-            terr = 0.0;
-            for (i = 0; i < io.ndim; i++) terr += (prhs[i] - sol[i]) * (prhs[i] - sol[i]);
-            io.rnorm = sqrt(terr);
-
-            /*-------------------- next params */
-NEXT_PARA:
-            itsol_output_result(lfil, &io, iparam);
-            lfil += io.fill_lev_inc;
-            itsol_cleanVBILU(lu);
-        }
-
-        /*-------------------- next matrix */
-NEXT_MAT:
-        /*  output_blocks( nBlock, nB, io.fout ); */
-        itsol_cleanCS(csmat);
-        itsol_cleanVBMat(vbmat);
-        free(nB);
-        free(perm);
-        free(sol);
-        free(x);
-        free(prhs);
-        free(rhs);
+    if (ierr != 0) {
+        printf("*** in csrvbsr ierr != 0 ***\n");
+        exit(10);
     }
 
-    fclose(io.fout);
-    if (flog != stdout) fclose(flog);
+    /*---------------------------*/
+    lfil = io.fill_lev;
+    io.tol0 = 0.0;          /* make sure this is set to zero */
 
-    fclose(fmat);
+    lu = (ITS_VBILUSpar *) itsol_malloc(sizeof(ITS_VBILUSpar), "main");
+    printf("begin vbiluk\n");
+
+    /*-------------------- call VBILUK preconditioner set-up  */
+    ierr = itsol_pc_vbilukC(lfil, vbmat, lu, stdout);
+
+    /*-------------------- initial guess */
+    for( i = 0; i < n; i++ ) {
+        x[i] = 0.0;
+    }
+
+    /*-------------------- set up the structs before calling itsol_solver_fgmres */
+    MAT->n = n;
+    MAT->CS = csmat;
+    MAT->matvec = itsol_matvecCSR;
+    PRE->VBILU = lu;
+    PRE->precon = itsol_preconVBR;
+
+    /*-------------------- call itsol_solver_fgmres */
+    itsol_solver_fgmres(MAT, PRE, prhs, x, io.tol, io.restart, io.maxits, &its, stdout);
+    printf("solver converged in %d steps...\n\n", its);
+
+    /*---------------------- calculate residual norm */
+    itsol_vbmatvec(vbmat, x, sol);
+
+    /* error */
+    terr = 0.0;
+    norm = 0.;
+    for (i = 0; i < A.n; i++) {
+        terr += (prhs[i] - sol[i]) * (prhs[i] - sol[i]);
+
+        norm += prhs[i] * prhs[i];
+    }
+
+    printf("residual: %e, relative residual: %e\n\n", sqrt(terr), sqrt(terr / norm));
+
+    itsol_cleanVBILU(lu);
+
+    /*  output_blocks( nBlock, nB, io.fout ); */
+    itsol_cleanCS(csmat);
+    itsol_cleanCOO(&A);
+    itsol_cleanVBMat(vbmat);
+    free(nB);
+    free(perm);
+    free(sol);
+    free(x);
+    free(prhs);
+    free(rhs);
+
     free(MAT);
     free(PRE);
 

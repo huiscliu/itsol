@@ -98,21 +98,37 @@ int itsol_invSVD(int nn, double *A)
     S = (double *)malloc(nn * sizeof(double));
     Wk = (double *)malloc(lWk * sizeof(double));
 
-    if (U == NULL || VT == NULL || S == NULL || Wk == NULL)
-        return -1;
+    if (U == NULL || VT == NULL || S == NULL || Wk == NULL) return -1;
+
     /*-------------------- trivial case nn = 1                     */
     if (nn == 1) {
-        if (A[0] == 0.0)
+        if (A[0] == 0.0) {
+            free(U);
+            free(VT);
+            free(S);
+            free(Wk);
             return 1;
+        }
         else {
+            free(U);
+            free(VT);
+            free(S);
+            free(Wk);
+
             A[0] = one / A[0];
             return 0;
         }
     }
     /*-------------------- general case                              */
     FC_FUNC(dgesvd,DGESVD)("A", "A", &nn, &nn, A, &nn, S, U, &nn, VT, &nn, Wk, &lWk, &info);
-    if (S[0] == 0.0)
+    if (S[0] == 0.0) {
+        free(U);
+        free(VT);
+        free(S);
+        free(Wk);
         return 1;
+    }
+
     nrm = S[0] * tol;
     /*-------------------- compute S\inv * VT                        */
     for (i = 0; i < nn; i++) {
@@ -127,6 +143,7 @@ int itsol_invSVD(int nn, double *A)
     free(VT);
     free(S);
     free(Wk);
+
     return 0;
 }
 
