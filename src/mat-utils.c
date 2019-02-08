@@ -1161,7 +1161,7 @@ static int KeyComp(const void *vfst, const void *vsnd)
  *        we merge row_i and row_j by resetting
  *        group[j] = i and size[i] = size[i]+size[j]
  *--------------------------------------------------------------------------*/
-int itsol_init_blocks(ITS_SparMat *csmat, int *pnBlock, int **pnB, int **pperm, double eps, double *t_hash, double *t_angle)
+int itsol_init_blocks(ITS_SparMat *csmat, int *pnBlock, int **pnB, int **pperm, double eps)
 {
     int n = csmat->n, nBlock = 0, i, j, k;
     ITS_SparMat *at = NULL;
@@ -1172,9 +1172,8 @@ int itsol_init_blocks(ITS_SparMat *csmat, int *pnBlock, int **pnB, int **pperm, 
     int *iw = NULL, *jbuf = NULL;
     int cnt, pos, nnz_i, row_j, col, bkcnt;
     int nextBlockID, nextBlockPos, belongTo, grp;
-    double eps_2 = eps * eps, t1, t2;
+    double eps_2 = eps * eps;
 
-    t1 = itsol_get_time();           /* begin Hash method timer */
     group = (KeyType *) itsol_malloc(n * sizeof(KeyType), "init_blocks");
     compress = (ITS_CompressType *) itsol_malloc(n * sizeof(ITS_CompressType), "init_blocks");
     perm = (int *)itsol_malloc(n * sizeof(int), "init_blocks");
@@ -1240,10 +1239,7 @@ int itsol_init_blocks(ITS_SparMat *csmat, int *pnBlock, int **pnB, int **pperm, 
             }
         }
     }
-    t2 = itsol_get_time();           /* end Hash method timer */
-    *t_hash = t2 - t1;
 
-    t1 = itsol_get_time();           /* begin angle method timer */
     nB = (int *)itsol_malloc(n * sizeof(int), "init_blocks");
     jbuf = (int *)itsol_malloc(n * sizeof(int), "init_blocks");
 
@@ -1346,8 +1342,7 @@ int itsol_init_blocks(ITS_SparMat *csmat, int *pnBlock, int **pnB, int **pperm, 
             nB[belongTo]++;
         }
     }
-    t2 = itsol_get_time();           /* end angle method timer */
-    *t_angle = t2 - t1;
+
     *pperm = perm;
 
     itsol_cleanCS(at);
