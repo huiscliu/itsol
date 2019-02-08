@@ -92,6 +92,7 @@ int main(void)
 
     itsol_cleanILU(lu);
     itsol_cleanCS(csmat);
+    itsol_cleanCOO(&A);
 
     free(sol);
     free(x);

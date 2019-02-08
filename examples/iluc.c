@@ -106,6 +106,7 @@ int main(void)
         }
 
         itsol_matvec(Ac, x, sol);
+        itsol_cleanCS(Ac);
 
         /* error */
         terr = 0.0;
@@ -123,6 +124,7 @@ int main(void)
 
     /*-------------------- NEXT_MAT: */
     itsol_cleanCS(csmat);
+    itsol_cleanCOO(&A);
     itsol_cleanILU(lumat);
     free(sol);
     free(x);
