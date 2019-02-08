@@ -41,6 +41,16 @@ typedef struct ITS_SparMat_
 
 } ITS_SparMat;
 
+typedef struct ITS_CooMat_
+{
+    int n;
+    int nnz;      /* length of each row */
+    int *ia;      /* pointer-to-pointer to store column indices  */
+    int *ja;      /* pointer-to-pointer to store column indices  */
+    double *ma;   /* pointer-to-pointer to store nonzero entries */
+
+} ITS_CooMat;
+
 typedef double *ITS_BData;
 
 typedef struct ITS_VBSparMat_
