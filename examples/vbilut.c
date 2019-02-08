@@ -11,12 +11,11 @@ int main(void)
 {
     int ierr = 0;
 
-    /*-------------------- main structs and wraper structs.   */
-    ITS_SparMat *csmat = NULL;         /* matrix in csr formt             */
+    ITS_SparMat *csmat = NULL;        /* matrix in csr formt             */
     ITS_VBSparMat *vbmat = NULL;
     ITS_VBILUSpar *lu = NULL;         /* vbilu preconditioner structure  */
-    ITS_SMat *MAT;                /* Matrix structure for matvecs    */
-    ITS_PC *PRE;                /* general precond structure       */
+    ITS_SMat *MAT;                    /* Matrix structure for matvecs    */
+    ITS_PC *PRE;                      /* general precond structure       */
     double *sol = NULL, *x = NULL, *prhs = NULL, *rhs = NULL;
 
     /*---------------------------------------------------------*/
@@ -25,10 +24,9 @@ int main(void)
     int lfil, max_blk_sz = ITS_MAX_BLOCK_SIZE * ITS_MAX_BLOCK_SIZE * sizeof(double);
     int nBlock, *nB = NULL, *perm = NULL;
     double tol;
-    FILE *flog = stdout, *fmat = NULL;
 
     int i;
-    double terr;
+    double terr, norm;
     ITS_PARS io;
     ITS_CooMat A;
     int its;
@@ -61,22 +59,25 @@ int main(void)
 
     /*------------------------------------------------------------*/
     x = (double *)itsol_malloc(A.n * sizeof(double), "main");
+    sol = (double *)itsol_malloc(A.n * sizeof(double), "main");
+
     ierr = itsol_init_blocks(csmat, &nBlock, &nB, &perm, io.eps);
 
     if (ierr != 0) {
-        fprintf(flog, "*** in init_blocks ierr != 0 ***\n");
+        printf("*** in init_blocks ierr != 0 ***\n");
         exit(8);
     }
 
     /*------------- permutes the rows and columns of the matrix */
     if (itsol_dpermC(csmat, perm) != 0) {
-        fprintf(flog, "*** dpermC error ***\n");
+        printf("*** dpermC error ***\n");
         exit(9);
     }
 
     /*------------- permutes right hand side */
     prhs = (double *)itsol_malloc(n * sizeof(double), "main");
     rhs = (double *)itsol_malloc(n * sizeof(double), "main");
+    x = (double *)itsol_malloc(n * sizeof(double), "main");
     for (i = 0; i < n; i++) rhs[i] = i;
 
     for (i = 0; i < n; i++) prhs[perm[i]] = rhs[i];
@@ -86,7 +87,7 @@ int main(void)
     ierr = itsol_csrvbsrC(1, nBlock, nB, csmat, vbmat);
 
     if (ierr != 0) {
-        fprintf(flog, "*** in csrvbsr ierr != 0 ***\n");
+        printf("*** in csrvbsr ierr != 0 ***\n");
         exit(10);
     }
 
@@ -97,37 +98,44 @@ int main(void)
 
     for (i = 0; i < vbmat->n; i++) {
         w[i] = (double *)itsol_malloc(max_blk_sz, "main");
-
-        lu = (ITS_VBILUSpar *) itsol_malloc(sizeof(ITS_VBILUSpar), "main");
-
-        /*-------------------- call VBILUT preconditioner set-up  */
-        ierr = itsol_pc_vbilutC(vbmat, lu, lfil, tol, w, flog);
-
-        /*-------------------- initial guess */
-        for( i = 0; i < A.n; i++ ) x[i] = 0.0;
-
-
-        /*-------------------- set up the structs before calling itsol_solver_fgmres */
-        MAT->n = n;
-        MAT->CS = csmat;
-        MAT->matvec = itsol_matvecCSR;
-        PRE->VBILU = lu;
-        PRE->precon = itsol_preconVBR;
-
-        /*-------------------- call itsol_solver_fgmres */
-        its = itsol_solver_fgmres(MAT, PRE, prhs, x, io.tol, io.restart, io.maxits, &its, stdout);
-
-        printf("solver converged in %d steps...\n\n", its);
-
-        /*---------------------- calculate residual norm */
-        itsol_vbmatvec(vbmat, x, sol);
-
-        terr = 0.0;
-        for (i = 0; i < A.n; i++)
-            terr += (prhs[i] - sol[i]) * (prhs[i] - sol[i]);
-
-        itsol_cleanVBILU(lu);
     }
+
+    lu = (ITS_VBILUSpar *) itsol_malloc(sizeof(ITS_VBILUSpar), "main");
+
+    /*-------------------- call VBILUT preconditioner set-up  */
+    ierr = itsol_pc_vbilutC(vbmat, lu, lfil, tol, w, stdout);
+
+    /*-------------------- initial guess */
+    for( i = 0; i < A.n; i++ ) x[i] = 0.0;
+
+
+    /*-------------------- set up the structs before calling itsol_solver_fgmres */
+    MAT->n = n;
+    MAT->CS = csmat;
+    MAT->matvec = itsol_matvecCSR;
+    PRE->VBILU = lu;
+    PRE->precon = itsol_preconVBR;
+
+    /*-------------------- call itsol_solver_fgmres */
+    itsol_solver_fgmres(MAT, PRE, prhs, x, io.tol, io.restart, io.maxits, &its, stdout);
+
+    printf("solver converged in %d steps...\n\n", its);
+
+    /*---------------------- calculate residual norm */
+    itsol_vbmatvec(vbmat, x, sol);
+
+    /* error */
+    terr = 0.0;
+    norm = 0.;
+    for (i = 0; i < A.n; i++) {
+        terr += (prhs[i] - sol[i]) * (prhs[i] - sol[i]);
+
+        norm += prhs[i] * prhs[i];
+    }
+
+    printf("residual: %e, relative residual: %e\n\n", sqrt(terr), sqrt(terr / norm));
+
+    itsol_cleanVBILU(lu);
 
     /*  output_blocks( nBlock, nB, io.fout ); */
     for (i = 0; i < vbmat->n; i++) free(w[i]);
@@ -141,9 +149,6 @@ int main(void)
     free(x);
     free(prhs);
     free(rhs);
-
-    if (flog != stdout) fclose(flog);
-    fclose(fmat);
 
     free(MAT);
     free(PRE);

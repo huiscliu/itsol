@@ -167,7 +167,7 @@ int itsol_solver_fgmres(ITS_SMat *Amat, ITS_PC *lu, double *rhs, double *sol, do
             retval = 1;
         /*---------- end main [outer] while loop */
     }
-    /*-------------------- prepare to return */
+
     *nits = its;
     free(vv);
     free(z);
