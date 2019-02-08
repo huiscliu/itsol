@@ -11,13 +11,13 @@ lib:
 
 include ../Makefile.inc
 
-arms: arms.o
-iluc: iluc.o
-iluk: iluk.o
-ilut: ilut.o
-vbiluk: vbiluk.o
-vbilut: vbilut.o
-solver: solver.o
+arms: arms.o ../src/libitsol.a
+iluc: iluc.o ../src/libitsol.a
+iluk: iluk.o ../src/libitsol.a
+ilut: ilut.o ../src/libitsol.a
+vbiluk: vbiluk.o ../src/libitsol.a
+vbilut: vbilut.o ../src/libitsol.a
+solver: solver.o ../src/libitsol.a
 
 clean:
 	rm -f *.o $(BIN_C)
