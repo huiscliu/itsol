@@ -88,7 +88,7 @@ int itsol_solver_assemble(ITS_SOLVER *s)
     }
 
     /* pc assemble */
-    itsol_pc_assemble(&s->pc);
+    itsol_pc_assemble(s);
 
     s->assembled = 1;
     return 0;
@@ -161,19 +161,31 @@ void itsol_pc_finalize(ITS_PC *pc)
     }
 }
 
-void itsol_pc_assemble(ITS_PC *pc)
+int itsol_pc_assemble(ITS_SOLVER *s)
 {
     ITS_PC_TYPE pctype;
+    int ierr;
+    ITS_PARS p;
+    ITS_PC *pc;
 
-    if (pc == NULL) return;
+    assert(s != NULL);
+    pc = &s->pc;
 
     /* type */
     pctype = pc->pc_type;
+    p = s->pars;
 
     if (pctype == ITS_PC_ILUC) {
         pc->precon = itsol_preconLDU;
     }
     else if (pctype == ITS_PC_ILUK) {
+        ierr = itsol_pc_ilukC(p.fill_lev, s->csmat, pc->ILU, pc->log);
+
+        if (ierr != 0) {
+            fprintf(pc->log, "pc assemble, ILUK error\n");
+            return ierr;
+        }
+
         pc->precon = itsol_preconILU;
     }
     else if (pctype == ITS_PC_ILUT) {
@@ -192,6 +204,8 @@ void itsol_pc_assemble(ITS_PC *pc)
         fprintf(pc->log, "wrong preconditioner type\n");
         exit(-1);
     }
+
+    return 0;
 }
 
 
