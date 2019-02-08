@@ -45,7 +45,7 @@
   |     preconditionning operation 
   +---------------------------------------------------------------------*/
 int itsol_solver_fgmres(ITS_SMat *Amat, ITS_PC *lu, double *rhs, double *sol, double tol,
-        int im, int maxits, int *nits, FILE * fits)
+        int im, int maxits, int *nits, double *res, FILE * fits)
 {
     int n = Amat->n;
     int i, i1, ii, j, k, k1, its, im1, pti, pti1, ptih = 0, retval, one = 1;
@@ -70,39 +70,51 @@ int itsol_solver_fgmres(ITS_SMat *Amat, ITS_PC *lu, double *rhs, double *sol, do
     while (its < maxits) {
         /*-------------------- compute initial residual vector */
         Amat->matvec(Amat, sol, vv);
-        for (j = 0; j < n; j++)
-            vv[j] = rhs[j] - vv[j];     /*  vv[0]= initial residual */
+        for (j = 0; j < n; j++) vv[j] = rhs[j] - vv[j];     /*  vv[0]= initial residual */
+
         beta = itsol_dnrm2(n, vv, one);
+
         /*-------------------- print info if fits != null */
         if (fits != NULL && its == 0)
             fprintf(fits, "%8d   %10.2e\n", its, beta);
-        if (beta == 0.0)
+
+        if (beta == 0.0) {
+            if (res != NULL) *res = beta;
             break;
+        }
+
         t = 1.0 / beta;
+
         /*--------------------   normalize:  vv    =  vv   / beta */
         itsol_dscal(n, t, vv, one);
-        if (its == 0)
-            eps1 = tol * beta;
+        if (its == 0) eps1 = tol * beta;
+
         /*--------------------initialize 1-st term  of rhs of hessenberg mtx */
         rs[0] = beta;
         i = 0;
+
         /*-------------------- Krylov loop*/
         i = -1;
         pti = pti1 = 0;
+
         while ((i < im - 1) && (beta > eps1) && (its++ < maxits)) {
             i++;
             i1 = i + 1;
             pti = i * n;
             pti1 = i1 * n;
+
             /*------------------------------------------------------------
               |  (Right) Preconditioning Operation   z_{j} = M^{-1} v_{j}
               +-----------------------------------------------------------*/
+
             if (lu == NULL)
                 memcpy(z + pti, vv + pti, n * sizeof(double));
             else
                 lu->precon(vv + pti, z + pti, lu);
+
             /*-------------------- matvec operation w = A z_{j} = A M^{-1} v_{j} */
             Amat->matvec(Amat, &z[pti], &vv[pti1]);
+
             /*-------------------- modified gram - schmidt...
               |     h_{i,j} = (w,v_{i});  
               |     w  = w - h_{i,j} v_{i}
@@ -114,14 +126,16 @@ int itsol_solver_fgmres(ITS_SMat *Amat, ITS_PC *lu, double *rhs, double *sol, do
                 negt = -t;
                 itsol_daxpy(n, negt, &vv[j * n], one, &vv[pti1], one);
             }
+
             /*-------------------- h_{j+1,j} = ||w||_{2}    */
             t = itsol_dnrm2(n, &vv[pti1], one);
             hh[ptih + i1] = t;
-            if (t == 0.0)
-                return (1);
+            if (t == 0.0) return (1);
             t = 1.0 / t;
+
             /*-------------------- v_{j+1} = w / h_{j+1,j}  */
             itsol_dscal(n, t, &vv[pti1], one);
+
             /*-------- done with modified gram schimdt/arnoldi step
               | now  update factorization of hh.
               | perform previous transformations  on i-th column of h
@@ -132,22 +146,28 @@ int itsol_solver_fgmres(ITS_SMat *Amat, ITS_PC *lu, double *rhs, double *sol, do
                 hh[ptih + k1] = c[k1] * t + s[k1] * hh[ptih + k];
                 hh[ptih + k] = -s[k1] * t + c[k1] * hh[ptih + k];
             }
+
             gam = sqrt(pow(hh[ptih + i], 2) + pow(hh[ptih + i1], 2));
+
             /*-------------------- check if gamma is zero */
-            if (gam == 0.0)
-                gam = epsmac;
+            if (gam == 0.0) gam = epsmac;
+
             /*-------------------- get  next plane rotation    */
             c[i] = hh[ptih + i] / gam;
             s[i] = hh[ptih + i1] / gam;
             rs[i1] = -s[i] * rs[i];
             rs[i] = c[i] * rs[i];
+
             /*-------------------- get residual norm + test convergence*/
             hh[ptih + i] = c[i] * hh[ptih + i] + s[i] * hh[ptih + i1];
             beta = fabs(rs[i1]);
             if (fits != NULL)
                 fprintf(fits, "%8d   %10.2e\n", its, beta);
-            /*-------------------- end [inner] while loop [Arnoldi] */
+
+            /* record res */
+            if (res != NULL) *res = beta;
         }
+
         /*-------------------- now compute solution. 1st, solve upper 
           triangular system*/
         rs[i] = rs[i] / hh[ptih + i];
@@ -157,15 +177,15 @@ int itsol_solver_fgmres(ITS_SMat *Amat, ITS_PC *lu, double *rhs, double *sol, do
                 t -= hh[j * im1 + ii] * rs[j];
             rs[ii] = t / hh[ii * im1 + ii];
         }
+
         /*---------- linear combination of z_j's to get sol. */
-        for (j = 0; j <= i; j++)
-            itsol_daxpy(n, rs[j], &z[j * n], one, sol, one);
+        for (j = 0; j <= i; j++) itsol_daxpy(n, rs[j], &z[j * n], one, sol, one);
+
         /*--------------------  restart outer loop if needed */
         if (beta < eps1)
             break;
         else if (its >= maxits)
             retval = 1;
-        /*---------- end main [outer] while loop */
     }
 
     *nits = its;

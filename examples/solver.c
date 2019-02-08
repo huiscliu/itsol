@@ -47,25 +47,27 @@ int main(void)
     its = s.nits;
     printf("solver converged in %d steps...\n\n", its);
 
-    /* calculate residual norm */
-    csmat = (ITS_SparMat *) itsol_malloc(sizeof(ITS_SparMat), "main");
-    if ((ierr = itsol_COOcs(n, nnz, A.ma, A.ja, A.ia, csmat)) != 0) {
-        fprintf(stderr, "mainARMS: COOcs error\n");
-        return ierr;
+    /* calculate residual norm, optional */
+    {
+        csmat = (ITS_SparMat *) itsol_malloc(sizeof(ITS_SparMat), "main");
+        if ((ierr = itsol_COOcs(n, nnz, A.ma, A.ja, A.ia, csmat)) != 0) {
+            fprintf(stderr, "mainARMS: COOcs error\n");
+            return ierr;
+        }
+
+        itsol_matvec(csmat, x, sol);
+
+        /* error */
+        terr = 0.0;
+        norm = 0.;
+        for (i = 0; i < A.n; i++) {
+            terr += (rhs[i] - sol[i]) * (rhs[i] - sol[i]);
+
+            norm += rhs[i] * rhs[i];
+        }
+
+        printf("residual: %e, relative residual: %e\n\n", sqrt(terr), sqrt(terr / norm));
     }
-
-    itsol_matvec(csmat, x, sol);
-
-    /* error */
-    terr = 0.0;
-    norm = 0.;
-    for (i = 0; i < A.n; i++) {
-        terr += (rhs[i] - sol[i]) * (rhs[i] - sol[i]);
-
-        norm += rhs[i] * rhs[i];
-    }
-
-    printf("residual: %e, relative residual: %e\n\n", sqrt(terr), sqrt(terr / norm));
 
     itsol_solver_finalize(&s);
     itsol_cleanCOO(&A);

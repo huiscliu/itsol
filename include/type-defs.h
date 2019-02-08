@@ -284,6 +284,7 @@ typedef struct ITS_SOLVER_
 
     FILE *log;
     int nits;
+    double res;
     int assembled;
 
 } ITS_SOLVER;

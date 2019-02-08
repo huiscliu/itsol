@@ -105,7 +105,7 @@ int main(void)
     PRE->precon = itsol_preconVBR;
 
     /*-------------------- call itsol_solver_fgmres */
-    itsol_solver_fgmres(MAT, PRE, prhs, x, io.tol, io.restart, io.maxits, &its, stdout);
+    itsol_solver_fgmres(MAT, PRE, prhs, x, io.tol, io.restart, io.maxits, &its, NULL, stdout);
     printf("solver converged in %d steps...\n\n", its);
 
     /*---------------------- calculate residual norm */

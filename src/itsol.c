@@ -115,14 +115,14 @@ int itsol_solver_solve(ITS_SOLVER *s, double *x, double *rhs)
     }
 
     if (pctype == ITS_PC_ILUC || pctype == ITS_PC_ILUK || pctype == ITS_PC_ILUT) {
-        return itsol_solver_fgmres(&s->smat, &s->pc, rhs, x, io.tol, io.restart, io.maxits, &s->nits, log);
+        return itsol_solver_fgmres(&s->smat, &s->pc, rhs, x, io.tol, io.restart, io.maxits, &s->nits, &s->res, log);
     }
     else if (pctype == ITS_PC_ARMS) {
-        return itsol_solver_fgmres(&s->smat, &s->pc, rhs, x, io.tol, io.restart, io.maxits, &s->nits, log);
+        return itsol_solver_fgmres(&s->smat, &s->pc, rhs, x, io.tol, io.restart, io.maxits, &s->nits, &s->res, log);
     }
     else if (pctype == ITS_PC_VBILUK || pctype == ITS_PC_VBILUT) {
         if (s->pc.perm == NULL) {
-            return itsol_solver_fgmres(&s->smat, &s->pc, rhs, x, io.tol, io.restart, io.maxits, &s->nits, log);
+            return itsol_solver_fgmres(&s->smat, &s->pc, rhs, x, io.tol, io.restart, io.maxits, &s->nits, &s->res, log);
         }
         else {
             double *px = NULL, *prhs = NULL;
@@ -136,7 +136,7 @@ int itsol_solver_solve(ITS_SOLVER *s, double *x, double *rhs)
                 px[s->pc.perm[i]] = x[i];
             }
 
-            rt = itsol_solver_fgmres(&s->smat, &s->pc, prhs, px, io.tol, io.restart, io.maxits, &s->nits, log);
+            rt = itsol_solver_fgmres(&s->smat, &s->pc, prhs, px, io.tol, io.restart, io.maxits, &s->nits, &s->res, log);
 
             for (i = 0; i < s->csmat->n; i++) {
                 rhs[i] = prhs[s->pc.perm[i]];

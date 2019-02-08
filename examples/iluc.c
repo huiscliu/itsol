@@ -92,7 +92,7 @@ int main(void)
     PRE->precon = itsol_preconLDU;
 
     /*-------------------- call itsol_solver_fgmres */
-    itsol_solver_fgmres(MAT, PRE, rhs, x, io.tol, io.restart, io.maxits, &its, stdout);
+    itsol_solver_fgmres(MAT, PRE, rhs, x, io.tol, io.restart, io.maxits, &its, NULL, stdout);
 
     printf("solver converged in %d steps...\n\n", its);
 

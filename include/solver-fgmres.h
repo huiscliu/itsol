@@ -26,7 +26,7 @@ extern "C" {
 |           solution on input.
 | tol     = tolerance for stopping iteration
 | im      = Krylov subspace dimension 
-| (itmax) = max number of iterations allowed. 
+| (maxits) = max number of iterations allowed. 
 | fits    = NULL: no output
 |        != NULL: file handle to output " resid vs time and its" 
 |
@@ -35,8 +35,9 @@ extern "C" {
 | fgmr      int =  0 --> successful return.
 |           int =  1 --> convergence not achieved in itmax iterations.
 | sol     = contains an approximate solution (upon successful return).
-| itmax   = has changed. It now contains the number of steps required
+| nits    = has changed. It now contains the number of steps required
 |           to converge -- 
+| res     = relative residual.
 +-----------------------------------------------------------------------
 | internal work arrays:
 |----------       
@@ -50,7 +51,7 @@ extern "C" {
 |     preconditionning operation 
 +---------------------------------------------------------------------*/
 int itsol_solver_fgmres(ITS_SMat *Amat, ITS_PC *lu, double *rhs, double *sol, double tol,
-        int im, int maxits, int *nits, FILE * fits);
+        int im, int maxits, int *nits, double *res, FILE * fits);
 
 #ifdef __cplusplus
 }
