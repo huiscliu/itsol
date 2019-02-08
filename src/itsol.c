@@ -87,6 +87,7 @@ int itsol_solver_assemble(ITS_SOLVER *s)
         exit(-1);
     }
 
+    /* pc assemble */
     itsol_pc_assemble(&s->pc);
 
     s->assembled = 1;
@@ -162,7 +163,35 @@ void itsol_pc_finalize(ITS_PC *pc)
 
 void itsol_pc_assemble(ITS_PC *pc)
 {
+    ITS_PC_TYPE pctype;
+
     if (pc == NULL) return;
+
+    /* type */
+    pctype = pc->pc_type;
+
+    if (pctype == ITS_PC_ILUC) {
+        pc->precon = itsol_preconLDU;
+    }
+    else if (pctype == ITS_PC_ILUK) {
+        pc->precon = itsol_preconILU;
+    }
+    else if (pctype == ITS_PC_ILUT) {
+        pc->precon = itsol_preconILU;
+    }
+    else if (pctype == ITS_PC_VBILUK) {
+        pc->precon = itsol_preconVBR;
+    }
+    else if (pctype == ITS_PC_VBILUT) {
+        pc->precon = itsol_preconVBR;
+    }
+    else if (pctype == ITS_PC_ARMS) {
+        pc->precon = itsol_preconARMS;
+    }
+    else {
+        fprintf(pc->log, "wrong preconditioner type\n");
+        exit(-1);
+    }
 }
 
 
