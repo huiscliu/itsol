@@ -408,8 +408,8 @@ void itsol_set_arms_pars(ITS_PARS *io, int Dscale, int *ipar, double *dropcoef, 
 
     /*-------------------- */
     ipar[0] = ITS_MAX_NUM_LEV;      /* max number of levels allowed */
-    fprintf(stdout, " %d maxlev \n", ipar[0]);
     ipar[1] = io->perm_type;    /* Indset (0) / PQ (1)    permutation   */
+
     /* note that these refer to completely  */
     /* different methods for reordering A   */
     /* 0 = standard ARMS independent sets   */
