@@ -30,9 +30,25 @@ void itsol_solver_finalize(ITS_SOLVER *s)
 
 void itsol_solver_assemble(ITS_SOLVER *s)
 {
+    ITS_PC_TYPE pctype;
+
     assert(s != NULL);
 
     if (s->assembled) return;
+
+    /* assemble */
+    pctype = s->pc_type;
+
+    if (pctype == ITS_PC_ILUC) {
+    }
+    else if(pctype == ITS_PC_ILUK || pctype == ITS_PC_ILUT) {
+    }
+    else if (pctype == ITS_PC_VBILUK || pctype == ITS_PC_VBILUT) {
+    }
+    else if (pctype == ITS_PC_ARMS) {
+    }
+    else {
+    }
 
     itsol_pc_assemble(&s->pc);
 
