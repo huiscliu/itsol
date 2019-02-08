@@ -58,7 +58,6 @@ int main(void)
     }
 
     /*------------------------------------------------------------*/
-    x = (double *)itsol_malloc(A.n * sizeof(double), "main");
     sol = (double *)itsol_malloc(A.n * sizeof(double), "main");
 
     ierr = itsol_init_blocks(csmat, &nBlock, &nB, &perm, io.eps);
@@ -142,6 +141,7 @@ int main(void)
 
     free(w);
     itsol_cleanCS(csmat);
+    itsol_cleanCOO(&A);
     itsol_cleanVBMat(vbmat);
     free(nB);
     free(perm);
