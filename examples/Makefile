@@ -18,6 +18,7 @@ ilut: ilut.o ../src/libitsol.a
 vbiluk: vbiluk.o ../src/libitsol.a
 vbilut: vbilut.o ../src/libitsol.a
 solver: solver.o ../src/libitsol.a
+simplest: simplest.o ../src/libitsol.a
 
 clean:
 	rm -f *.o $(BIN_C)
