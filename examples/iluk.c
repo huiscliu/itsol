@@ -48,6 +48,8 @@ int main(void)
 
     /*---------------------------------------------------------*/
     x = (double *)itsol_malloc(n * sizeof(double), "main");
+    rhs = (double *)itsol_malloc(n * sizeof(double), "main");
+    sol = (double *)itsol_malloc(n * sizeof(double), "main");
 
     /*-------------------- set initial lfil and tol */
     lfil = io.fill_lev;
@@ -61,6 +63,7 @@ int main(void)
     ierr = itsol_pc_ilukC(lfil, csmat, lu, stdout);
 
     for( i = 0; i < n; i++ ) x[i] = 0.0;
+    for (i = 0; i < n; i++) rhs[i] = i;
 
     /*-------------------- set up the structs before calling itsol_solver_fgmres */
     MAT->n = n;
@@ -89,8 +92,8 @@ int main(void)
     printf("residual: %e, relative residual: %e\n\n", sqrt(terr), sqrt(terr / norm));
 
     itsol_cleanILU(lu);
-
     itsol_cleanCS(csmat);
+
     free(sol);
     free(x);
     free(rhs);
