@@ -176,13 +176,6 @@ int itsol_pc_assemble(ITS_SOLVER *s)
     p = s->pars;
 
     if (pctype == ITS_PC_ILUC) {
-        ierr = itsol_pc_arms2(s->csmat, p.ipar, p.droptol, p.lfil_arr, p.tolind, pc->ARMS, pc->log);
-
-        if (ierr != 0) {
-            fprintf(pc->log, "pc assemble, ILUK error\n");
-            return ierr;
-        }
-
         pc->precon = itsol_preconLDU;
     }
     else if (pctype == ITS_PC_ILUK) {
@@ -212,6 +205,17 @@ int itsol_pc_assemble(ITS_SOLVER *s)
         pc->precon = itsol_preconVBR;
     }
     else if (pctype == ITS_PC_ARMS) {
+        /* setup */
+        itsol_setup_arms(pc->ARMS);
+
+        /* assemble */
+        ierr = itsol_pc_arms2(s->csmat, p.ipar, p.droptol, p.lfil_arr, p.tolind, pc->ARMS, pc->log);
+
+        if (ierr != 0) {
+            fprintf(pc->log, "pc assemble, arms error\n");
+            return ierr;
+        }
+
         pc->precon = itsol_preconARMS;
     }
     else {
