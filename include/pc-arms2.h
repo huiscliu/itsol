@@ -150,6 +150,13 @@ extern "C" {
 int itsol_pc_arms2(ITS_SparMat *Amat, int *ipar, double *droptol, int *lfil, 
 	  double tolind, ITS_ARMSpar *PreMat, FILE *ft);
 
+/*-------------------------------------------------*/
+/* sets parameters required by arms preconditioner */
+/* input ITS_IOT, Dscale                            */
+/* output ipar tolcoef, lfil                       */
+/*-------------------- trigger an error if not set */
+void itsol_set_arms_pars(ITS_PARS *io, int Dscale, int *ipar, double *dropcoef, int *lfil);
+
 #ifdef __cplusplus
 }
 #endif

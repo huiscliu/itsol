@@ -30,7 +30,7 @@ int main(void)
     int rsa, n, nnz;
     /*-------------------- IO */
     FILE *flog = stdout, *fmat = NULL;
-    ITS_IOT io;
+    ITS_PARS io;
     double tm1, tm2;
     int mat, numat, iparam, i;
     double terr;

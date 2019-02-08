@@ -2,6 +2,7 @@
 #include "pc-arms2.h"
 
 #define  PERMTOL  0.99          /*  0 --> no permutation 0.01 to 0.1 good  */
+#define ITS_MAX_NUM_LEV 10
 
 /*---------------------------------------------------------------------
   | MULTI-LEVEL BLOCK ILUT PRECONDITIONER.
@@ -392,3 +393,56 @@ int itsol_pc_arms2(ITS_SparMat *Amat, int *ipar, double *droptol, int *lfil, dou
 
     return 0;
 }
+
+/*-------------------------------------------------*/
+/* sets parameters required by arms preconditioner */
+/* input ITS_IOT, Dscale                            */
+/* output ipar tolcoef, lfil                       */
+/*-------------------- trigger an error if not set */
+void itsol_set_arms_pars(ITS_PARS *io, int Dscale, int *ipar, double *dropcoef, int *lfil)
+{
+    int j;
+
+    for (j = 0; j < 17; j++)
+        ipar[j] = 0;
+
+    /*-------------------- */
+    ipar[0] = ITS_MAX_NUM_LEV;      /* max number of levels allowed */
+    fprintf(stdout, " %d maxlev \n", ipar[0]);
+    ipar[1] = io->perm_type;    /* Indset (0) / PQ (1)    permutation   */
+    /* note that these refer to completely  */
+    /* different methods for reordering A   */
+    /* 0 = standard ARMS independent sets   */
+    /* 1 = arms with ddPQ ordering          */
+    /* 2 = acoarsening-based ordering [new] */
+
+    ipar[2] = io->Bsize;        /* smallest size allowed for last schur comp. */
+    ipar[3] = 1;                /* whether or not to print statistics */
+
+    /*-------------------- interlevel methods */
+    ipar[10] = 0;               /* Always do permutations - currently not used  */
+    ipar[11] = 0;               /* ILUT or ILUTP - currently only ILUT is implemented */
+    ipar[12] = Dscale;          /* diagonal row scaling before PILUT 0:no 1:yes */
+    ipar[13] = Dscale;          /* diagonal column scaling before PILUT 0:no 1:yes */
+
+    /*-------------------- last level methods */
+    ipar[14] = 1;               /* Always do permutations at last level */
+    ipar[15] = 1;               /* ILUTP for last level(0 = ILUT at last level) */
+    ipar[16] = Dscale;          /* diagonal row scaling  0:no 1:yes */
+    ipar[17] = Dscale;          /* diagonal column scaling  0:no 1:yes */
+
+    /*-------------------- set lfil */
+    for (j = 0; j < 7; j++) {
+        lfil[j] = io->lfil0;
+    }
+
+    /*--------- dropcoef (droptol[k] = tol0*dropcoef[k]) ----- */
+    dropcoef[0] = 1.6;          /* dropcoef for L of B block */
+    dropcoef[1] = 1.6;          /* dropcoef for U of B block */
+    dropcoef[2] = 1.6;          /* dropcoef for L\ inv F */
+    dropcoef[3] = 1.6;          /* dropcoef for U\ inv E */
+    dropcoef[4] = 0.004;        /* dropcoef for forming schur comple. */
+    dropcoef[5] = 0.004;        /* dropcoef for last level L */
+    dropcoef[6] = 0.004;        /* dropcoef for last level U */
+}
+
