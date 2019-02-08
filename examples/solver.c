@@ -19,11 +19,11 @@ int main(void)
     ITS_SparMat *csmat = NULL;
     ITS_SOLVER s;
 
-    /*-------------------- case: COO formats */
+    /* case: COO formats */
     A = itsol_read_coo("pores3.coo");
     n = A.n;
 
-    /*---------------------------------------------------------*/
+    /* solution vectors */
     x = (double *)itsol_malloc(n * sizeof(double), "main");
     rhs = (double *)itsol_malloc(n * sizeof(double), "main");
     sol = (double *)itsol_malloc(n * sizeof(double), "main");
@@ -31,17 +31,22 @@ int main(void)
     for( i = 0; i < n; i++ ) x[i] = 0.0;
     for (i = 0; i < n; i++) rhs[i] = i;
 
-    /*-------------------- call itsol_solver_fgmres */
+    /* create */
     itsol_solver_initialize(&s, ITS_PC_ILUK, &A);
 
+    /* tune parameters, optional */
+
+    /* assemble */
     itsol_solver_assemble(&s);
 
+    /* call itsol_solver_fgmres */
     itsol_solver_solve(&s, x, rhs);
 
+    /* get results */
     its = s.nits;
     printf("solver converged in %d steps...\n\n", its);
 
-    /*-------------------- calculate residual norm */
+    /* calculate residual norm */
     csmat = s.csmat;
     itsol_matvec(csmat, x, sol);
 
