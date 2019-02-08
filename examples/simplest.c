@@ -1,10 +1,3 @@
-/*-------------------------------------------------------------------*
- * main test driver for ILUK                                         *
- *-------------------------------------------------------------------*
- * Na Li, Oct 31, 2001                                               *
- *                                                                   *
- * Report bugs / send comments to: saad@cs.umn.edu, nli@cs.umn.edu   *
- *-------------------------------------------------------------------*/
 #include "itsol.h"
 
 int main(void)
@@ -40,9 +33,10 @@ int main(void)
     /* get results */
     printf("solver converged in %d steps...\n\n", s.nits);
 
+    /* cleanup */
     itsol_solver_finalize(&s);
-    itsol_cleanCOO(&A);
 
+    itsol_cleanCOO(&A);
     free(x);
     free(rhs);
 
