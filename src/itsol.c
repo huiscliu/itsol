@@ -268,6 +268,7 @@ int itsol_pc_assemble(ITS_SOLVER *s)
             exit(10);
         }
 
+        /* fac */
         ierr = itsol_pc_vbilukC(p.fill_lev, vbmat, pc->VBILU, pc->log);
         if (ierr != 0) {
             fprintf(pc->log, "pc assemble in vbilukC ierr != 0 ***\n");
@@ -281,7 +282,56 @@ int itsol_pc_assemble(ITS_SOLVER *s)
         free(nB);
     }
     else if (pctype == ITS_PC_VBILUT) {
+        int nBlock, *nB = NULL, *perm = NULL, i;
+        ITS_VBSparMat *vbmat = NULL;
+        int lfil, max_blk_sz = ITS_MAX_BLOCK_SIZE * ITS_MAX_BLOCK_SIZE * sizeof(double);
+        double tol;
+        ITS_BData *w = NULL;
+
+        /* init */
+        itsol_init_blocks(s->csmat, &nBlock, &nB, &perm, p.eps);
+
+        /* save perm */
+        pc->perm = perm;
+
+        /* permutes the rows and columns of the matrix */
+        if (itsol_dpermC(s->csmat, perm) != 0) {
+            fprintf(pc->log, "*** dpermC error ***\n");
+            exit(9);
+        }
+
+        /*-------------------- convert to block matrix. */
+        vbmat = (ITS_VBSparMat *) itsol_malloc(sizeof(ITS_VBSparMat), "main");
+
+        ierr = itsol_csrvbsrC(1, nBlock, nB, s->csmat, vbmat);
+        if (ierr != 0) {
+            fprintf(pc->log, "pc assemble in csrvbsr ierr != 0 ***\n");
+            exit(10);
+        }
+
+        /* fac */
+        lfil = p.lfil0;
+        tol = p.tol0;
+        w = (ITS_BData *) itsol_malloc(vbmat->n * sizeof(ITS_BData), "main");
+
+        for (i = 0; i < vbmat->n; i++) {
+            w[i] = (double *)itsol_malloc(max_blk_sz, "main");
+        }
+
+        ierr = itsol_pc_vbilutC(vbmat, pc->VBILU, lfil, tol, w, pc->log);
+        if (ierr != 0) {
+            fprintf(pc->log, "pc assemble in vbilutC ierr != 0 ***\n");
+            exit(10);
+        }
+
         pc->precon = itsol_preconVBR;
+
+        /* cleanup */
+        for (i = 0; i < vbmat->n; i++) free(w[i]);
+        free(w);
+
+        itsol_cleanVBMat(vbmat);
+        free(nB);
     }
     else if (pctype == ITS_PC_ARMS) {
         /* setup */
