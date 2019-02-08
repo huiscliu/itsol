@@ -56,16 +56,30 @@ int itsol_solver_assemble(ITS_SOLVER *s)
     A = *s->A;
 
     if (pctype == ITS_PC_ILUC) {
+        if ((ierr = itsol_COOcs(A.n, A.nnz, A.ma, A.ia, A.ja, s->csmat)) != 0) {
+            fprintf(log, "solver assemble, COOcs error\n");
+            return ierr;
+        }
+
+        /* smat */
+        s->smat.n = A.n;
+        s->smat.CS = s->csmat;               /* in column format */
+        s->smat.matvec = itsol_matvecCSC;    /* column matvec */
     }
     else if(pctype == ITS_PC_ILUK || pctype == ITS_PC_ILUT || pctype == ITS_PC_VBILUK || pctype == ITS_PC_VBILUT
             || pctype == ITS_PC_ARMS) {
         if ((ierr = itsol_COOcs(A.n, A.nnz, A.ma, A.ja, A.ia, s->csmat)) != 0) {
-            fprintf(stderr, "mainARMS: COOcs error\n");
+            fprintf(log, "mainARMS: COOcs error\n");
             return ierr;
         }
+
+        /* smat */
+        s->smat.n = A.n;
+        s->smat.CS = s->csmat;               /* in row format */
+        s->smat.matvec = itsol_matvecCSR;    /* row matvec */
     }
     else {
-        fprintf(log, "wrong preconditioner type\n");
+        fprintf(log, "solver assemble, wrong preconditioner type\n");
         exit(-1);
     }
 
