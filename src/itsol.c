@@ -22,9 +22,17 @@ void itsol_solver_initialize(ITS_SOLVER *s, ITS_PC_TYPE pctype, ITS_CooMat *A)
 void itsol_solver_finalize(ITS_SOLVER *s)
 {
     if (s == NULL) return;
+
+    itsol_pc_finalize(&s->pc);
 }
 
-void itsol_solver_assemble(ITS_SOLVER *s);
+void itsol_solver_assemble(ITS_SOLVER *s)
+{
+    assert(s != NULL);
+
+    itsol_pc_assemble(&s->pc);
+}
+
 void itsol_solver_solve(ITS_SOLVER *s, double *x, double *rhs);
 
 void itsol_pc_initialize(ITS_PC *pc, ITS_PC_TYPE pctype)
@@ -41,8 +49,16 @@ void itsol_pc_initialize(ITS_PC *pc, ITS_PC_TYPE pctype)
     }
 }
 
-void itsol_pc_finalize(ITS_PC *pc);
-void itsol_pc_assemble(ITS_PC *pc);
+void itsol_pc_finalize(ITS_PC *pc)
+{
+    if (pc == NULL) return;
+}
+
+void itsol_pc_assemble(ITS_PC *pc)
+{
+    if (pc == NULL) return;
+}
+
 
 void itsol_solver_set_pars(ITS_SOLVER *s, ITS_PARS par)
 {
