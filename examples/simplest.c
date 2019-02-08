@@ -20,11 +20,8 @@ int main(void)
         rhs[i] = i;
     }
 
-    /* create */
+    /* init */
     itsol_solver_initialize(&s, ITS_PC_ARMS, &A);
-
-    /* assemble */
-    itsol_solver_assemble(&s);
 
     /* call itsol_solver_fgmres */
     itsol_solver_solve(&s, x, rhs);

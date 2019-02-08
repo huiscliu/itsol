@@ -37,8 +37,10 @@ int main(void)
 
     /* tune parameters, optional */
 
-    /* assemble */
+    /* assemble, optional */
+#if 0
     itsol_solver_assemble(&s);
+#endif
 
     /* call itsol_solver_fgmres */
     itsol_solver_solve(&s, x, rhs);

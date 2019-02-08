@@ -104,6 +104,9 @@ int itsol_solver_solve(ITS_SOLVER *s, double *x, double *rhs)
     assert(x != NULL);
     assert(rhs != NULL);
 
+    /* assemble */
+    itsol_solver_assemble(s);
+
     io = s->pars;
     pctype = s->pc_type;
 
