@@ -118,6 +118,8 @@ void itsol_pc_initialize(ITS_PC *pc, ITS_PC_TYPE pctype)
 {
     assert(pc != NULL);
 
+    pc->pc_type = pctype;
+
     if (pctype == ITS_PC_ILUC || pctype == ITS_PC_ILUK || pctype == ITS_PC_ILUT) {
         pc->ILU = (ITS_ILUSpar *) itsol_malloc(sizeof(ITS_ILUSpar), "pc init");
     }
@@ -135,8 +137,11 @@ void itsol_pc_initialize(ITS_PC *pc, ITS_PC_TYPE pctype)
 
 void itsol_pc_finalize(ITS_PC *pc)
 {
+    ITS_PC_TYPE pctype;
+
     if (pc == NULL) return;
 
+    pctype = pc->pc_type;
     if (pctype == ITS_PC_ILUC || pctype == ITS_PC_ILUK || pctype == ITS_PC_ILUT) {
         itsol_cleanILU(pc->ILU);
         pc->ILU = NULL;
