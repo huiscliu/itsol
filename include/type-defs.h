@@ -226,6 +226,12 @@ typedef enum ITS_PC_TYPE_
 
 } ITS_PC_TYPE;
 
+typedef enum ITS_SOLVER_TYPE_
+{
+    ITS_SOLVER_FGMRES,
+
+} ITS_SOLVER_TYPE;
+
 typedef struct ITS_PC
 {
     ITS_PC_TYPE pc_type;
