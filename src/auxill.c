@@ -29,7 +29,8 @@ int itsol_read_inputs(char *in_file, ITS_IOT * pio)
     for (p1 = line; ' ' == *p1; p1++) ;
     for (p2 = p1; ' ' != *p2; p2++) ;
     *p2 = '\0';
-    pio->im = atoi(p1);
+    pio->restart = atoi(p1);
+
     /*-------------------- Line 3 : maximum number of iterations */
     memset(line, 0, ITS_MAX_LINE);
     if (NULL == fgets(line, ITS_MAX_LINE, finputs))
@@ -531,6 +532,23 @@ void itsol_set_arms_pars(ITS_PARS * io, int Dscale, int *ipar, double *dropcoef,
     dropcoef[4] = 0.004;        /* dropcoef for forming schur comple. */
     dropcoef[5] = 0.004;        /* dropcoef for last level L */
     dropcoef[6] = 0.004;        /* dropcoef for last level U */
+}
+
+ITS_PARS itsol_set_iot_to_pars(ITS_PARS *io)
+{
+    ITS_PARS t;
+
+    assert(io != NULL);
+
+    t.restart = io->restart;
+    t.maxits = io->maxits;
+    t.tol = io->tol;
+
+    t.lfil0 = io->lfil0;
+    t.tol0 = io->tol0;
+    t.fill_lev = io->fill_lev;
+
+    return t;
 }
 
 void itsol_randvec(double *v, int n)
