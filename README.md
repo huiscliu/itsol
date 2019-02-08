@@ -10,5 +10,5 @@ ITerative SOLvers package created by Yousef Saad
 
 
 # Purpose
-The purpose is to refactorize the ITSOL: 1) to add an automatic script; 2) to add name space for each function;
-3) to remove some types and functions; 4) to add higher level data structures.
+The purposes of refactorizing the ITSOL are 1) to add an automatic script; 2) to add name space for each function;
+3) to remove some types and functions; 4) to add higher level data structures; 5) to revise the APIs.
