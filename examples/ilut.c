@@ -54,7 +54,7 @@ int main(void)
     sol = (double *)itsol_malloc(n * sizeof(double), "main");
 
     /*-------------------- set initial lfil and tol */
-    lfil = io.lfil0;
+    lfil = io.ilut_p;
     tol = io.tol0;
 
     lu = (ITS_ILUSpar *) itsol_malloc(sizeof(ITS_ILUSpar), "main");

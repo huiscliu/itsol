@@ -234,7 +234,7 @@ int itsol_pc_assemble(ITS_SOLVER *s)
         pc->precon = itsol_preconILU;
     }
     else if (pctype == ITS_PC_ILUT) {
-        ierr = itsol_pc_ilut(s->csmat, pc->ILU, p.lfil0, p.tol0, pc->log);
+        ierr = itsol_pc_ilut(s->csmat, pc->ILU, p.ilut_p, p.tol0, pc->log);
 
         if (ierr != 0) {
             fprintf(pc->log, "pc assemble, ILUK error\n");
@@ -310,7 +310,7 @@ int itsol_pc_assemble(ITS_SOLVER *s)
         }
 
         /* fac */
-        lfil = p.lfil0;
+        lfil = p.ilut_p;
         tol = p.tol0;
         w = (ITS_BData *) itsol_malloc(vbmat->n * sizeof(ITS_BData), "main");
 
@@ -379,7 +379,7 @@ void itsol_solver_init_pars(ITS_PARS *p)
     p->tol = 1e-6;                 /* tolerance for stopping fgmres   */
 
     p->eps = 0.8;
-    p->lfil0 = 50;                 /* initial lfil                    */
+    p->ilut_p = 50;                /* initial lfil                    */
     p->tol0 = 1e-3;                /* initial drop tolerance          */
     p->fill_lev = 1;               /* initial level of fill for ILUK  */
 

@@ -258,7 +258,7 @@ typedef struct ITS_PARS_
                                    how close are two rows or columns which can be grouped in
                                    the same block. */
 
-    int lfil0;                  /* ilut fill                    */
+    int ilut_p;                 /* ilut fill                    */
     double tol0;                /* ilut drop tolerance          */
     int fill_lev;               /* level of fill for ILUK  */
 

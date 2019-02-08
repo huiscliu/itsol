@@ -433,7 +433,7 @@ void itsol_set_arms_pars(ITS_PARS *io, int Dscale, int *ipar, double *dropcoef, 
 
     /*-------------------- set lfil */
     for (j = 0; j < 7; j++) {
-        lfil[j] = io->lfil0;
+        lfil[j] = io->ilut_p;
     }
 
     /*--------- dropcoef (droptol[k] = tol0*dropcoef[k]) ----- */
