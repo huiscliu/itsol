@@ -72,8 +72,7 @@ int main(void)
     }
 
     /*-------------------- permute the right-hand-side  */
-    for (i = 0; i < n; i++)
-        prhs[perm[i]] = rhs[i];
+    for (i = 0; i < n; i++) prhs[perm[i]] = rhs[i];
 
     /*-------------------- convert to block matrix. */
     vbmat = (ITS_VBSparMat *) itsol_malloc(sizeof(ITS_VBSparMat), "main");

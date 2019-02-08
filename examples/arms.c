@@ -12,9 +12,7 @@ int main(void)
 {
     int ierr = 0;
 
-    int diagscal = 1;
-    double tol, tolind = TOL_DD;
-    int j, nnz = 0, lfil;
+    int nnz = 0;
 
     /*-------------------- main structs and wraper structs.     */
     ITS_SparMat *csmat = NULL;         /* matrix in csr formt             */
@@ -22,10 +20,6 @@ int main(void)
     ITS_SMat *MAT = NULL;         /* Matrix structure for matvecs    */
     ITS_PC *PRE = NULL;         /* general precond structure       */
     double *sol = NULL, *x = NULL, *rhs = NULL;
-    /*---------------- method for incrementing lfil is set here */
-    int lfil_arr[7];
-    double droptol[7], dropcoef[7];
-    int ipar[18];
 
     int n;
 
@@ -44,9 +38,6 @@ int main(void)
 
     csmat = (ITS_SparMat *) itsol_malloc(sizeof(ITS_SparMat), "main:csmat");
 
-    /*-------------------- set parameters for arms */
-    itsol_set_arms_pars(&io, diagscal, ipar, dropcoef, lfil_arr);
-
     /*-------------------- case: COO formats */
     A = itsol_read_coo("pores3.coo");
     n = A.n;
@@ -63,21 +54,12 @@ int main(void)
     rhs = (double *)itsol_malloc(n * sizeof(double), "main");
     sol = (double *)itsol_malloc(n * sizeof(double), "main");
 
-    /*-------------------- set initial lfil and tol */
-    lfil = io.lfil0;
-    tol = io.tol0;
-
-    for (j = 0; j < 7; j++) {
-        lfil_arr[j] = lfil * ((int)nnz / n);
-        droptol[j] = tol * dropcoef[j];
-    }
-
     ArmsSt = (ITS_ARMSpar *) itsol_malloc(sizeof(ITS_ARMSpar), "main:ArmsSt");
     itsol_setup_arms(ArmsSt);
     printf("begin arms\n");
 
     /*-------------------- call ARMS preconditioner set-up  */
-    ierr = itsol_pc_arms2(csmat, ipar, droptol, lfil_arr, tolind, ArmsSt, stdout);
+    ierr = itsol_pc_arms2(csmat, io.ipar, io.droptol, io.lfil_arr, io.tolind, ArmsSt, stdout);
 
     /*-------------------- initial guess */
     for(i=0; i < n; i++) {
