@@ -243,6 +243,9 @@ typedef struct ITS_PARS_
     int restart;                /* Dim of Krylov subspace [fgmr]   */
     int maxits;                 /* maximum number of fgmres iters  */
     double tol;                 /* tolerance for stopping fgmres   */
+    double eps;                 /* not available in Hash-based algorithm.  <= 1.  indicating
+                                   how close are two rows or columns which can be grouped in
+                                   the same block. */
 
     int lfil0;                  /* initial lfil                    */
     double tol0;                /* initial drop tolerance          */

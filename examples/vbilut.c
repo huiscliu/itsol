@@ -32,25 +32,19 @@ int main(void)
     int lfil, max_blk_sz = ITS_MAX_BLOCK_SIZE * ITS_MAX_BLOCK_SIZE * sizeof(double);
     int nBlock, *nB = NULL, *perm = NULL;
     double tol;
-    /*-------------------- IO */
     FILE *flog = stdout, *fmat = NULL;
-    ITS_IOT io;
-    /*---------------------------------------------------------*/
+
     double tm1, tm2;
     int mat, numat, iparam, i;
     double terr;
     char line[ITS_MAX_LINE];
+    ITS_PARS io;
 
     MAT = (ITS_SMat *) itsol_malloc(sizeof(ITS_SMat), "main:MAT");
     PRE = (ITS_PC *) itsol_malloc(sizeof(ITS_PC), "main:PRE");
 
-    /*------------------ read and set parameters and other inputs  */
-    memset(&io, 0, sizeof(io));
-
-    if (itsol_read_inputs("inputs", &io) != 0) {
-        fprintf(flog, "Invalid inputs file...\n");
-        exit(1);
-    }
+    /*------------------ set parameters and other inputs  */
+    itsol_solver_init_pars(&io);
 
     /*------------------ set any parameters manually */
     /* io.eps  is the angle tolerance for grouping two columns in same
@@ -71,63 +65,27 @@ int main(void)
         exit(3);
     }
 
-    /*-------------------- open file ILUT.out for all performance
-      results of this run (all matrices and params) 
-      also set io->PrecMeth */
-    strcpy(io.outfile, "VBILUT.out");
-    strcpy(io.PrecMeth, "Variable Block ILUT (VBILUT)");
-
-    if (NULL == (io.fout = fopen(io.outfile, "w"))) {
-        fprintf(flog, "Can't open output file %s...\n", io.outfile);
-        exit(4);
-    }
-
     /*-------------------- LOOP THROUGH MATRICES --------------------*/
     for (mat = 1; mat <= numat; mat++) {
-        if (itsol_get_matrix_info(fmat, &io) != 0) {
-            fprintf(flog, "Invalid format in matfile_hb...\n");
-            exit(5);
-        }
-
-        fprintf(flog, "MATRIX: %s...\n", io.MatNam);
-
         /* ------------------- Read in matrix and allocate memory-------- */
         csmat = (ITS_SparMat *) itsol_malloc(sizeof(ITS_SparMat), "main");
 
         /*-------------------- case: COO formats */
-        if (io.Fmt > ITS_HB) {
-            ierr = itsol_read_coo(&AA, &JA, &IA, &io, &rhs, &sol, 0);
-            if (ierr == 0)
-                fprintf(flog, "matrix read successfully\n");
-            else {
-                fprintf(flog, "read_coo error = %d\n", ierr);
-                exit(6);
-            }
-
-            n = io.ndim;
-            nnz = io.nnz;
-
-            /*-------------------- conversion from COO to CSR format */
-            if ((ierr = itsol_COOcs(n, nnz, AA, JA, IA, csmat)) != 0) {
-                fprintf(stderr, "mainARMS: COOcs error\n");
-                return ierr;
-            }
+        ierr = itsol_read_coo(&AA, &JA, &IA, &io, &rhs, &sol, 0);
+        if (ierr == 0)
+            fprintf(flog, "matrix read successfully\n");
+        else {
+            fprintf(flog, "read_coo error = %d\n", ierr);
+            exit(6);
         }
-        else if (io.Fmt == ITS_HB) {
-            /*-------------------- NOTE: (AA,JA,IA) is in CSR format */
-            ierr = itsol_readhb_c(&n, &AA, &JA, &IA, &io, &rhs, &sol, &rsa);
 
-            if (ierr != 0) {
-                fprintf(flog, "readhb_c error = %d\n", ierr);
-                exit(7);
-            }
+        n = io.ndim;
+        nnz = io.nnz;
 
-            nnz = io.nnz;
-
-            if ((ierr = itsol_CSRcs(n, AA, JA, IA, csmat, rsa)) != 0) {
-                fprintf(flog, "readhb_c: CSRcs error\n");
-                return ierr;
-            }
+        /*-------------------- conversion from COO to CSR format */
+        if ((ierr = itsol_COOcs(n, nnz, AA, JA, IA, csmat)) != 0) {
+            fprintf(stderr, "mainARMS: COOcs error\n");
+            return ierr;
         }
 
         /*----------------------- Free Memory */

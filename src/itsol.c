@@ -27,6 +27,7 @@ void itsol_solver_init_pars(ITS_PARS *p)
     p->maxits = 1000;                 /* maximum number of fgmres iters  */
     p->tol = 1e-6;                 /* tolerance for stopping fgmres   */
 
+    p->eps = 0.8;
     p->lfil0 = 50;                 /* initial lfil                    */
     p->tol0 = 1e-3;                /* initial drop tolerance          */
     p->fill_lev = 1;               /* initial level of fill for ILUK  */
