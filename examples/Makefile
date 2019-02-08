@@ -17,6 +17,7 @@ iluk: iluk.o
 ilut: ilut.o
 vbiluk: vbiluk.o
 vbilut: vbilut.o
+solver: solver.o
 
 clean:
 	rm -f *.o $(BIN_C)
