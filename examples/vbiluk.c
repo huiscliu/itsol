@@ -39,11 +39,6 @@ int main(void)
     /*------------------ set parameters and other inputs  */
     itsol_solver_init_pars(&io);
 
-    /*------------------ set any parameters manually */
-    /* io.eps is the angle tolerance for grouping two columns in same
-       supernode. This is a cosine and should be <= 1.  */
-    io.eps = 0.8;
-
     /* ------------------- Read in matrix and allocate memory */
     csmat = (ITS_SparMat *) itsol_malloc(sizeof(ITS_SparMat), "main");
 
@@ -131,7 +126,6 @@ int main(void)
 
     itsol_cleanVBILU(lu);
 
-    /*  output_blocks( nBlock, nB, io.fout ); */
     itsol_cleanCS(csmat);
     itsol_cleanCOO(&A);
     itsol_cleanVBMat(vbmat);
