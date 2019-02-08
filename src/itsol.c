@@ -119,10 +119,13 @@ void itsol_pc_initialize(ITS_PC *pc, ITS_PC_TYPE pctype)
     assert(pc != NULL);
 
     if (pctype == ITS_PC_ILUC || pctype == ITS_PC_ILUK || pctype == ITS_PC_ILUT) {
+        pc->ILU = (ITS_ILUSpar *) itsol_malloc(sizeof(ITS_ILUSpar), "pc init");
     }
     else if (pctype == ITS_PC_VBILUK || pctype == ITS_PC_VBILUT) {
+        pc->VBILU = (ITS_VBILUSpar *) itsol_malloc(sizeof(ITS_VBILUSpar), "pc init");
     }
     else if (pctype == ITS_PC_ARMS) {
+        pc->ARMS = (ITS_ARMSpar *) itsol_malloc(sizeof(ITS_ARMSpar), "pc init");
     }
     else {
         fprintf(pc->log, "wrong preconditioner type\n");
