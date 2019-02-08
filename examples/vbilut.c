@@ -115,7 +115,7 @@ int main(void)
     printf("solver converged in %d steps...\n\n", its);
 
     /*---------------------- calculate residual norm */
-    itsol_vbmatvec(vbmat, x, sol);
+    itsol_matvec(csmat, x, sol);
 
     /* error */
     terr = 0.0;

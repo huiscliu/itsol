@@ -270,8 +270,10 @@ typedef struct ITS_PARS_
 typedef struct ITS_SOLVER_
 {
     ITS_CooMat *A;
-    ITS_SparMat *csmat;
+
+    /* internal mat */
     ITS_SMat smat;           /* Matrix structure for matvecs    */
+    ITS_SparMat *csmat;
 
     ITS_PC_TYPE pc_type;
     ITS_PC pc;               /* general precond structure       */
