@@ -258,6 +258,11 @@ typedef struct ITS_PARS_
     /*                  or coarsen (2) */
     int Bsize;                   /* block size - dual role. see input file */
 
+    int diagscal;
+    int lfil_arr[7];
+    double droptol[7], dropcoef[7];
+    int ipar[18];
+
 } ITS_PARS;
 
 typedef struct ITS_SOLVER_

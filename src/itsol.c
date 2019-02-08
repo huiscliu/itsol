@@ -189,6 +189,13 @@ int itsol_pc_assemble(ITS_SOLVER *s)
         pc->precon = itsol_preconILU;
     }
     else if (pctype == ITS_PC_ILUT) {
+        ierr = itsol_pc_ilut(s->csmat, pc->ILU, p.lfil0, p.tol0, pc->log);
+
+        if (ierr != 0) {
+            fprintf(pc->log, "pc assemble, ILUK error\n");
+            return ierr;
+        }
+
         pc->precon = itsol_preconILU;
     }
     else if (pctype == ITS_PC_VBILUK) {
@@ -233,4 +240,10 @@ void itsol_solver_init_pars(ITS_PARS *p)
     /* value always set to 1           */
     p->perm_type = 0;              /* indset perms (0) or PQ perms (1)*/
     p->Bsize = 30;                 /* block size - dual role. see input file */
+
+    /* arms */
+    p->diagscal = 1;
+
+    /* init pars */
+    itsol_set_arms_pars(p, p->diagscal, p->ipar, p->dropcoef, p->lfil_arr);
 }
