@@ -45,9 +45,9 @@
   |     preconditionning operation 
   +---------------------------------------------------------------------*/
 int itsol_solver_fgmres(ITS_SMat *Amat, ITS_PC *lu, double *rhs, double *sol, double tol,
-        int im, int *itmax, FILE * fits)
+        int im, int maxits, int *nits, FILE * fits)
 {
-    int n = Amat->n, maxits = *itmax;
+    int n = Amat->n;
     int i, i1, ii, j, k, k1, its, im1, pti, pti1, ptih = 0, retval, one = 1;
     double *hh, *c, *s, *rs, t;
     double negt, beta, eps1 = 0, gam, *vv, *z;
@@ -168,9 +168,10 @@ int itsol_solver_fgmres(ITS_SMat *Amat, ITS_PC *lu, double *rhs, double *sol, do
         /*---------- end main [outer] while loop */
     }
     /*-------------------- prepare to return */
-    *itmax = its;
+    *nits = its;
     free(vv);
     free(z);
     free(hh);
+
     return (retval);
 }

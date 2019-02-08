@@ -26,7 +26,6 @@ int main(void)
     int n, nnz, lfil, rsa;
     /*-------------------- IO */
     FILE *flog = stdout, *fmat = NULL;
-    ITS_IOT io;
     double tm1, tm2;
     int mat, numat, iparam, i;
     double terr;
@@ -34,9 +33,6 @@ int main(void)
 
     MAT = (ITS_SMat *) itsol_malloc(sizeof(ITS_SMat), "main:MAT");
     PRE = (ITS_PC *) itsol_malloc(sizeof(ITS_PC), "main:PRE");
-
-    /*------------------ read and set parameters and other inputs  */
-    memset(&io, 0, sizeof(io));
 
     if (itsol_read_inputs("inputs", &io) != 0) {
         fprintf(flog, "Invalid inputs file...\n");
