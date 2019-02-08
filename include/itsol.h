@@ -2,7 +2,6 @@
 #ifndef __ITSOL_INCLUDED_PROTOS_H__
 #define __ITSOL_INCLUDED_PROTOS_H__
 
-#include "auxill.h"
 #include "solver-fgmres.h"
 
 #include "pc-arms2.h"
