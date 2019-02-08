@@ -70,7 +70,7 @@ int itsol_outputLU(ITS_ILUSpar *lu, char *filename);
 int itsol_checkperm(int *p, int n);
 void itsol_qsortR1I(double *wa, int *cor1, int left, int right);
 
-int itsol_read_coo(double **VAL, int **COL, int **ROW, double **rhs, double **sol, char *Fname, int *ndim, int *nnnz);
+ITS_CooMat itsol_read_coo(char *Fname);
 
 #ifdef __cplusplus
 }
