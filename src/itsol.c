@@ -24,7 +24,7 @@ void itsol_solver_init_pars(ITS_PARS *p)
 
     /* parameters from inputs -----------------------------------------*/
     p->restart = 30;               /* Dim of Krylov subspace [fgmr]   */
-    p->maxits = 1000;                 /* maximum number of fgmres iters  */
+    p->maxits = 1000;              /* maximum number of fgmres iters  */
     p->tol = 1e-6;                 /* tolerance for stopping fgmres   */
 
     p->eps = 0.8;
@@ -33,6 +33,6 @@ void itsol_solver_init_pars(ITS_PARS *p)
     p->fill_lev = 1;               /* initial level of fill for ILUK  */
 
     /* value always set to 1           */
-    p->perm_type = 0;               /* indset perms (0) or PQ perms (1)*/
-    p->Bsize = 30;                  /* block size - dual role. see input file */
+    p->perm_type = 0;              /* indset perms (0) or PQ perms (1)*/
+    p->Bsize = 30;                 /* block size - dual role. see input file */
 }
