@@ -47,7 +47,6 @@ int main(void)
 
     /*-------------------- case: COO formats */
     A = itsol_read_coo("pores3.coo");
-
     n = A.n;
     nnz = A.nnz;
 
