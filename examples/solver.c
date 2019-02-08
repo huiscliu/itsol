@@ -11,8 +11,8 @@ int main(void)
 {
 
     double *sol = NULL, *x = NULL, *rhs = NULL;
-    int n;
-    int i;
+    int n, nnz;
+    int i, ierr;
     double terr, norm;
     ITS_CooMat A;
     int its;
@@ -22,6 +22,7 @@ int main(void)
     /* case: COO formats */
     A = itsol_read_coo("pores3.coo");
     n = A.n;
+    nnz = A.nnz;
 
     /* solution vectors */
     x = (double *)itsol_malloc(n * sizeof(double), "main");
@@ -32,7 +33,7 @@ int main(void)
     for (i = 0; i < n; i++) rhs[i] = i;
 
     /* create */
-    itsol_solver_initialize(&s, ITS_PC_ARMS, &A);
+    itsol_solver_initialize(&s, ITS_PC_VBILUK, &A);
 
     /* tune parameters, optional */
 
@@ -47,7 +48,12 @@ int main(void)
     printf("solver converged in %d steps...\n\n", its);
 
     /* calculate residual norm */
-    csmat = s.csmat;
+    csmat = (ITS_SparMat *) itsol_malloc(sizeof(ITS_SparMat), "main");
+    if ((ierr = itsol_COOcs(n, nnz, A.ma, A.ja, A.ia, csmat)) != 0) {
+        fprintf(stderr, "mainARMS: COOcs error\n");
+        return ierr;
+    }
+
     itsol_matvec(csmat, x, sol);
 
     /* error */
@@ -63,6 +69,7 @@ int main(void)
 
     itsol_solver_finalize(&s);
     itsol_cleanCOO(&A);
+    itsol_cleanCS(csmat);
 
     free(sol);
     free(x);
