@@ -218,9 +218,15 @@ int itsol_pc_assemble(ITS_SOLVER *s)
 
 void itsol_solver_set_pars(ITS_SOLVER *s, ITS_PARS par)
 {
+    ITS_PARS *p;
+
     assert(s != NULL);
 
     memcpy(&s->pars, &par, sizeof(par));
+
+    /* update arms pars */
+    p = &s->pars;
+    itsol_set_arms_pars(p, p->diagscal, p->ipar, p->dropcoef, p->lfil_arr);
 }
 
 void itsol_solver_init_pars(ITS_PARS *p)
@@ -244,6 +250,6 @@ void itsol_solver_init_pars(ITS_PARS *p)
     /* arms */
     p->diagscal = 1;
 
-    /* init pars */
+    /* init arms pars */
     itsol_set_arms_pars(p, p->diagscal, p->ipar, p->dropcoef, p->lfil_arr);
 }
