@@ -176,6 +176,13 @@ int itsol_pc_assemble(ITS_SOLVER *s)
     p = s->pars;
 
     if (pctype == ITS_PC_ILUC) {
+        ierr = itsol_pc_arms2(s->csmat, p.ipar, p.droptol, p.lfil_arr, p.tolind, pc->ARMS, pc->log);
+
+        if (ierr != 0) {
+            fprintf(pc->log, "pc assemble, ILUK error\n");
+            return ierr;
+        }
+
         pc->precon = itsol_preconLDU;
     }
     else if (pctype == ITS_PC_ILUK) {
@@ -249,6 +256,7 @@ void itsol_solver_init_pars(ITS_PARS *p)
 
     /* arms */
     p->diagscal = 1;
+    p->tolind = TOL_DD;
 
     /* init arms pars */
     itsol_set_arms_pars(p, p->diagscal, p->ipar, p->dropcoef, p->lfil_arr);

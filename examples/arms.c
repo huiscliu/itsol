@@ -8,9 +8,6 @@
  *-----------------------------------------------------------------*/
 #include "itsol.h"
 
-#define TOL_DD 0.7              /* diagonal dominance tolerance for */
-                     /* independent sets                 */
-
 int main(void)
 {
     int ierr = 0;

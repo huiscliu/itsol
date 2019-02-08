@@ -12,6 +12,7 @@
 #include "protos-deps.h"
 
 #define ITS_MAX_BLOCK_SIZE   100
+#define TOL_DD 0.7                   /* diagonal dominance tolerance for arms */
 
 /* FORTRAN style vblock format, compatible for many FORTRAN routines */
 #define ITS_DATA(a,row,i,j)  (a[(j)*(row)+(i)])
@@ -259,6 +260,7 @@ typedef struct ITS_PARS_
     int Bsize;                   /* block size - dual role. see input file */
 
     int diagscal;
+    double tolind;
     int lfil_arr[7];
     double droptol[7], dropcoef[7];
     int ipar[18];
