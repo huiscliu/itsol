@@ -214,7 +214,7 @@ typedef struct ITS_SMat
 
 } ITS_SMat;
 
-/*-------------------- 3 types of matrices so far */
+/* types of pc */
 typedef enum ITS_PC_TYPE_
 {
     ITS_PC_ARMS,
@@ -226,6 +226,7 @@ typedef enum ITS_PC_TYPE_
 
 } ITS_PC_TYPE;
 
+/* types of solver */
 typedef enum ITS_SOLVER_TYPE_
 {
     ITS_SOLVER_FGMRES,
@@ -257,15 +258,13 @@ typedef struct ITS_PARS_
                                    how close are two rows or columns which can be grouped in
                                    the same block. */
 
-    int lfil0;                  /* initial lfil                    */
-    double tol0;                /* initial drop tolerance          */
-    int fill_lev;               /* initial level of fill for ILUK  */
+    int lfil0;                  /* ilut fill                    */
+    double tol0;                /* ilut drop tolerance          */
+    int fill_lev;               /* level of fill for ILUK  */
 
-    /* value always set to 1           */
+    /* vbilu value always set to 1           */
     int perm_type;               /* indset perms (0) or PQ perms (1)*/
-
-    /*                  or coarsen (2) */
-    int Bsize;                   /* block size - dual role. see input file */
+    int Bsize;                   /* block size - dual role */
 
     int diagscal;
     double tolind;
