@@ -231,8 +231,10 @@ typedef struct ITS_PC
     ITS_PC_TYPE pc_type;
 
     ITS_ILUSpar *ILU;      /* struct for an ILU type preconditioner */
-    ITS_VBILUSpar *VBILU;  /* struct for a block preconditioner */
     ITS_ARMSpar *ARMS;     /* struct for a block preconditioner */
+
+    ITS_VBILUSpar *VBILU;  /* struct for a block preconditioner */
+    int *perm;
 
     int (*precon) (double *, double *, struct ITS_PC *); 
     FILE *log;
