@@ -136,6 +136,23 @@ void itsol_pc_initialize(ITS_PC *pc, ITS_PC_TYPE pctype)
 void itsol_pc_finalize(ITS_PC *pc)
 {
     if (pc == NULL) return;
+
+    if (pctype == ITS_PC_ILUC || pctype == ITS_PC_ILUK || pctype == ITS_PC_ILUT) {
+        itsol_cleanILU(pc->ILU);
+        pc->ILU = NULL;
+    }
+    else if (pctype == ITS_PC_VBILUK || pctype == ITS_PC_VBILUT) {
+        itsol_cleanVBILU(pc->VBILU);
+        pc->VBILU = NULL;
+    }
+    else if (pctype == ITS_PC_ARMS) {
+        itsol_cleanARMS(pc->ARMS);
+        pc->ARMS = NULL;
+    }
+    else {
+        fprintf(pc->log, "wrong preconditioner type\n");
+        exit(-1);
+    }
 }
 
 void itsol_pc_assemble(ITS_PC *pc)
