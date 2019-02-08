@@ -25,6 +25,10 @@ void itsol_solver_finalize(ITS_SOLVER *s)
 {
     if (s == NULL) return;
 
+    /* cleanup */
+    if (s->csmat != NULL) itsol_cleanCS(s->csmat);
+    s->csmat = NULL;
+
     itsol_pc_finalize(&s->pc);
 
     bzero(s, sizeof(*s));
