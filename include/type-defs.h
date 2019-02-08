@@ -268,6 +268,9 @@ typedef struct ITS_SOLVER_
     ITS_PC pc;               /* general precond structure       */
 
     ITS_PARS pars;
+
+    FILE *log;
+    int nits;
     int assembled;
 
 } ITS_SOLVER;

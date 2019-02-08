@@ -24,16 +24,41 @@ void itsol_solver_finalize(ITS_SOLVER *s)
     if (s == NULL) return;
 
     itsol_pc_finalize(&s->pc);
+
+    bzero(s, sizeof(*s));
 }
 
 void itsol_solver_assemble(ITS_SOLVER *s)
 {
     assert(s != NULL);
 
+    if (s->assembled) return;
+
     itsol_pc_assemble(&s->pc);
+
+    s->assembled = 1;
 }
 
-void itsol_solver_solve(ITS_SOLVER *s, double *x, double *rhs);
+int itsol_solver_solve(ITS_SOLVER *s, double *x, double *rhs)
+{
+    FILE *log;
+    ITS_PARS io;
+
+    assert(s != NULL);
+    assert(x != NULL);
+    assert(rhs != NULL);
+
+    io = s->pars;
+
+    if (s->log == NULL) {
+        log = stdout;
+    }
+    else {
+        log = s->log;
+    }
+
+    return itsol_solver_fgmres(&s->smat, &s->pc, rhs, x, io.tol, io.restart, io.maxits, &s->nits, log);
+}
 
 void itsol_pc_initialize(ITS_PC *pc, ITS_PC_TYPE pctype)
 {
