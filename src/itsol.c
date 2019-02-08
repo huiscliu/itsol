@@ -10,9 +10,11 @@ void itsol_solver_initialize(ITS_SOLVER *s, ITS_PC_TYPE pctype, ITS_CooMat *A)
     bzero(s, sizeof(*s));
 
     s->A = A;
+    s->log = stdout;
     
     /* pc */
     s->pc_type = pctype;
+    s->pc.log = s->log;
     itsol_pc_initialize(&s->pc, pctype);
 
     /* init parameters */
@@ -28,31 +30,49 @@ void itsol_solver_finalize(ITS_SOLVER *s)
     bzero(s, sizeof(*s));
 }
 
-void itsol_solver_assemble(ITS_SOLVER *s)
+int itsol_solver_assemble(ITS_SOLVER *s)
 {
     ITS_PC_TYPE pctype;
+    ITS_CooMat A;
+    int ierr;
+    FILE *log;
 
     assert(s != NULL);
 
-    if (s->assembled) return;
+    if (s->assembled) return 0;
+
+    /* log */
+    if (s->log == NULL) {
+        log = stdout;
+    }
+    else {
+        log = s->log;
+    }
 
     /* assemble */
     pctype = s->pc_type;
 
+    s->csmat = (ITS_SparMat *) itsol_malloc(sizeof(ITS_SparMat), "solver assemble");
+    A = *s->A;
+
     if (pctype == ITS_PC_ILUC) {
     }
-    else if(pctype == ITS_PC_ILUK || pctype == ITS_PC_ILUT) {
-    }
-    else if (pctype == ITS_PC_VBILUK || pctype == ITS_PC_VBILUT) {
-    }
-    else if (pctype == ITS_PC_ARMS) {
+    else if(pctype == ITS_PC_ILUK || pctype == ITS_PC_ILUT || pctype == ITS_PC_VBILUK || pctype == ITS_PC_VBILUT
+            || pctype == ITS_PC_ARMS) {
+        if ((ierr = itsol_COOcs(A.n, A.nnz, A.ma, A.ja, A.ia, s->csmat)) != 0) {
+            fprintf(stderr, "mainARMS: COOcs error\n");
+            return ierr;
+        }
     }
     else {
+        fprintf(log, "wrong preconditioner type\n");
+        exit(-1);
     }
 
     itsol_pc_assemble(&s->pc);
 
     s->assembled = 1;
+    return 0;
 }
 
 int itsol_solver_solve(ITS_SOLVER *s, double *x, double *rhs)
@@ -87,6 +107,8 @@ void itsol_pc_initialize(ITS_PC *pc, ITS_PC_TYPE pctype)
     else if (pctype == ITS_PC_ARMS) {
     }
     else {
+        fprintf(pc->log, "wrong preconditioner type\n");
+        exit(-1);
     }
 }
 

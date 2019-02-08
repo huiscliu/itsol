@@ -223,6 +223,7 @@ typedef struct ITS_PC
     ITS_ARMSpar *ARMS;     /* struct for a block preconditioner */
 
     int (*precon) (double *, double *, struct ITS_PC *); 
+    FILE *log;
 
 } ITS_PC;
 
@@ -262,6 +263,7 @@ typedef struct ITS_PARS_
 typedef struct ITS_SOLVER_
 {
     ITS_CooMat *A;
+    ITS_SparMat *csmat;
     ITS_SMat smat;           /* Matrix structure for matvecs    */
 
     ITS_PC_TYPE pc_type;

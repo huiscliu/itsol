@@ -20,7 +20,7 @@ extern "C" {
 void itsol_solver_initialize(ITS_SOLVER *s, ITS_PC_TYPE pctype, ITS_CooMat *A);
 void itsol_solver_finalize(ITS_SOLVER *s);
 
-void itsol_solver_assemble(ITS_SOLVER *s);
+int itsol_solver_assemble(ITS_SOLVER *s);
 
 int itsol_solver_solve(ITS_SOLVER *s, double *x, double *rhs);
 
