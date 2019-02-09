@@ -41,13 +41,14 @@ int itsol_diagvec(ITS_VBSparMat *vbmat, ITS_BData x, ITS_BData y);
 void itsol_matvec(ITS_SparMat *A, double *x, double *y); 
 
 /* y = a * Ax + b * y*/
-void itsol_amxpby(ITS_SparMat *A, double *x, double a, double *y, double b); 
+void itsol_amxpby(double a, ITS_SparMat *A, double *x, double b, double *y); 
 
 /* z = a * Ax + b * y*/
-void itsol_amxpbyz(ITS_SparMat *A, double *x, double a, double *y, double b, double *z); 
+void itsol_amxpbyz(double a, ITS_SparMat *A, double *x, double b, double *y, double *z); 
 
 void itsol_matvecCSR(ITS_SMat *mat, double *x, double *y);
 void itsol_matvecz(ITS_SparMat *mata, double *x, double *y, double *z);
+
 void itsol_vbmatvec(ITS_VBSparMat *vbmat, double *x, double *y);
 void itsol_luinv(int n, double *a, double *x, double *y); 
 int itsol_vblusolC(double *y, double *x, ITS_VBILUSpar *lu); 

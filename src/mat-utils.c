@@ -278,7 +278,7 @@ void itsol_matvec(ITS_SparMat *A, double *x, double *y)
 }
 
 /* y = a * Ax + b * y*/
-void itsol_amxpby(ITS_SparMat *A, double *x, double a, double *y, double b)
+void itsol_amxpby(double a, ITS_SparMat *A, double *x, double b, double *y)
 {
     int i, k, *ki;
     double *kr;
@@ -300,7 +300,7 @@ void itsol_amxpby(ITS_SparMat *A, double *x, double a, double *y, double b)
 }
 
 /* z = a * Ax + b * y*/
-void itsol_amxpbyz(ITS_SparMat *A, double *x, double a, double *y, double b, double *z)
+void itsol_amxpbyz(double a, ITS_SparMat *A, double *x, double b, double *y, double *z)
 {
     int i, k, *ki;
     double *kr;
