@@ -44,13 +44,16 @@
   |     matvec and
   |     preconditionning operation 
   +---------------------------------------------------------------------*/
-int itsol_solver_fgmres(ITS_SMat *Amat, ITS_PC *lu, double *rhs, double *sol, double tol,
-        int im, int maxits, int *nits, double *res, FILE * fp)
+int itsol_solver_fgmres(ITS_SMat *Amat, ITS_PC *lu, double *rhs, double *sol, ITS_PARS io,
+        int *nits, double *res)
 {
     int n = Amat->n;
     int i, i1, ii, j, k, k1, its, im1, pti, pti1, ptih = 0, retval, one = 1;
     double *hh, *c, *s, *rs, t;
     double negt, beta, eps1 = 0, gam, *vv, *z;
+    int im = io.restart, maxits = io.maxits;
+    FILE * fp = io.fp;
+    double tol = io.tol;
 
     im1 = im + 1;
 
@@ -76,7 +79,7 @@ int itsol_solver_fgmres(ITS_SMat *Amat, ITS_PC *lu, double *rhs, double *sol, do
 
         /*-------------------- print info if fp != null */
         if (fp != NULL && its == 0)
-            fprintf(fp, "%8d   %10.2e\n", its, beta);
+            if (io.verb > 0 && fp != NULL) fprintf(fp, "%8d   %10.2e\n", its, beta);
 
         if (beta == 0.0) {
             if (res != NULL) *res = beta;
@@ -161,8 +164,8 @@ int itsol_solver_fgmres(ITS_SMat *Amat, ITS_PC *lu, double *rhs, double *sol, do
             /*-------------------- get residual norm + test convergence*/
             hh[ptih + i] = c[i] * hh[ptih + i] + s[i] * hh[ptih + i1];
             beta = fabs(rs[i1]);
-            if (fp != NULL)
-                fprintf(fp, "%8d   %10.2e\n", its, beta);
+
+            if (fp != NULL && io.verb > 0) fprintf(fp, "%8d   %10.2e\n", its, beta);
 
             /* record res */
             if (res != NULL) *res = beta;

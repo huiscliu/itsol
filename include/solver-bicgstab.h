@@ -24,10 +24,6 @@ extern "C" {
 | rhs     = real vector of length n containing the right hand side.
 | sol     = real vector of length n containing an initial guess to the
 |           solution on input.
-| tol     = tolerance for stopping iteration
-| (maxits) = max number of iterations allowed. 
-| fp      = NULL: no output
-|        != NULL: file handle to output " resid vs time and its" 
 |
 | on return:
 |---------- 
@@ -42,8 +38,8 @@ extern "C" {
 |     matvec and
 |     preconditionning operation 
 +---------------------------------------------------------------------*/
-int itsol_solver_bicgstab(ITS_SMat *Amat, ITS_PC *lu, double *rhs, double *sol, double tol,
-        int maxits, int *nits, double *res, FILE *fp);
+int itsol_solver_bicgstab(ITS_SMat *Amat, ITS_PC *lu, double *rhs, double *sol, ITS_PARS io,
+        int *nits, double *res);
 
 #ifdef __cplusplus
 }

@@ -276,6 +276,9 @@ typedef struct ITS_PARS_
     double droptol[7], dropcoef[7];
     int ipar[18];
 
+    FILE *fp;
+    int verb;
+
 } ITS_PARS;
 
 typedef struct ITS_SOLVER_

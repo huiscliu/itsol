@@ -1,14 +1,17 @@
 
 #include "solver-bicgstab.h"
 
-int itsol_solver_bicgstab(ITS_SMat *Amat, ITS_PC *lu, double *rhs, double *x, double tol,
-        int maxits, int *nits, double *res, FILE * fp)
+int itsol_solver_bicgstab(ITS_SMat *Amat, ITS_PC *lu, double *rhs, double *x, ITS_PARS io,
+        int *nits, double *res)
 {
     double *rg, *rh, *pg, *ph, *sg, *sh, *tg, *vg, *tp;
     double r0 = 0, r1 = 0, pra = 0, prb = 0, prc = 0;
     double residual, err_rel = 0;
     int i, n, retval = 0;
     int itr = 0.;
+    double tol = io.tol;
+    int maxits = io.maxits;
+    FILE * fp = io.fp;
 
     n = Amat->n;
     rg = itsol_malloc(n * sizeof(double), "bicgstab");
@@ -38,7 +41,7 @@ int itsol_solver_bicgstab(ITS_SMat *Amat, ITS_PC *lu, double *rhs, double *x, do
         r1 = itsol_dot(rg, rh, n);
 
         if (r1 == 0) {
-            fprintf(fp, "solver bicgstab failed.\n");
+            if (io.verb > 0 && fp != NULL) fprintf(fp, "solver bicgstab failed.\n");
             break;
         }
 
@@ -100,7 +103,7 @@ int itsol_solver_bicgstab(ITS_SMat *Amat, ITS_PC *lu, double *rhs, double *x, do
 
         residual = itsol_norm(rg, n);
 
-        fprintf(fp, "%8d   %10.2e\n", itr, residual / err_rel);
+        if (io.verb > 0 && fp != NULL) fprintf(fp, "%8d   %10.2e\n", itr, residual / err_rel);
 
         if (residual <= tol) break;
     }
