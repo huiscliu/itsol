@@ -100,6 +100,7 @@ int itsol_solver_solve(ITS_SOLVER *s, double *x, double *rhs)
     FILE *log;
     ITS_PARS io;
     ITS_PC_TYPE pctype;
+    ITS_SOLVER_TYPE stype;
 
     assert(s != NULL);
     assert(x != NULL);
@@ -110,6 +111,7 @@ int itsol_solver_solve(ITS_SOLVER *s, double *x, double *rhs)
 
     io = s->pars;
     pctype = s->pc_type;
+    stype = s->s_type;
 
     if (s->log == NULL) {
         log = stdout;
@@ -118,45 +120,93 @@ int itsol_solver_solve(ITS_SOLVER *s, double *x, double *rhs)
         log = s->log;
     }
 
-    if (pctype == ITS_PC_ILUC || pctype == ITS_PC_ILUK || pctype == ITS_PC_ILUT) {
-        return itsol_solver_fgmres(&s->smat, &s->pc, rhs, x, io.tol, io.restart, io.maxits, &s->nits, &s->res, log);
-    }
-    else if (pctype == ITS_PC_ARMS) {
-        return itsol_solver_fgmres(&s->smat, &s->pc, rhs, x, io.tol, io.restart, io.maxits, &s->nits, &s->res, log);
-    }
-    else if (pctype == ITS_PC_VBILUK || pctype == ITS_PC_VBILUT) {
-        if (s->pc.perm == NULL) {
+    if (stype == ITS_SOLVER_FGMRES) {
+        if (pctype == ITS_PC_ILUC || pctype == ITS_PC_ILUK || pctype == ITS_PC_ILUT || pctype == ITS_PC_ARMS) {
             return itsol_solver_fgmres(&s->smat, &s->pc, rhs, x, io.tol, io.restart, io.maxits, &s->nits, &s->res, log);
         }
+        else if (pctype == ITS_PC_VBILUK || pctype == ITS_PC_VBILUT) {
+            if (s->pc.perm == NULL) {
+                return itsol_solver_fgmres(&s->smat, &s->pc, rhs, x, io.tol, io.restart, io.maxits, &s->nits, &s->res, log);
+            }
+            else {
+                double *px = NULL, *prhs = NULL;
+                int i, rt;
+
+                px = (double *)itsol_malloc(s->csmat->n * sizeof(double), "main");
+                prhs = (double *)itsol_malloc(s->csmat->n * sizeof(double), "main");
+
+                for (i = 0; i < s->csmat->n; i++) {
+                    prhs[s->pc.perm[i]] = rhs[i];
+                    px[s->pc.perm[i]] = x[i];
+                }
+
+                rt = itsol_solver_fgmres(&s->smat, &s->pc, prhs, px, io.tol, io.restart, io.maxits, &s->nits, &s->res, log);
+
+                for (i = 0; i < s->csmat->n; i++) {
+                    rhs[i] = prhs[s->pc.perm[i]];
+                    x[i] = px[s->pc.perm[i]];
+                }
+
+                free(px);
+                free(prhs);
+
+                return rt;
+            }
+        }
+        else if (pctype == ITS_PC_NONE) {
+            return itsol_solver_fgmres(&s->smat, NULL, rhs, x, io.tol, io.restart, io.maxits, &s->nits, &s->res, log);
+        }
         else {
-            double *px = NULL, *prhs = NULL;
-            int i, rt;
-
-            px = (double *)itsol_malloc(s->csmat->n * sizeof(double), "main");
-            prhs = (double *)itsol_malloc(s->csmat->n * sizeof(double), "main");
-
-            for (i = 0; i < s->csmat->n; i++) {
-                prhs[s->pc.perm[i]] = rhs[i];
-                px[s->pc.perm[i]] = x[i];
+            fprintf(s->pc.log, "wrong preconditioner type\n");
+            exit(-1);
+        }
+    }
+    else if (stype == ITS_SOLVER_BICGSTAB) {
+        if (pctype == ITS_PC_ILUC || pctype == ITS_PC_ILUK || pctype == ITS_PC_ILUT || pctype == ITS_PC_ARMS) {
+            return itsol_solver_bicgstab(&s->smat, &s->pc, rhs, x, io.tol, io.maxits, &s->nits, &s->res, log);
+        }
+        else if (pctype == ITS_PC_VBILUK || pctype == ITS_PC_VBILUT) {
+            if (s->pc.perm == NULL) {
+                return itsol_solver_bicgstab(&s->smat, &s->pc, rhs, x, io.tol, io.maxits, &s->nits, &s->res, log);
             }
+            else {
+                double *px = NULL, *prhs = NULL;
+                int i, rt;
 
-            rt = itsol_solver_fgmres(&s->smat, &s->pc, prhs, px, io.tol, io.restart, io.maxits, &s->nits, &s->res, log);
+                px = (double *)itsol_malloc(s->csmat->n * sizeof(double), "main");
+                prhs = (double *)itsol_malloc(s->csmat->n * sizeof(double), "main");
 
-            for (i = 0; i < s->csmat->n; i++) {
-                rhs[i] = prhs[s->pc.perm[i]];
-                x[i] = px[s->pc.perm[i]];
+                for (i = 0; i < s->csmat->n; i++) {
+                    prhs[s->pc.perm[i]] = rhs[i];
+                    px[s->pc.perm[i]] = x[i];
+                }
+
+                rt = itsol_solver_bicgstab(&s->smat, &s->pc, prhs, px, io.tol, io.maxits, &s->nits, &s->res, log);
+
+                for (i = 0; i < s->csmat->n; i++) {
+                    rhs[i] = prhs[s->pc.perm[i]];
+                    x[i] = px[s->pc.perm[i]];
+                }
+
+                free(px);
+                free(prhs);
+
+                return rt;
             }
-
-            free(px);
-            free(prhs);
-
-            return rt;
+        }
+        else if (pctype == ITS_PC_NONE) {
+            return itsol_solver_bicgstab(&s->smat, NULL, rhs, x, io.tol, io.maxits, &s->nits, &s->res, log);
+        }
+        else {
+            fprintf(s->pc.log, "wrong preconditioner type\n");
+            exit(-1);
         }
     }
     else {
-        fprintf(s->pc.log, "wrong preconditioner type\n");
+        fprintf(s->log, "wrong solver type\n");
         exit(-1);
     }
+
 
     return 0;
 }

@@ -4,22 +4,11 @@
 int itsol_solver_bicgstab(ITS_SMat *Amat, ITS_PC *lu, double *bg, double *xg, double tol,
         int maxits, int *nits, double *res, FILE * fits)
 {
-    double *rg;
-    double *rh;
-    double *pg;
-    double *ph;
-    double *sg;
-    double *sh;
-    double *tg;
-    double *vg;
-    double *tp;
-    double r0 = 0, r1 = 0;
-    double pra = 0, prb = 0, prc = 0;
-    double residual;
-    double err_rel = 0;
+    double *rg, *rh, *pg, *ph, *sg, *sh, *tg, *vg, *tp;
+    double r0 = 0, r1 = 0, pra = 0, prb = 0, prc = 0;
+    double residual, err_rel = 0;
+    int i, n, retval = 0;
     int itr = 0.;
-    int i;
-    int n, retval = 0;
 
     n = Amat->n;
     rg = itsol_malloc(n * sizeof(double), "bicgstab");
@@ -111,7 +100,7 @@ int itsol_solver_bicgstab(ITS_SMat *Amat, ITS_PC *lu, double *bg, double *xg, do
 
         residual = itsol_norm(rg, n);
 
-        fprintf(fits, "%5d      %.6e\n", itr, residual / err_rel);
+        fprintf(fits, "%8d   %10.2e\n", itr, residual / err_rel);
 
         if (residual <= tol) break;
     }

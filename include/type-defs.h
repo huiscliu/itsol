@@ -217,6 +217,7 @@ typedef struct ITS_SMat
 /* types of pc */
 typedef enum ITS_PC_TYPE_
 {
+    ITS_PC_NONE,
     ITS_PC_ARMS,
     ITS_PC_ILUK,
     ITS_PC_ILUT,
