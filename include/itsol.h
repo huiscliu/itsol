@@ -4,6 +4,7 @@
 
 #include "solver-fgmres.h"
 #include "solver-bicgstab.h"
+#include "solver-bicgstabl.h"
 
 #include "pc-arms2.h"
 #include "pc-iluk.h"
