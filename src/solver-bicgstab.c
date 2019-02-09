@@ -2,7 +2,7 @@
 #include "solver-bicgstab.h"
 
 int itsol_solver_bicgstab(ITS_SMat *Amat, ITS_PC *lu, double *bg, double *xg, double tol,
-        int maxits, int *nits, double *res, FILE * fits)
+        int maxits, int *nits, double *res, FILE * fp)
 {
     double *rg, *rh, *pg, *ph, *sg, *sh, *tg, *vg, *tp;
     double r0 = 0, r1 = 0, pra = 0, prb = 0, prc = 0;
@@ -38,7 +38,7 @@ int itsol_solver_bicgstab(ITS_SMat *Amat, ITS_PC *lu, double *bg, double *xg, do
         r1 = itsol_dot(rg, rh, n);
 
         if (r1 == 0) {
-            fprintf(fits, "solver bicgstab failed.\n");
+            fprintf(fp, "solver bicgstab failed.\n");
             break;
         }
 
@@ -100,7 +100,7 @@ int itsol_solver_bicgstab(ITS_SMat *Amat, ITS_PC *lu, double *bg, double *xg, do
 
         residual = itsol_norm(rg, n);
 
-        fprintf(fits, "%8d   %10.2e\n", itr, residual / err_rel);
+        fprintf(fp, "%8d   %10.2e\n", itr, residual / err_rel);
 
         if (residual <= tol) break;
     }

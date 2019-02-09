@@ -22,7 +22,7 @@
   | tol     = tolerance for stopping iteration
   | im      = Krylov subspace dimension 
   | (itmax) = max number of iterations allowed. 
-  | fits    = NULL: no output
+  | fp    = NULL: no output
   |        != NULL: file handle to output " resid vs time and its" 
   |
   | on return:
@@ -45,7 +45,7 @@
   |     preconditionning operation 
   +---------------------------------------------------------------------*/
 int itsol_solver_fgmres(ITS_SMat *Amat, ITS_PC *lu, double *rhs, double *sol, double tol,
-        int im, int maxits, int *nits, double *res, FILE * fits)
+        int im, int maxits, int *nits, double *res, FILE * fp)
 {
     int n = Amat->n;
     int i, i1, ii, j, k, k1, its, im1, pti, pti1, ptih = 0, retval, one = 1;
@@ -74,9 +74,9 @@ int itsol_solver_fgmres(ITS_SMat *Amat, ITS_PC *lu, double *rhs, double *sol, do
 
         beta = itsol_dnrm2(n, vv, one);
 
-        /*-------------------- print info if fits != null */
-        if (fits != NULL && its == 0)
-            fprintf(fits, "%8d   %10.2e\n", its, beta);
+        /*-------------------- print info if fp != null */
+        if (fp != NULL && its == 0)
+            fprintf(fp, "%8d   %10.2e\n", its, beta);
 
         if (beta == 0.0) {
             if (res != NULL) *res = beta;
@@ -161,8 +161,8 @@ int itsol_solver_fgmres(ITS_SMat *Amat, ITS_PC *lu, double *rhs, double *sol, do
             /*-------------------- get residual norm + test convergence*/
             hh[ptih + i] = c[i] * hh[ptih + i] + s[i] * hh[ptih + i1];
             beta = fabs(rs[i1]);
-            if (fits != NULL)
-                fprintf(fits, "%8d   %10.2e\n", its, beta);
+            if (fp != NULL)
+                fprintf(fp, "%8d   %10.2e\n", its, beta);
 
             /* record res */
             if (res != NULL) *res = beta;

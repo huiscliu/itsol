@@ -26,7 +26,7 @@ extern "C" {
 |           solution on input.
 | tol     = tolerance for stopping iteration
 | (maxits) = max number of iterations allowed. 
-| fits    = NULL: no output
+| fp      = NULL: no output
 |        != NULL: file handle to output " resid vs time and its" 
 |
 | on return:
@@ -43,7 +43,7 @@ extern "C" {
 |     preconditionning operation 
 +---------------------------------------------------------------------*/
 int itsol_solver_bicgstab(ITS_SMat *Amat, ITS_PC *lu, double *rhs, double *sol, double tol,
-        int maxits, int *nits, double *res, FILE *fits);
+        int maxits, int *nits, double *res, FILE *fp);
 
 #ifdef __cplusplus
 }

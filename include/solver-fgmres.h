@@ -27,7 +27,7 @@ extern "C" {
 | tol     = tolerance for stopping iteration
 | im      = Krylov subspace dimension 
 | (maxits) = max number of iterations allowed. 
-| fits    = NULL: no output
+| fp      = NULL: no output
 |        != NULL: file handle to output " resid vs time and its" 
 |
 | on return:
@@ -51,7 +51,7 @@ extern "C" {
 |     preconditionning operation 
 +---------------------------------------------------------------------*/
 int itsol_solver_fgmres(ITS_SMat *Amat, ITS_PC *lu, double *rhs, double *sol, double tol,
-        int im, int maxits, int *nits, double *res, FILE * fits);
+        int im, int maxits, int *nits, double *res, FILE * fp);
 
 #ifdef __cplusplus
 }
