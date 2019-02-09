@@ -3,6 +3,7 @@
 #define __ITSOL_INCLUDED_PROTOS_H__
 
 #include "solver-fgmres.h"
+#include "solver-bicgstab.h"
 
 #include "pc-arms2.h"
 #include "pc-iluk.h"
