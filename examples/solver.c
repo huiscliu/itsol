@@ -18,6 +18,7 @@ int main(void)
     int its;
     ITS_SparMat *csmat = NULL;
     ITS_SOLVER s;
+    ITS_PARS io;
 
     /* case: COO formats */
     A = itsol_read_coo("pores3.coo");
@@ -36,6 +37,12 @@ int main(void)
     itsol_solver_initialize(&s, ITS_SOLVER_FGMRES, ITS_PC_ILUK, &A);
 
     /* tune parameters, optional */
+    itsol_solver_init_pars(&io);
+    io.tol = 1e-9;
+    io.iluk_level = 3;
+
+    /* override default parameters */
+    itsol_solver_set_pars(&s, io);
 
     /* assemble, optional */
 #if 0
