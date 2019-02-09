@@ -2,7 +2,7 @@
 #define __ITSOL_UTILS_H__
 
 #include <stdarg.h>
-#include "type-defs.h"
+#include "data-types.h"
 
 #ifdef __cplusplus
 extern "C" {
