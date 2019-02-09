@@ -21,7 +21,7 @@ int main(void)
     }
 
     /* init */
-    itsol_solver_initialize(&s, ITS_PC_ARMS, &A);
+    itsol_solver_initialize(&s, ITS_PC_ILUK, &A);
 
     /* call solver */
     itsol_solver_solve(&s, x, rhs);

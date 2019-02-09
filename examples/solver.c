@@ -33,7 +33,7 @@ int main(void)
     for (i = 0; i < n; i++) rhs[i] = i;
 
     /* create */
-    itsol_solver_initialize(&s, ITS_PC_ARMS, &A);
+    itsol_solver_initialize(&s, ITS_PC_ILUK, &A);
 
     /* tune parameters, optional */
 

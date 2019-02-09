@@ -2298,3 +2298,30 @@ ITS_CooMat itsol_read_coo(char *Fname)
 
     return A;
 }
+
+double itsol_norm(double *x, int n)
+{
+    int i;
+    double t = 0.;
+    
+    assert(n >= 0);
+    if (n > 0) assert(x != NULL);
+
+    for (i = 0; i < n; i++)  t += x[i] * x[i];
+
+    return sqrt(t);
+}
+
+double itsol_dot(double *x, double *y, int n)
+{
+    int i;
+    double t = 0.;
+    
+    assert(n >= 0);
+    if (n > 0) assert(x != NULL && y != NULL);
+
+    for (i = 0; i < n; i++)  t += x[i] * y[i];
+
+    return t;
+}
+

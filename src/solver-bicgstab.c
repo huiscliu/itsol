@@ -1,34 +1,6 @@
 
 #include "solver-bicgstab.h"
 
-#define  epsmac  1.0e-16
-
-static double vec_norm_host(double *x, int n)
-{
-    int i;
-    double t = 0.;
-    
-    assert(n >= 0);
-    if (n > 0) assert(x != NULL);
-
-    for (i = 0; i < n; i++)  t += x[i] * x[i];
-
-    return sqrt(t);
-}
-
-static double vec_dot_host(double *x, double *y, int n)
-{
-    int i;
-    double t = 0.;
-    
-    assert(n >= 0);
-    if (n > 0) assert(x != NULL && y != NULL);
-
-    for (i = 0; i < n; i++)  t += x[i] * y[i];
-
-    return t;
-}
-
 int itsol_solver_bicgstab(ITS_SMat *Amat, ITS_PC *lu, double *bg, double *xg, double tol,
         int maxits, int *nits, double *res, FILE * fits)
 {
@@ -41,11 +13,11 @@ int itsol_solver_bicgstab(ITS_SMat *Amat, ITS_PC *lu, double *bg, double *xg, do
     double *tg;
     double *vg;
     double *tp;
-    double rho0 = 0, rho1 = 0;
-    double alpha = 0, beta = 0, omega = 0;
+    double r0 = 0, r1 = 0;
+    double pra = 0, prb = 0, prc = 0;
     double residual;
     double err_rel = 0;
-    int itr_out;
+    int itr = 0.;
     int i;
     int n, retval = 0;
 
@@ -68,31 +40,32 @@ int itsol_solver_bicgstab(ITS_SMat *Amat, ITS_PC *lu, double *bg, double *xg, do
         sh[i] = ph[i] = 0.;
     }
 
-    residual = err_rel = vec_norm_host(rg, n);
-
+    residual = err_rel = itsol_norm(rg, n);
     tol = residual * fabs(tol);
 
-    for (itr_out = 0; itr_out < maxits; itr_out++) {
-        rho1 = vec_dot_host(rg, rh, n);
+    if (tol == 0.) goto skip;
 
-        if (rho1 == 0) {
+    for (itr = 0; itr < maxits; itr++) {
+        r1 = itsol_dot(rg, rh, n);
+
+        if (r1 == 0) {
             fprintf(fits, "solver bicgstab failed.\n");
             break;
         }
 
-        if (itr_out == 0) {
+        if (itr == 0) {
 
             for (i = 0; i < n; i++)
                 pg[i] = rg[i];
         }
         else {
-            beta = (rho1 * alpha) / (rho0 * omega);
+            prb = (r1 * pra) / (r0 * prc);
             for (i = 0; i < n; i++) {
-                pg[i] = rg[i] + beta * (pg[i] - omega * vg[i]);
+                pg[i] = rg[i] + prb * (pg[i] - prc * vg[i]);
             }
         }
 
-        rho0 = rho1;
+        r0 = r1;
 
         /*  pc */
         if (lu == NULL) {
@@ -104,19 +77,19 @@ int itsol_solver_bicgstab(ITS_SMat *Amat, ITS_PC *lu, double *bg, double *xg, do
 
         Amat->matvec(Amat, ph, vg);
 
-        alpha = rho1 / vec_dot_host(rh, vg, n);
+        pra = r1 / itsol_dot(rh, vg, n);
         for (i = 0; i < n; i++) {
-            sg[i] = rg[i] - alpha * vg[i];
+            sg[i] = rg[i] - pra * vg[i];
         }
 
-        if (vec_norm_host(sg, n) <= 1e-60) {
+        if (itsol_norm(sg, n) <= 1e-60) {
             for (i = 0; i < n; i++) {
-                xg[i] = xg[i] + alpha * ph[i];
+                xg[i] = xg[i] + pra * ph[i];
             }
 
             Amat->matvec(Amat, xg, tp);
             for (i = 0; i < n; i++) rg[i] = bg[i] - tp[i];
-            residual = vec_norm_host(rg, n);
+            residual = itsol_norm(rg, n);
 
             break;
         }
@@ -130,22 +103,22 @@ int itsol_solver_bicgstab(ITS_SMat *Amat, ITS_PC *lu, double *bg, double *xg, do
 
         Amat->matvec(Amat, sh, tg);
 
-        omega = vec_dot_host(tg, sg, n) / vec_dot_host(tg, tg, n);
+        prc = itsol_dot(tg, sg, n) / itsol_dot(tg, tg, n);
         for (i = 0; i < n; i++) {
-            xg[i] = xg[i] + alpha * ph[i] + omega * sh[i];
-            rg[i] = sg[i] - omega * tg[i];
+            xg[i] = xg[i] + pra * ph[i] + prc * sh[i];
+            rg[i] = sg[i] - prc * tg[i];
         }
 
-        residual = vec_norm_host(rg, n);
+        residual = itsol_norm(rg, n);
 
-        fprintf(fits, "it: %5d, abs res: %.6e, rel res: %.6e\n", itr_out, residual,
-             (err_rel == 0 ? 0 : residual / err_rel));
+        fprintf(fits, "%5d      %.6e\n", itr, residual / err_rel);
 
         if (residual <= tol) break;
     }
 
-    if (itr_out < maxits) itr_out += 1;
+    if (itr < maxits) itr += 1;
 
+skip:
     free(rg);
     free(rh);
     free(pg);
@@ -156,8 +129,8 @@ int itsol_solver_bicgstab(ITS_SMat *Amat, ITS_PC *lu, double *bg, double *xg, do
     free(tp);
     free(vg);
 
-    if (itr_out >= maxits) retval = 1;
-    if (nits != NULL) *nits = itr_out;
+    if (itr >= maxits) retval = 1;
+    if (nits != NULL) *nits = itr;
     if (res != NULL) *res = residual;
 
     return retval;

@@ -72,6 +72,8 @@ int itsol_checkperm(int *p, int n);
 void itsol_qsortR1I(double *wa, int *cor1, int left, int right);
 
 ITS_CooMat itsol_read_coo(char *Fname);
+double itsol_norm(double *x, int n);
+double itsol_dot(double *x, double *y, int n);
 
 #ifdef __cplusplus
 }

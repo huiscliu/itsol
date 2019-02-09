@@ -230,6 +230,7 @@ typedef enum ITS_PC_TYPE_
 typedef enum ITS_SOLVER_TYPE_
 {
     ITS_SOLVER_FGMRES,
+    ITS_SOLVER_BICGSTAB,
 
 } ITS_SOLVER_TYPE;
 
