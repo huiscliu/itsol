@@ -2,7 +2,6 @@
 #ifndef __ITSOL_ILUK_H__
 #define __ITSOL_ILUK_H__
 
-#include "type-defs.h"
 #include "utils.h"
 
 #ifdef __cplusplus

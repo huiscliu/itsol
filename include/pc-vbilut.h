@@ -2,7 +2,6 @@
 #ifndef __ITSOL_VBILUT_H__
 #define __ITSOL_VBILUT_H__
 
-#include "type-defs.h"
 #include "utils.h"
 #include "mat-utils.h"
 
