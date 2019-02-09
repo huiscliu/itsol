@@ -1,7 +1,7 @@
 
 #include "itsol.h"
 
-void itsol_solver_initialize(ITS_SOLVER *s, ITS_PC_TYPE pctype, ITS_CooMat *A)
+void itsol_solver_initialize(ITS_SOLVER *s, ITS_SOLVER_TYPE stype, ITS_PC_TYPE pctype, ITS_CooMat *A)
 {
     assert(s != NULL);
     assert(A != NULL);
@@ -9,6 +9,7 @@ void itsol_solver_initialize(ITS_SOLVER *s, ITS_PC_TYPE pctype, ITS_CooMat *A)
     /* init */
     bzero(s, sizeof(*s));
 
+    s->s_type = stype;
     s->A = A;
     s->log = stdout;
     

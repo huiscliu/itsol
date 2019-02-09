@@ -277,6 +277,7 @@ typedef struct ITS_PARS_
 
 typedef struct ITS_SOLVER_
 {
+    ITS_SOLVER_TYPE s_type;
     ITS_CooMat *A;
 
     /* internal mat */

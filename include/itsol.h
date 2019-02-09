@@ -18,7 +18,7 @@
 extern "C" {
 #endif
 
-void itsol_solver_initialize(ITS_SOLVER *s, ITS_PC_TYPE pctype, ITS_CooMat *A);
+void itsol_solver_initialize(ITS_SOLVER *s, ITS_SOLVER_TYPE stype, ITS_PC_TYPE pctype, ITS_CooMat *A);
 void itsol_solver_finalize(ITS_SOLVER *s);
 
 int itsol_solver_assemble(ITS_SOLVER *s);
