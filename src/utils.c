@@ -2325,3 +2325,8 @@ double itsol_dot(double *x, double *y, int n)
     return t;
 }
 
+double itsol_norm2(double *x, int n)
+{
+    return sqrt(itsol_dot(x, x, n));
+}
+

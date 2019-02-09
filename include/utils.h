@@ -74,6 +74,7 @@ void itsol_qsortR1I(double *wa, int *cor1, int left, int right);
 ITS_CooMat itsol_read_coo(char *Fname);
 double itsol_norm(double *x, int n);
 double itsol_dot(double *x, double *y, int n);
+double itsol_norm2(double *x, int n);
 
 #ifdef __cplusplus
 }
