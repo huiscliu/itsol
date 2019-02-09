@@ -3,6 +3,32 @@
 
 #define  epsmac  1.0e-16
 
+static double vec_norm_host(double *x, int n)
+{
+    int i;
+    double t = 0.;
+    
+    assert(n >= 0);
+    if (n > 0) assert(x != NULL);
+
+    for (i = 0; i < n; i++)  t += x[i] * x[i];
+
+    return sqrt(t);
+}
+
+static double vec_dot_host(double *x, double *y, int n)
+{
+    int i;
+    double t = 0.;
+    
+    assert(n >= 0);
+    if (n > 0) assert(x != NULL && y != NULL);
+
+    for (i = 0; i < n; i++)  t += x[i] * y[i];
+
+    return t;
+}
+
 int itsol_solver_bicgstab(ITS_SMat *Amat, ITS_PC *lu, double *bg, double *xg, double tol,
         int maxits, int *nits, double *res, FILE * fits)
 {
@@ -14,6 +40,7 @@ int itsol_solver_bicgstab(ITS_SMat *Amat, ITS_PC *lu, double *bg, double *xg, do
     double *sh;
     double *tg;
     double *vg;
+    double *tp;
     double rho0 = 0, rho1 = 0;
     double alpha = 0, beta = 0, omega = 0;
     double residual;
@@ -31,8 +58,11 @@ int itsol_solver_bicgstab(ITS_SMat *Amat, ITS_PC *lu, double *bg, double *xg, do
     sh = itsol_malloc(n * sizeof(double), "bicgstab");
     tg = itsol_malloc(n * sizeof(double), "bicgstab");
     vg = itsol_malloc(n * sizeof(double), "bicgstab");
+    tp = itsol_malloc(n * sizeof(double), "bicgstab");
 
-    mv_amxpbyz_host(A, xg, -1, bg, 1, rg);
+    Amat->matvec(Amat, xg, tp);
+    for (i = 0; i < n; i++) rg[i] = bg[i] - tp[i];
+
     for (i = 0; i < n; i++) {
         rh[i] = rg[i];
         sh[i] = ph[i] = 0.;
@@ -46,7 +76,7 @@ int itsol_solver_bicgstab(ITS_SMat *Amat, ITS_PC *lu, double *bg, double *xg, do
         rho1 = vec_dot_host(rg, rh, n);
 
         if (rho1 == 0) {
-            solver_lprintf("BICTSTAB, CPU: method failed.!\n");
+            fprintf(fits, "solver bicgstab failed.\n");
             break;
         }
 
@@ -64,44 +94,41 @@ int itsol_solver_bicgstab(ITS_SMat *Amat, ITS_PC *lu, double *bg, double *xg, do
 
         rho0 = rho1;
 
-        if (pc.type != PC_NON) {
-            vec_set_value_host(ph, 0., n);
-            pc.solve(pc, ph, pg);
+        /*  pc */
+        if (lu == NULL) {
+            memcpy(ph, pg, n * sizeof(double));
         }
         else {
-            for (i = 0; i < n; i++) {
-                ph[i] = pg[i];
-            }
+            lu->precon(pg, ph, lu);
         }
 
-        mv_amxpbyz_host(A, ph, 1, pg, 0, vg);
+        Amat->matvec(Amat, ph, vg);
 
         alpha = rho1 / vec_dot_host(rh, vg, n);
         for (i = 0; i < n; i++) {
             sg[i] = rg[i] - alpha * vg[i];
         }
 
-        if (vec_norm_host(sg, n) <= PASS_SOLVER_BREAKDOWN) {
-            solver_lprintf
-                ("BICTSTAB, CPU: ||s|| is too small: %f, terminated.\n",
-                 vec_norm_host(sg, n));
-
+        if (vec_norm_host(sg, n) <= 1e-60) {
             for (i = 0; i < n; i++) {
                 xg[i] = xg[i] + alpha * ph[i];
             }
 
-            mv_amxpbyz_host(A, xg, -1, bg, 1, rg);
+            Amat->matvec(Amat, xg, tp);
+            for (i = 0; i < n; i++) rg[i] = bg[i] - tp[i];
             residual = vec_norm_host(rg, n);
 
             break;
         }
 
-        if (pc.type != PC_NON) {
-            vec_set_value_host(sh, 0., n);
-            pc.solve(pc, sh, sg);
+        if (lu == NULL) {
+            memcpy(sh, sg, n * sizeof(double));
+        }
+        else {
+            lu->precon(sg, sh, lu);
         }
 
-        mv_amxpbyz_host(A, sh, 1, pg, 0, tg);
+        Amat->matvec(Amat, sh, tg);
 
         omega = vec_dot_host(tg, sg, n) / vec_dot_host(tg, tg, n);
         for (i = 0; i < n; i++) {
@@ -111,7 +138,7 @@ int itsol_solver_bicgstab(ITS_SMat *Amat, ITS_PC *lu, double *bg, double *xg, do
 
         residual = vec_norm_host(rg, n);
 
-        frintf(fits, "it: %5d, abs res: %.6e, rel res: %.6e\n", itr_out, residual,
+        fprintf(fits, "it: %5d, abs res: %.6e, rel res: %.6e\n", itr_out, residual,
              (err_rel == 0 ? 0 : residual / err_rel));
 
         if (residual <= tol) break;
@@ -119,23 +146,19 @@ int itsol_solver_bicgstab(ITS_SMat *Amat, ITS_PC *lu, double *bg, double *xg, do
 
     if (itr_out < maxits) itr_out += 1;
 
-end:
+    free(rg);
+    free(rh);
+    free(pg);
+    free(ph);
+    free(sg);
+    free(sh);
+    free(tg);
+    free(tp);
+    free(vg);
 
-    solver.residual = residual;
-    solver.nits = itr_out;
-
-    array_free_host < double > (rg);
-    array_free_host < double > (rh);
-    array_free_host < double > (pg);
-    array_free_host < double > (ph);
-    array_free_host < double > (sg);
-    array_free_host < double > (sh);
-    array_free_host < double > (tg);
-    array_free_host < double > (vg);
-    array_free_host < double > (rscl);
-
-    if (iter >= maxits) retval = 1;
+    if (itr_out >= maxits) retval = 1;
     if (nits != NULL) *nits = itr_out;
+    if (res != NULL) *res = residual;
 
     return retval;
 }
