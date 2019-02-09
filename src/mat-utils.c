@@ -259,18 +259,66 @@ int itsol_diagvec(ITS_VBSparMat *vbmat, ITS_BData x, ITS_BData y)
   | on return
   | y     = the product A * x
   |--------------------------------------------------------------------*/
-void itsol_matvec(ITS_SparMat *mata, double *x, double *y)
+void itsol_matvec(ITS_SparMat *A, double *x, double *y)
 {
     int i, k, *ki;
     double *kr;
 
-    for (i = 0; i < mata->n; i++) {
-        y[i] = 0.0;
-        kr = mata->ma[i];
-        ki = mata->ja[i];
+    assert(A != NULL);
+    assert(x != NULL);
+    assert(y != NULL);
 
-        for (k = 0; k < mata->nzcount[i]; k++)
-            y[i] += kr[k] * x[ki[k]];
+    for (i = 0; i < A->n; i++) {
+        y[i] = 0.0;
+        kr = A->ma[i];
+        ki = A->ja[i];
+
+        for (k = 0; k < A->nzcount[i]; k++) y[i] += kr[k] * x[ki[k]];
+    }
+}
+
+/* y = a * Ax + b * y*/
+void itsol_amxpby(ITS_SparMat *A, double *x, double a, double *y, double b)
+{
+    int i, k, *ki;
+    double *kr;
+
+    assert(A != NULL);
+    assert(x != NULL);
+    assert(y != NULL);
+
+    for (i = 0; i < A->n; i++) {
+        double t = 0.;
+
+        kr = A->ma[i];
+        ki = A->ja[i];
+
+        for (k = 0; k < A->nzcount[i]; k++) t += kr[k] * x[ki[k]];
+
+        y[i] = t * a + y[i] * b;
+    }
+}
+
+/* z = a * Ax + b * y*/
+void itsol_amxpbyz(ITS_SparMat *A, double *x, double a, double *y, double b, double *z)
+{
+    int i, k, *ki;
+    double *kr;
+
+    assert(A != NULL);
+    assert(x != NULL);
+    assert(y != NULL);
+    assert(z != NULL);
+
+    for (i = 0; i < A->n; i++) {
+        double t = 0.;
+
+        kr = A->ma[i];
+        ki = A->ja[i];
+
+        for (k = 0; k < A->nzcount[i]; k++) t += kr[k] * x[ki[k]];
+
+        z[i] = t * a + y[i] * b;
     }
 }
 
