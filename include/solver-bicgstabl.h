@@ -1,8 +1,8 @@
 
-#ifndef __ITSOL_BICGSTAB_H__
-#define __ITSOL_BICGSTAB_H__
+#ifndef __ITSOL_BICGSTABL_H__
+#define __ITSOL_BICGSTABL_H__
 
-#include "utils.h"
+#include "mat-utils.h"
 
 #ifdef __cplusplus
 extern "C" {

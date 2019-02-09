@@ -202,6 +202,47 @@ int itsol_solver_solve(ITS_SOLVER *s, double *x, double *rhs)
             exit(-1);
         }
     }
+    else if (stype == ITS_SOLVER_BICGSTABL) {
+        if (pctype == ITS_PC_ILUC || pctype == ITS_PC_ILUK || pctype == ITS_PC_ILUT || pctype == ITS_PC_ARMS) {
+            return itsol_solver_bicgstabl(&s->smat, &s->pc, rhs, x, io.bgsl, io.tol, io.maxits, &s->nits, &s->res, log);
+        }
+        else if (pctype == ITS_PC_VBILUK || pctype == ITS_PC_VBILUT) {
+            if (s->pc.perm == NULL) {
+                return itsol_solver_bicgstabl(&s->smat, &s->pc, rhs, x, io.bgsl, io.tol, io.maxits, &s->nits, &s->res, log);
+            }
+            else {
+                double *px = NULL, *prhs = NULL;
+                int i, rt;
+
+                px = (double *)itsol_malloc(s->csmat->n * sizeof(double), "main");
+                prhs = (double *)itsol_malloc(s->csmat->n * sizeof(double), "main");
+
+                for (i = 0; i < s->csmat->n; i++) {
+                    prhs[s->pc.perm[i]] = rhs[i];
+                    px[s->pc.perm[i]] = x[i];
+                }
+
+                rt = itsol_solver_bicgstabl(&s->smat, &s->pc, prhs, px, io.bgsl, io.tol, io.maxits, &s->nits, &s->res, log);
+
+                for (i = 0; i < s->csmat->n; i++) {
+                    rhs[i] = prhs[s->pc.perm[i]];
+                    x[i] = px[s->pc.perm[i]];
+                }
+
+                free(px);
+                free(prhs);
+
+                return rt;
+            }
+        }
+        else if (pctype == ITS_PC_NONE) {
+            return itsol_solver_bicgstabl(&s->smat, NULL, rhs, x, io.bgsl, io.tol, io.maxits, &s->nits, &s->res, log);
+        }
+        else {
+            fprintf(s->pc.log, "wrong preconditioner type\n");
+            exit(-1);
+        }
+    }
     else {
         fprintf(s->log, "wrong solver type\n");
         exit(-1);
@@ -428,6 +469,7 @@ void itsol_solver_init_pars(ITS_PARS *p)
     assert(p != NULL);
 
     /* parameters from inputs -----------------------------------------*/
+    p->bgsl = 4;
     p->restart = 30;               /* Dim of Krylov subspace [fgmr]   */
     p->maxits = 1000;              /* maximum number of fgmres iters  */
     p->tol = 1e-6;                 /* tolerance for stopping fgmres   */

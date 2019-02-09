@@ -232,6 +232,7 @@ typedef enum ITS_SOLVER_TYPE_
 {
     ITS_SOLVER_FGMRES,
     ITS_SOLVER_BICGSTAB,
+    ITS_SOLVER_BICGSTABL,
 
 } ITS_SOLVER_TYPE;
 
@@ -253,6 +254,7 @@ typedef struct ITS_PC
 typedef struct ITS_PARS_
 {
     /* parameters from inputs -----------------------------------------*/
+    int bgsl;
     int restart;                /* Dim of Krylov subspace [fgmr]   */
     int maxits;                 /* maximum number of fgmres iters  */
     double tol;                 /* tolerance for stopping fgmres   */

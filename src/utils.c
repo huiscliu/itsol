@@ -2330,3 +2330,21 @@ double itsol_norm2(double *x, int n)
     return sqrt(itsol_dot(x, x, n));
 }
 
+void itsol_copy(double *d, double *s, int n)
+{
+    assert(d != NULL);
+    assert(s != NULL);
+    assert(n >= 0);
+
+    memcpy(d, s, sizeof(*d) * n);
+}
+
+void itsol_axpby(double a, double *x, double b, double *y, int n)
+{
+    int i;
+    
+    assert(n >= 0);
+    if (n > 0) assert(x != NULL && y != NULL);
+
+    for (i = 0; i < n; i++)  y[i] = x[i] * a + b * y[i];
+}

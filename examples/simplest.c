@@ -21,7 +21,7 @@ int main(void)
     }
 
     /* init */
-    itsol_solver_initialize(&s, ITS_SOLVER_BICGSTAB, ITS_PC_ILUK, &A);
+    itsol_solver_initialize(&s, ITS_SOLVER_BICGSTABL, ITS_PC_ILUK, &A);
 
     /* call solver */
     itsol_solver_solve(&s, x, rhs);

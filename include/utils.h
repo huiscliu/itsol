@@ -75,6 +75,8 @@ ITS_CooMat itsol_read_coo(char *Fname);
 double itsol_norm(double *x, int n);
 double itsol_dot(double *x, double *y, int n);
 double itsol_norm2(double *x, int n);
+void itsol_copy(double *d, double *s, int n);
+void itsol_axpby(double a, double *x, double b, double *y, int n);
 
 #ifdef __cplusplus
 }

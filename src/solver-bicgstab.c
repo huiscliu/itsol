@@ -1,7 +1,7 @@
 
 #include "solver-bicgstab.h"
 
-int itsol_solver_bicgstab(ITS_SMat *Amat, ITS_PC *lu, double *bg, double *xg, double tol,
+int itsol_solver_bicgstab(ITS_SMat *Amat, ITS_PC *lu, double *rhs, double *x, double tol,
         int maxits, int *nits, double *res, FILE * fp)
 {
     double *rg, *rh, *pg, *ph, *sg, *sh, *tg, *vg, *tp;
@@ -21,8 +21,8 @@ int itsol_solver_bicgstab(ITS_SMat *Amat, ITS_PC *lu, double *bg, double *xg, do
     vg = itsol_malloc(n * sizeof(double), "bicgstab");
     tp = itsol_malloc(n * sizeof(double), "bicgstab");
 
-    Amat->matvec(Amat, xg, tp);
-    for (i = 0; i < n; i++) rg[i] = bg[i] - tp[i];
+    Amat->matvec(Amat, x, tp);
+    for (i = 0; i < n; i++) rg[i] = rhs[i] - tp[i];
 
     for (i = 0; i < n; i++) {
         rh[i] = rg[i];
@@ -73,11 +73,11 @@ int itsol_solver_bicgstab(ITS_SMat *Amat, ITS_PC *lu, double *bg, double *xg, do
 
         if (itsol_norm(sg, n) <= 1e-60) {
             for (i = 0; i < n; i++) {
-                xg[i] = xg[i] + pra * ph[i];
+                x[i] = x[i] + pra * ph[i];
             }
 
-            Amat->matvec(Amat, xg, tp);
-            for (i = 0; i < n; i++) rg[i] = bg[i] - tp[i];
+            Amat->matvec(Amat, x, tp);
+            for (i = 0; i < n; i++) rg[i] = rhs[i] - tp[i];
             residual = itsol_norm(rg, n);
 
             break;
@@ -94,7 +94,7 @@ int itsol_solver_bicgstab(ITS_SMat *Amat, ITS_PC *lu, double *bg, double *xg, do
 
         prc = itsol_dot(tg, sg, n) / itsol_dot(tg, tg, n);
         for (i = 0; i < n; i++) {
-            xg[i] = xg[i] + pra * ph[i] + prc * sh[i];
+            x[i] = x[i] + pra * ph[i] + prc * sh[i];
             rg[i] = sg[i] - prc * tg[i];
         }
 
