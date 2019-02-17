@@ -302,4 +302,4 @@ typedef struct ITS_SOLVER_
 
 } ITS_SOLVER;
 
-#endif  /* __VBLOCK_HEADER_H__ */
+#endif
