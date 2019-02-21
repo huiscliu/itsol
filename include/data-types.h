@@ -74,8 +74,8 @@ typedef struct ITS_VBILUSpar_
 
     /* diagonal block                             */
     ITS_BData *D;     /* diagonal blocks                            */
-    ITS_VBSparMat *L;     /* L part blocks                              */
-    ITS_VBSparMat *U;     /* U part blocks                              */
+    ITS_VBSparMat *L; /* L part blocks                              */
+    ITS_VBSparMat *U; /* U part blocks                              */
     int *work;        /* working buffer                             */
     ITS_BData bf;     /* buffer of a temp block                     */
     int DiagOpt;  /* Option for diagonal inversion/solutiob     *
@@ -87,9 +87,9 @@ typedef struct ITS_VBILUSpar_
 typedef struct ITS_ILUSpar_
 {
     int n;
-    ITS_SparMat *L;      /* L part elements                            */
+    ITS_SparMat *L;   /* L part elements                            */
     double *D;        /* diagonal elements                          */
-    ITS_SparMat *U;      /* U part elements                            */
+    ITS_SparMat *U;   /* U part elements                            */
     int *work;        /* working buffer */
 
 } ITS_ILUSpar;
@@ -121,9 +121,11 @@ typedef struct ITS_Per4Mat_
     int n;                  
     int nB; 
     int symperm;
+
     /*   LU factors  */
     ITS_SparMat *L;
     ITS_SparMat *U;
+
     /* E, F blocks   */
     ITS_SparMat *E;
     ITS_SparMat *F;
