@@ -12,7 +12,7 @@
 #include "protos-deps.h"
 
 #define ITS_MAX_BLOCK_SIZE   100
-#define TOL_DD 0.7                   /* diagonal dominance tolerance for arms */
+#define ITS_TOL_DD           0.7  /* diagonal dominance tolerance for arms */
 
 /* FORTRAN style vblock format, compatible for many FORTRAN routines */
 #define ITS_DATA(a,row,i,j)  (a[(j)*(row)+(i)])
@@ -24,10 +24,6 @@
 #define ITS_MAX_HBNAME      64
 #define ITS_MAX_MAT	        100
 #define ITS_MaxNamLen       64
-#define ITS_HB   1
-#define ITS_MM0  2
-#define ITS_MM1  3
-#define ITS_UNK  4
 
 /*--------------------------------------------- 
   | C-style CSR format - used internally

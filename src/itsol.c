@@ -480,7 +480,7 @@ void itsol_solver_init_pars(ITS_PARS *p)
 
     /* arms */
     p->diagscal = 1;
-    p->tolind = TOL_DD;
+    p->tolind = ITS_TOL_DD;
 
     /* init arms pars */
     itsol_set_arms_pars(p, p->diagscal, p->ipar, p->dropcoef, p->lfil_arr);
