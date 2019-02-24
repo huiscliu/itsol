@@ -1,6 +1,6 @@
 
-#ifndef __ITSOL_INDSETC_H__
-#define __ITSOL_INDSETC_H__
+#ifndef ITSOL_INDSETC_H__
+#define ITSOL_INDSETC_H__
 
 #include "utils.h"
 

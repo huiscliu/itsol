@@ -1,5 +1,5 @@
-#ifndef __VBLOCK_DATATYPE_DEFS_H__
-#define __VBLOCK_DATATYPE_DEFS_H__
+#ifndef VBLOCK_DATATYPE_DEFS_H__
+#define VBLOCK_DATATYPE_DEFS_H__
 
 #include <stdio.h>
 #include <stdlib.h>

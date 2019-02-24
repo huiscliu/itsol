@@ -1,6 +1,6 @@
 
-#ifndef __ITSOL_ILUT_H__
-#define __ITSOL_ILUT_H__
+#ifndef ITSOL_ILUT_H__
+#define ITSOL_ILUT_H__
 
 #include <math.h>
 #include "utils.h"

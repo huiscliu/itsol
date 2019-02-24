@@ -1,6 +1,6 @@
 
-#ifndef __ITSOL_BICGSTABL_H__
-#define __ITSOL_BICGSTABL_H__
+#ifndef ITSOL_BICGSTABL_H__
+#define ITSOL_BICGSTABL_H__
 
 #include "mat-utils.h"
 

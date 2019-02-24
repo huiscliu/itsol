@@ -1,6 +1,6 @@
 
-#ifndef __ITSOL_VBILUK_H__
-#define __ITSOL_VBILUK_H__
+#ifndef ITSOL_VBILUK_H__
+#define ITSOL_VBILUK_H__
 
 #include "mat-utils.h"
 #include "utils.h"

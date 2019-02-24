@@ -1,5 +1,5 @@
-#ifndef __ITSOL_UTILS_H__
-#define __ITSOL_UTILS_H__
+#ifndef ITSOL_UTILS_H__
+#define ITSOL_UTILS_H__
 
 #include <stdarg.h>
 #include "data-types.h"

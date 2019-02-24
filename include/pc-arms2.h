@@ -1,5 +1,5 @@
-#ifndef __ITSOL_ARMS2_H__
-#define __ITSOL_ARMS2_H__
+#ifndef ITSOL_ARMS2_H__
+#define ITSOL_ARMS2_H__
 
 #include "utils.h"
 #include "mat-utils.h"

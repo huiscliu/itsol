@@ -1,6 +1,6 @@
 
-#ifndef __ITSOL_ILUK_H__
-#define __ITSOL_ILUK_H__
+#ifndef ITSOL_ILUK_H__
+#define ITSOL_ILUK_H__
 
 #include "utils.h"
 

@@ -1,5 +1,5 @@
-#ifndef __ITSOL_EXT_PROTOS_H__
-#define __ITSOL_EXT_PROTOS_H__
+#ifndef ITSOL_EXT_PROTOS_H__
+#define ITSOL_EXT_PROTOS_H__
 
 #include <stdio.h>
 

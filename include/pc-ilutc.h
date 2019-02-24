@@ -1,6 +1,6 @@
 
-#ifndef __ITSOL_ILUTC_H__
-#define __ITSOL_ILUTC_H__
+#ifndef ITSOL_ILUTC_H__
+#define ITSOL_ILUTC_H__
 
 #include "utils.h"
 #include "mat-utils.h"

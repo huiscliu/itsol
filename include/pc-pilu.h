@@ -1,6 +1,6 @@
 
-#ifndef __ITSOL_PILUNEW_H__
-#define __ITSOL_PILUNEW_H__
+#ifndef ITSOL_PILUNEW_H__
+#define ITSOL_PILUNEW_H__
 
 #include "utils.h"
 

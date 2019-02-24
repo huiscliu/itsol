@@ -1,6 +1,6 @@
 
-#ifndef __ITSOL_BICGSTAB_H__
-#define __ITSOL_BICGSTAB_H__
+#ifndef ITSOL_BICGSTAB_H__
+#define ITSOL_BICGSTAB_H__
 
 #include "utils.h"
 

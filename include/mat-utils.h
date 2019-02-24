@@ -1,5 +1,5 @@
-#ifndef __ITSOL_MatOps_H__
-#define __ITSOL_MatOps_H__
+#ifndef ITSOL_MatOps_H__
+#define ITSOL_MatOps_H__
 
 #include "utils.h"
 

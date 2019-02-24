@@ -1,6 +1,6 @@
 
-#ifndef __ITSOL_INCLUDED_PROTOS_H__
-#define __ITSOL_INCLUDED_PROTOS_H__
+#ifndef ITSOL_INCLUDED_PROTOS_H__
+#define ITSOL_INCLUDED_PROTOS_H__
 
 #include "solver-fgmres.h"
 #include "solver-bicgstab.h"
