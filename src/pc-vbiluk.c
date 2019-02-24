@@ -274,7 +274,7 @@ int itsol_pc_vblofC(int lofM, ITS_VBSparMat *vbmat, ITS_VBILUSpar *lu, FILE * fp
                     }
                 }
                 else
-                    levls[ip] = min(levls[ip], it);
+                    levls[ip] = its_min(levls[ip], it);
             }
         }                       /* end - while loop */
         /*-------------------- reset iw */

@@ -15,7 +15,7 @@ int itsol_CondestC(ITS_ILUSpar *lu, FILE * fp)
 
     itsol_lumsolC(y, x, lu);
     for (i = 0; i < n; i++) {
-        norm = max(norm, fabs(x[i]));
+        norm = its_max(norm, fabs(x[i]));
     }
     fprintf(fp, "ILU inf-norm lower bound : %16.2f\n", norm);
     free(x);
@@ -132,7 +132,7 @@ int itsol_invSVD(int nn, double *A)
     nrm = S[0] * tol;
     /*-------------------- compute S\inv * VT                        */
     for (i = 0; i < nn; i++) {
-        tmp = one / max(S[i], nrm);
+        tmp = one / its_max(S[i], nrm);
         itsol_dscal(nn, tmp, &VT[i], nn);
     }
     /*-------------------- do [V^T S\inv ] * U^T                     */
@@ -1052,7 +1052,7 @@ int itsol_condestLU(ITS_ILUSpar *lu, FILE * fp)
 
     itsol_lusolC(y, x, lu);
 
-    for (i = 0; i < n; i++) norm = max(norm, fabs(x[i]));
+    for (i = 0; i < n; i++) norm = its_max(norm, fabs(x[i]));
 
     fprintf(fp, "ILU inf-norm lower bound : %16.2f\n", norm);
     free(y);
@@ -1073,7 +1073,7 @@ int itsol_condestArms(ITS_ARMSpar *armspre, double *y, FILE * fp)
     itsol_armsol2(y, armspre);
 
     for (i = 0; i < n; i++) {
-        norm = max(norm, fabs(y[i]));
+        norm = its_max(norm, fabs(y[i]));
     }
 
     fprintf(fp, "ARMS inf-norm lower bound = : %16.2f\n", norm);
@@ -1095,7 +1095,7 @@ int itsol_VBcondestC(ITS_VBILUSpar *lu, FILE * fp)
 
     itsol_vblusolC(y, x, lu);
 
-    for (i = 0; i < ndim; i++) norm = max(norm, fabs(x[i]));
+    for (i = 0; i < ndim; i++) norm = its_max(norm, fabs(x[i]));
 
     fprintf(fp, "VBILU inf-norm lower bound : %16.2f\n", norm);
     free(y);

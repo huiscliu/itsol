@@ -97,7 +97,7 @@ int itsol_pc_vbilutC(ITS_VBSparMat *vbmat, ITS_VBILUSpar *lu, int lfil, double t
         for (j = 0; j < nzcount; j++) {
             sz = ITS_B_DIM(bsz, ja[j]);
             t = itsol_vbnorm2(dim * sz, ba[j]);
-            tnorm = max(t, tnorm);
+            tnorm = its_max(t, tnorm);
         }
         if (tnorm == 0.0) {
             fprintf(fp, "vbilut:  zero row encountered.\n");
@@ -231,7 +231,7 @@ int itsol_pc_vbilutC(ITS_VBSparMat *vbmat, ITS_VBILUSpar *lu, int lfil, double t
 
             /* update l-matrix */
             lenl = len;
-            len = min(lenl, lfil);
+            len = its_min(lenl, lfil);
             for (j = 0; j < lenl; j++) {
                 sz = ITS_B_DIM(bsz, jbuf[j]);
                 wn[j] = itsol_vbnorm2(dim * sz, w[j]);
@@ -256,7 +256,7 @@ int itsol_pc_vbilutC(ITS_VBSparMat *vbmat, ITS_VBILUSpar *lu, int lfil, double t
                 iw[j] = -1;
 
             /* update u-matrix */
-            len = min(lenu, lfil);
+            len = its_min(lenu, lfil);
             for (j = 1; j < lenu; j++) {
                 jpos = i + j;
                 sz = ITS_B_DIM(bsz, jbuf[jpos]);
@@ -279,7 +279,7 @@ int itsol_pc_vbilutC(ITS_VBSparMat *vbmat, ITS_VBILUSpar *lu, int lfil, double t
                 sz = ITS_B_DIM(bsz, ja[j]);
                 ba[j] = (ITS_BData) itsol_malloc(dim * sz * sizeof(double), "vbilut");
                 itsol_copyBData(dim, sz, ba[j], w[jpos], 0);
-                t = max(t, wn[j]);
+                t = its_max(t, wn[j]);
             }
             for (j = 0; j < lenu - 1; j++)
                 iw[j] = -1;

@@ -93,7 +93,7 @@ static int std_drop(int lfil, int i, double tolL, double tolU, double toldiag)
     }
     /*-------------------- find the largest lfil elements in row k */
     Unnz = len;
-    len = min(Unnz, lfil);
+    len = its_min(Unnz, lfil);
     for (j = 0; j < Unnz; j++)
         w[j] = fabs(wU[Uid[j]]);
     FC_FUNC(itsol_qsplit,ITSOL_QSPLIT)(w, Uid, &Unnz, &len);
@@ -125,7 +125,7 @@ static int std_drop(int lfil, int i, double tolL, double tolU, double toldiag)
     }
     /*-------------------- find the largest lfil elements in column k         */
     Lnnz = len;
-    len = min(Lnnz, lfil);
+    len = its_min(Lnnz, lfil);
     for (j = 0; j < Lnnz; j++) w[j] = fabs(wL[Lid[j]]);
 
     FC_FUNC(itsol_qsplit,ITSOL_QSPLIT)(w, Lid, &Lnnz, &len);
@@ -454,9 +454,9 @@ int itsol_pc_ilutc(ITS_ILUSpar *mt, ITS_ILUSpar *lu, int lfil, double tol, int d
             /*-------------------- drop = 2                                          */
         }
         else if (drop == 2) {
-            Lnorm = tol * diag / max(1, fabs(eL[i]));
+            Lnorm = tol * diag / its_max(1, fabs(eL[i]));
             eU[i] *= D[i];
-            Unorm = tol / max(1, fabs(eU[i]));
+            Unorm = tol / its_max(1, fabs(eU[i]));
             std_drop(lfil, i, Lnorm, Unorm, toldiag);
             /*-------------------- update eL[i+1,...,n] and eU[i+1,...,n]            */
             t = eL[i] * D[i];
@@ -485,8 +485,8 @@ int itsol_pc_ilutc(ITS_ILUSpar *mt, ITS_ILUSpar *lu, int lfil, double tol, int d
                 eU[i] = -1 - eU[i];
             }
             eU[i] *= D[i];
-            Lnorm = tol * diag / max(1, fabs(eL[i]));
-            Unorm = tol / max(1, fabs(eU[i]));
+            Lnorm = tol * diag / its_max(1, fabs(eL[i]));
+            Unorm = tol / its_max(1, fabs(eU[i]));
             std_drop(lfil, i, Lnorm, Unorm, toldiag);
             /*-------------------- update eL[i+1,...,n] and eU[i+1,...,n] */
             t = eL[i] * D[i];
@@ -521,7 +521,7 @@ int itsol_pc_ilutc(ITS_ILUSpar *mt, ITS_ILUSpar *lu, int lfil, double tol, int d
             else {
                 eL[i] = x2;
             }
-            Lnorm = tol * diag / max(1, fabs(eL[i]));
+            Lnorm = tol * diag / its_max(1, fabs(eL[i]));
             x1 = (1 - eU[i]) * D[i];
             x2 = (-1 - eU[i]) * D[i];
             s1 = s2 = 0.0;
@@ -541,7 +541,7 @@ int itsol_pc_ilutc(ITS_ILUSpar *mt, ITS_ILUSpar *lu, int lfil, double tol, int d
             else {
                 eU[i] = x2;
             }
-            Unorm = tol / max(1, fabs(eU[i]));
+            Unorm = tol / its_max(1, fabs(eU[i]));
             std_drop(lfil, i, Lnorm, Unorm, toldiag);
             /*-------------------- update eL[i+1,...,n] and eU[i+1,...,n] */
             t = eL[i] * D[i];

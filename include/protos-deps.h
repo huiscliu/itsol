@@ -7,11 +7,11 @@
 extern "C" {
 #endif
 
-#ifndef min
-#define min(a,b) (((a)>(b))?(b):(a))
+#ifndef its_min
+#define its_min(a,b) (((a)>(b))?(b):(a))
 #endif
-#ifndef max
-#define max(a,b) (((a)>(b))?(a):(b))
+#ifndef its_max
+#define its_max(a,b) (((a)>(b))?(a):(b))
 #endif
 
 #if defined(_IBM)  /* IBM */
