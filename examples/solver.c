@@ -1,10 +1,7 @@
 /*-------------------------------------------------------------------*
- * main test driver for ILUK                                         *
- *-------------------------------------------------------------------*
- * Na Li, Oct 31, 2001                                               *
- *                                                                   *
- * Report bugs / send comments to: saad@cs.umn.edu, nli@cs.umn.edu   *
+ * Report bugs / send comments to: saad@cs.umn.edu                   *
  *-------------------------------------------------------------------*/
+
 #include "itsol.h"
 
 int main(void)

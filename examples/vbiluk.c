@@ -18,9 +18,9 @@ int main(void)
     /*-------------------- main structs and wraper structs.   */
     ITS_SparMat *csmat = NULL;         /* matrix in csr formt             */
     ITS_VBSparMat *vbmat = NULL;
-    ITS_VBILUSpar *lu = NULL;         /* vbilu preconditioner structure  */
-    ITS_SMat *MAT;                /* Matrix structure for matvecs    */
-    ITS_PC *PRE;                /* general precond structure       */
+    ITS_VBILUSpar *lu = NULL;          /* vbilu preconditioner structure  */
+    ITS_SMat *MAT;                     /* Matrix structure for matvecs    */
+    ITS_PC *PRE;                       /* general precond structure       */
     double *sol = NULL, *x = NULL, *prhs = NULL, *rhs = NULL;
 
     int n, nnz;
