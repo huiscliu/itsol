@@ -252,7 +252,7 @@ typedef struct ITS_PC
 typedef struct ITS_PARS_
 {
     /* parameters from inputs -----------------------------------------*/
-    int bgsl;
+    int bgsl;                   /* parameter for BiCGSTAB(l)       */
     int restart;                /* Dim of Krylov subspace [fgmr]   */
     int maxits;                 /* maximum number of fgmres iters  */
     double tol;                 /* tolerance for stopping fgmres   */
